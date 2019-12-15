@@ -1,7 +1,9 @@
 (ns ^:figwheel-hooks theophilusx.yorick.core
   (:require [goog.dom :as gdom]
             [reagent.core :as reagent :refer [atom]]
-            [theophilusx.yorick.basic :as b]))
+            [reagent.session :as session]
+            [theophilusx.yorick.basic :as b]
+            [theophilusx.yorick.navbar :as nb]))
 
 (println "This text is printed from src/theophilusx/yorick/core.cljs. Go ahead and edit it and see reloading in action.")
 
@@ -33,7 +35,33 @@
      [:div.content
       [:h6.title.is-6 "Code"]
       [:pre.has-background-grey-light
-       "[box [:div.message \"The box component\"]]"]]]]])
+       "[box [:div.message \"The box component\"]]"]]]]
+   [nb/navbar :main-navbar
+    :brand (nb/defitem
+             :href "https://bulma.io"
+             :contents [:img {:src "images/bulma-logo.png"
+                              :width "112"
+                              :height "28"}])
+      :has-burger true
+    :start-menu [(nb/defitem
+                   :id :home
+                   :contents "Home"
+                   :selectable true)
+                 (nb/defitem
+                   :contents "Documents"
+                   :id :documents
+                   :selectable true)]
+      :end-menu [(nb/defitem
+                   :contents "Log Out "
+                   :id :log-out
+                   :selectable true)]]
+   [:div.columns
+    [:div.column
+     [:h6 "Navbar state"]
+     [:p (str @nb/navbar-state)]]
+    [:div.column
+     [:h6 "Global State"]
+     [:p (str @session/state)]]]])
 
 (defn mount [el]
   (reagent/render-component [hello-world] el))

@@ -1,12 +1,11 @@
-(ns theophilusx.yorick.basic)
+(ns theophilusx.yorick.basic
+  (:require [theophilusx.yorick.utils :refer [cs]]))
 
 (defn box
-  "A simple box component. `contents` is wrapped in a div with class `box`"
-  [body & {:keys [class]
-           :or {class ""}}]
-  (let [cls (str "box " class)]
-    [:div {:class cls} body]))
+  "A simple box component. `body` is wrapped in a div with class `box`"
+  [body & {:keys [classes]}]
+  [:div {:class (cs "box" classes)} body])
 
-(defn card
-  "A basic card component. Can have optional header and footer elements"
-  [body & {:keys {header-title header-icon card-image }}])
+;; (defn card
+;;   "A basic card component. Can have optional header and footer elements"
+;;   [body & {:keys {header-title header-icon card-image }}])

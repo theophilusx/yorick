@@ -50,7 +50,24 @@
                  (nb/defitem
                    :contents "Documents"
                    :id :documents
-                   :selectable true)]
+                   :selectable true)
+                 (nb/defitem
+                   :type :dropdown
+                   :title "Dropdown"
+                   :contents [(nb/defitem
+                                :contents "DD 1"
+                                :id :ddown-1
+                                :selectable true)
+                              (nb/defitem
+                                :contents "DD 2"
+                                :id :ddown-2
+                                :selectable true)
+                              (nb/defitem
+                                :type :divider)
+                              (nb/defitem
+                                :contents "Last chance"
+                                :id :ddown-3
+                                :selectable true)])]
       :end-menu [(nb/defitem
                    :contents "Log Out "
                    :id :log-out

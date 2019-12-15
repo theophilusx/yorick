@@ -15,11 +15,12 @@
 ;;  :selectable if true, add click handler to set model and active state
 
 
-(defn defitem [& {:keys [type classes href id contents selectable]
+(defn defitem [& {:keys [type title classes href id contents selectable]
                   :or {type :a
                        href "#"
                        id (keyword (gensym "item-"))}}]
   {:type type
+   :title title
    :class classes
    :href href
    :id id
@@ -31,6 +32,18 @@
     true
     false))
 
+(defn is-dropdown-active [model id]
+  (if (= (get-in @navbar-state [model :active-dropdown]) id)
+    true
+    false))
+
+(defn toggle-dropdown [model id]
+  (if (nil? id)
+    (swap! navbar-state assoc-in [model :active-dropdown] nil)
+    (if (= (get-in @navbar-state [model :active-dropdown]) id)
+      (swap! navbar-state assoc-in [model :active-dropdown] nil)
+      (swap! navbar-state assoc-in [model :active-dropdown] id))))
+
 (defn set-active [model id]
   (swap! navbar-state assoc-in [model :active-item] id))
 
@@ -40,6 +53,7 @@
        :href (:href a "#")
        :on-click (when (:selectable a)
                    (fn []
+                     (toggle-dropdown model nil)
                      (set-active model (:id a))
                      (session/assoc-in! [model :choice] (:id a))))}
    (:contents a)])
@@ -52,10 +66,30 @@
        (-item-a c model)
        (-item-div c model)))))
 
+(defn -item-dropdown [d model]
+  [:div {:class (utils/cs "navbar-item" "has-dropdown" (:class d)
+                          (when (is-dropdown-active model (:id d))
+                            "is-active"))}
+   [:a {:class (utils/cs "navbar-link")
+        :id (:id d)
+        :on-click (fn []
+                    (toggle-dropdown model (:id d)))}
+    (:title d)]
+   (into
+    [:div.navbar-dropdown]
+    (for [i (:contents d)]
+      (condp = (:type i)
+        :a (-item-a i model)
+        :dropdown (-item-dropdown i model)
+        :divider [:hr.navbar-divider]
+        :default (-item-div i model))))])
+
 (defn -make-item [i model]
-  (if (= (:type i) :a)
-    (-item-a i model)
-    (-item-div i model)))
+  (condp = (:type i)
+    :a (-item-a i model)
+    :dropdown (-item-dropdown i model)
+    :divider [:hr.navbar-divider]
+    :default (-item-div i model)))
 
 (defn -burger [model]
   [:a {:class (utils/cs "navbar-burger" "burger"

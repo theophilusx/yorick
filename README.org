@@ -53,7 +53,22 @@ Then visit [[http://localhost:8080][demo page]]
    some /tricks/ you can use to get around some common issues that come up when
    working with components.
 
-*** Working with classes
+*** Layout   
+
+    The /Bulma/ CSS framework is based on *flexbox*, providing a simple, fast
+    and flexible grid system to layout your web content. Bulma uses classes to
+    support containers, responsive columns, levels and other layout components.
+    Unlike other /Reagent/ component libraries, /Yorick/ does not attempt to
+    provide any additional layout functionality. All the standard /Bulma/
+    classes used to manage layout are compatible with the components provided by
+    /Yorick/. 
+
+    To get the most out of /Yorick/ you will need to have a basic familiarity
+    with /Bulma/. The good news is that /Bulma/ is clear, simple and easy to
+    learn. Use /Bulma/ classes like ~columns~, ~level~ and ~tiles~ to manage
+    your layout and /bulma/ helper classes to style the /Yorick/ components. s
+
+*** Working with Classes
 
     The standard way to modify the appearance of a component is by adding CSS
     classes. As /bulma/ is a pure CSS framework, all Bulma features are
@@ -130,7 +145,7 @@ Then visit [[http://localhost:8080][demo page]]
     class names or a vector with components that will resolve to a class name
     string or nil. 
     
-*** Component contents 
+*** Component Contents 
 
     In most cases, a component is really just a wrapper around other components
     or HTML elements. An element can be as simple as just a string or as complex
@@ -174,16 +189,25 @@ Then visit [[http://localhost:8080][demo page]]
     can just load the associated namespace for that component. The following
     namespaces are used -
 
-    | Namespace                   | Purpose                                  |
-    |-----------------------------+------------------------------------------|
-    | theophilusx.yorick.basic    | Very simple and basic components         |
-    | theophilusx.yorick.card     | A ~card~ component                       |
-    | theophilusx.yorick.icon     | A simple icon component                  |
-    | theophilusx.yorick.input    | A collection of input related components |
-    | theophilusx.yorick.media    | A flexible media component               |
-    | theophilusx.yorick.modal    | A modal window component                 |
-    | theophilusx.yorick.navbar   | A navigation bar component               |
-    | theophilusx.yorick.paginate | A pagination component                   |
-    | theophilusx.yorick.sidebar  | A sidebar menu component                 |
-    | theophilusx.yorick.table    | An HTML table component                  |
-    | theophilusx.yorick.toolbar  | A simple toolbar component               |
+    | Namespace                   | Purpose                                    |
+    |-----------------------------+--------------------------------------------|
+    | theophilusx.yorick.basic    | Very simple and basic components           |
+    | theophilusx.yorick.card     | A ~card~ component                         |
+    | theophilusx.yorick.icon     | A simple icon component                    |
+    | theophilusx.yorick.input    | A collection of input related components   |
+    | theophilusx.yorick.media    | A flexible media component                 |
+    | theophilusx.yorick.modal    | A modal window component                   |
+    | theophilusx.yorick.navbar   | A navigation bar component                 |
+    | theophilusx.yorick.paginate | A pagination component                     |
+    | theophilusx.yorick.sidebar  | A sidebar menu component                   |
+    | theophilusx.yorick.table    | An HTML table component                    |
+    | theophilusx.yorick.toolbar  | A simple toolbar component                 |
+    | theophilusx.yorick.utils    | A collection of useful utility functions   |
+    | theophilusx.yorick.store    | A collection of state management functions |
+
+    
+** License 
+
+   Copyright \copy 2020 Tim Cross
+
+   Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.

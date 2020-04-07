@@ -18,8 +18,8 @@
      [:header.header
       [:h1.title.is-1.has-text-white "Yorick Examples"]
       [:h3.subtitle.is-3
-       (str "Examples of " [:strong "Reagent"]
-            " styled with " [:strong "Bulma"])]]]]])
+       "Example of " [:strong "Reagent"] " components styled with "
+       [:strong "Bulma"]]]]]])
 
 
 (defn mount-app []

@@ -1,0 +1,14 @@
+{
+  "name": "yorick",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "shadow-cljs": "2.8.94"
+  },
+  "dependencies": {
+    "bulma": "^0.8.1",
+    "create-react-class": "^15.6.3",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}

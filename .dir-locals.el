@@ -1,3 +1,4 @@
-((clojure-mode
-  (cider-clojure-cli-global-options . "-A:fig")))
+((clojurescript-mode
+  (cider-default-cljs-repl . shadow)
+  (cider-shadow-default-options . "demo")))
 

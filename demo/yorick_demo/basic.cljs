@@ -46,9 +46,33 @@
               [:li [:strong ":id"] " an id attribute value"]]]
      :header [c/card-header "img - An HTML image component"]]]
    [:div.column
-    [:p "[basic/img \"images/bulma-logo.png\" :width 40]"]
+    [:p "[basic/img \"images/bulma-logo.png\" :width 400]"]
     [:div.box
      [:p [b/img "images/bulma-logo.png" :width 400]]]]])
+
+(defn render-vec-component []
+  [:div.columns
+   [:div.column
+    [c/card [:p "The " [:strong "render-vec"] " component is a basic component "
+             "which will render a ClojureScript vector as an unordered list. "
+             "It takes only one argument, the vector to render."]
+     :header [c/card-header "render-vec - Render a ClojureScript vector"]]]
+   [:div.column
+    [:p "[:p \"This is a ClojureScript vector \" [basic/render-vec [:a :b :c]]]"]
+    [:div.box
+     [:p "This is a ClojureScript vector " [b/render-vec [:a :b :c]]]]]])
+
+(defn render-set-component []
+  [:div.columns
+   [:div.column
+    [c/card [:p "The " [:strong "render-set"] " component renders a ClojureScript "
+             "set as a comma delimited list surrounded in parenthesis. It accepts "
+             "one argument, the set to render."]
+     :header [c/card-header "render-set - Render a ClojureScript set"]]]
+   [:div.column
+    [:p "[:p \"This is a ClojureScript set \" [basic/render-set #{1 2 3}]]"]
+    [:div.box
+     [:p "This is a ClojureScript set " [b/render-set #{1 2 3}]]]]])
 
 (defn basic-page []
   [:<>
@@ -72,4 +96,6 @@
     [:div.column
      [:h4.title.is-4 "Example"]]]
    [a-component]
-   [img-component]])
+   [img-component]
+   [render-vec-component]
+   [render-set-component]])

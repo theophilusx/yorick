@@ -54,7 +54,10 @@
        (set? i)    [:li (render-set i)]
        :else [:li (str i)]))))
 
-(defn render-set [s]
+(defn render-set
+  "Render a ClojureScript set as a string with elements separated by commas
+  and surrounded in parenthesis"
+  [s]
   [:div.box
    (str "(" (string/join ", " s) ")")])
 

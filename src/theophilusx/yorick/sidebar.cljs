@@ -1,6 +1,6 @@
 (ns theophilusx.yorick.sidebar
   (:require [theophilusx.yorick.utils :refer [spath]]
-            [theophilusx.yorick.icons :as icons]
+            [theophilusx.yorick.icon :as icons]
             [theophilusx.yorick.store :as store]
             [theophilusx.yorick.basic :as basic]))
 
@@ -68,10 +68,10 @@
                another path level e.g. :place.sub-place = [:place :sub-place].
   `:default-link` The default menu id to be set as active when sidebar is first
                    loaded
-  `:item` A `defsidebar-item` map defining the parent menu with sub-menus as a
+  `:data` A `defsidebar-item` map defining the parent menu with sub-menus as a
           vector of `defsidebar-tiem` items in the `:items` key"
   [data]
   (store/assoc-in! store/global-state (spath (:sid data)) (:default-link data))
   (fn [data]
     [:nav.menu {:class (:class (:item data))}
-     [make-menu (:item data) (:sid data)]]))
+     [make-menu (:data data) (:sid data)]]))

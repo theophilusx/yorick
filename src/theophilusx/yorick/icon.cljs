@@ -1,4 +1,4 @@
-(ns theophilusx.yorick.icons
+(ns theophilusx.yorick.icon
   (:require [clojure.string :as string]))
 
 (defn deficon

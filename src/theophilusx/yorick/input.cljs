@@ -1,6 +1,6 @@
-(ns theophilusx.yorick.inputs
+(ns theophilusx.yorick.input
   (:require [theophilusx.yorick.utils :refer [spath value-of value->keyword]]
-            [theophilusx.yorick.icons :as icons]
+            [theophilusx.yorick.icon :as icons]
             [theophilusx.yorick.store :as store]
             [reagent.core :as r]))
 

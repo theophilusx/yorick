@@ -1,5 +1,5 @@
-(ns theophilusx.yorick.cards
-  (:require [theophilusx.yorick.icons :as icons]
+(ns theophilusx.yorick.card
+  (:require [theophilusx.yorick.icon :as icons]
             [theophilusx.yorick.basic :as basic]))
 
 (defn card-header [title & {:keys [icon icon-action class]}]

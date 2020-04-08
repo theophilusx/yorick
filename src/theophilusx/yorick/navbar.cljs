@@ -2,7 +2,7 @@
   (:require [reagent.core :as r]
             [theophilusx.yorick.utils :refer [spath]]
             [theophilusx.yorick.store :as store]
-            [theophilusx.yorick.icons :as icons]
+            [theophilusx.yorick.icon :as icons]
             [theophilusx.yorick.basic :as basic]))
 
 (defn active? [state id]

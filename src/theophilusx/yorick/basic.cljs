@@ -3,8 +3,19 @@
             [clojure.string :as string]
             [theophilusx.yorick.store :as store]))
 
-(defn a [title & {:keys [href on-click class id role aria-label aria-expanded
-                         data-target]
+(defn a
+  "Creates an anchor <a> component. The required argument is the text title to
+  be used in the anchor. Optional keyword arguments include
+  `href` - a hypertext reference. Defaults to `#` if not provided
+  `on-click` - a function with no arguments to be executed when the link is clicked
+  `class` - a string or vector of strings representing CSS class names
+  `id` - an ID attribute value
+  `role` - the role attribute value
+  `aria-label` - aria-label attribute value
+  `aria-expanded` - true if aria-expanded attribute is to be set
+  `data-target` - data-target attribute value"
+  [title & {:keys [href on-click class id role aria-label aria-expanded
+                   data-target]
                   :or {href "#"}}]
   [:a {:href href
        :on-click on-click
@@ -16,7 +27,13 @@
        :data-target data-target}
    title])
 
-(defn img [src & {:keys [width class id]}]
+(defn img
+  "A basic component to generate an HTML <img> element. The expected argument
+  is a path or link to the image file. Additional optional keyword arguments are
+  `width` - a value for the width attribute
+  `class` - a string or vector of strings specifying CSS class names
+  `id` - an id attribute value"
+  [src & {:keys [width class id]}]
   [:img {:src src
          :class class
          :width width

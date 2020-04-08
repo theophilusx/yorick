@@ -1,18 +1,19 @@
 
 # Table of Contents
 
-1.  [Yorick](#orgf5c98e6)
-    1.  [Key Objectives](#org891842c)
-    2.  [Installation](#org117368f)
-    3.  [Using the API](#org36cebb7)
-        1.  [Layout](#orgdc69768)
-        2.  [Working with Classes](#org53bbe1b)
-        3.  [Component Contents](#org1f09141)
-        4.  [API Namespaces](#org02ef836)
-    4.  [License](#org18c6945)
+1.  [Yorick](#org3632e02)
+    1.  [Key Objectives](#org7ff754e)
+    2.  [Installation](#org044bfa4)
+    3.  [Using the API](#org5e64b54)
+        1.  [Layout](#orgc132760)
+        2.  [Working with Classes](#orgf0030e5)
+        3.  [Component Contents](#orgdfce66e)
+        4.  [Managing State](#org77089e0)
+        5.  [API Namespaces](#org7b54233)
+    4.  [License](#org4a7e8e1)
 
 
-<a id="orgf5c98e6"></a>
+<a id="org3632e02"></a>
 
 # Yorick
 
@@ -27,7 +28,7 @@ used with any ClojureScript build environment, such as *lein*, *CLI tools* or
 *boot*.
 
 
-<a id="org891842c"></a>
+<a id="org7ff754e"></a>
 
 ## Key Objectives
 
@@ -39,7 +40,7 @@ used with any ClojureScript build environment, such as *lein*, *CLI tools* or
     in basic data structures like *maps* and *vectors*.
 
 
-<a id="org117368f"></a>
+<a id="org044bfa4"></a>
 
 ## Installation
 
@@ -57,7 +58,7 @@ rendered. To run the demo, do the following
 Then visit [demo page](http://localhost:8080) 
 
 
-<a id="org36cebb7"></a>
+<a id="org5e64b54"></a>
 
 ## Using the API
 
@@ -77,7 +78,7 @@ some *tricks* you can use to get around some common issues that come up when
 working with components.
 
 
-<a id="orgdc69768"></a>
+<a id="orgc132760"></a>
 
 ### Layout
 
@@ -95,7 +96,7 @@ learn. Use *Bulma* classes like `columns`, `level` and `tiles` to manage
 your layout and *bulma* helper classes to style the *Yorick* components. s
 
 
-<a id="org53bbe1b"></a>
+<a id="orgf0030e5"></a>
 
 ### Working with Classes
 
@@ -167,7 +168,7 @@ library uses the following conventions
     string or nil. 
 
 
-<a id="org1f09141"></a>
+<a id="orgdfce66e"></a>
 
 ### Component Contents
 
@@ -201,7 +202,42 @@ fine. The second will enable `React` to handle the two button components and
 may avoid the addition of an explicit `<div>` element. 
 
 
-<a id="org02ef836"></a>
+<a id="org77089e0"></a>
+
+### Managing State
+
+The `theophilusx.yorick.store` namespace contains functions to assist in
+managing Reagent `atoms`. In Reagent, state is typically managed inside
+special `atoms`. Reagent components know which atoms they reference. When a
+value inside a referenced atom is updated, Reagent knows that the associated
+component may need to be re-rendered to reflect the new value. 
+
+Some components within *Yorick* use local atoms to store local state
+relevant to that component. The `theophilusx.yorick.store` namespace also
+includes a global state atom called `global-state`. This atom can be used to
+store state information which needs to be shared between components. 
+
+The `theophilusx.yorick.store` namespace contains functions to insert,
+update, retrieve and delete values in a Reagent atom. The global state atom
+is called `theophilusx.yorick.global-state` and is created when the
+namespace is first loaded. It uses the `defonce` macro to define the atom,
+so subsequent re-loads of the namespace do not result in redefinition of the
+atom. The atom is initialised as an empty `map`. 
+
+In general, *Yorick* uses ClojureScript `map` structures for state atoms.
+Values are stored in the atom by providing a *path* into the atom i.e. a
+list of keys. To make it easier to work with these paths, Yorick uses the
+convention of defining paths as `keywords` where a period `(.)` in the
+keyword is interpreted as a path separator. For example, the keyword
+`:ui.page.state` represents the path `[:ui :page :state]`. The
+`theophilusx.yorick.utils` namespace contains a function called `spath`,
+which accepts a single keyword argument. It will parse the keyword and
+return a vector of the keys the keyword represents i.e. 
+
+    (spath :ui.page.state) => [:ui :page :state
+
+
+<a id="org7b54233"></a>
 
 ### API Namespaces
 
@@ -308,7 +344,7 @@ namespaces are used -
 </table>
 
 
-<a id="org18c6945"></a>
+<a id="org4a7e8e1"></a>
 
 ## License
 

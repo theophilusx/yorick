@@ -180,6 +180,38 @@ Then visit [[http://localhost:8080][demo page]]
     fine. The second will enable ~React~ to handle the two button components and
     may avoid the addition of an explicit ~<div>~ element. 
 
+*** Managing State
+    
+    The ~theophilusx.yorick.store~ namespace contains functions to assist in
+    managing Reagent ~atoms~. In Reagent, state is typically managed inside
+    special ~atoms~. Reagent components know which atoms they reference. When a
+    value inside a referenced atom is updated, Reagent knows that the associated
+    component may need to be re-rendered to reflect the new value. 
+
+    Some components within /Yorick/ use local atoms to store local state
+    relevant to that component. The ~theophilusx.yorick.store~ namespace also
+    includes a global state atom called ~global-state~. This atom can be used to
+    store state information which needs to be shared between components. 
+
+    The ~theophilusx.yorick.store~ namespace contains functions to insert,
+    update, retrieve and delete values in a Reagent atom. The global state atom
+    is called ~theophilusx.yorick.global-state~ and is created when the
+    namespace is first loaded. It uses the ~defonce~ macro to define the atom,
+    so subsequent re-loads of the namespace do not result in redefinition of the
+    atom. The atom is initialised as an empty ~map~. 
+
+    In general, /Yorick/ uses ClojureScript ~map~ structures for state atoms.
+    Values are stored in the atom by providing a /path/ into the atom i.e. a
+    list of keys. To make it easier to work with these paths, Yorick uses the
+    convention of defining paths as ~keywords~ where a period ~(.)~ in the
+    keyword is interpreted as a path separator. For example, the keyword
+    ~:ui.page.state~ represents the path ~[:ui :page :state]~. The
+    ~theophilusx.yorick.utils~ namespace contains a function called ~spath~,
+    which accepts a single keyword argument. It will parse the keyword and
+    return a vector of the keys the keyword represents i.e. 
+
+    : (spath :ui.page.state) => [:ui :page :state
+
 *** API Namespaces
 
     The API uses separate namespaces for most components. The ~core~ namespace

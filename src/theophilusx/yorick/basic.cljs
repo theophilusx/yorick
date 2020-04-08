@@ -5,7 +5,7 @@
 
 (defn a [title & {:keys [href on-click class id role aria-label aria-expanded
                          data-target]
-                  :or [href "#"]}]
+                  :or {href "#"}}]
   [:a {:href href
        :on-click on-click
        :class class

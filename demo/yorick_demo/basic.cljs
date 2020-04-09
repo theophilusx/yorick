@@ -25,14 +25,14 @@
                "is to be added"]]]
      :header [c/card-header "a - An HTML anchor component"]]]
    [:div.column
-    [:div.content
-     [:pre
-      [:code
-            "[:p \"This is an example of an \" " [:br]
-            "    [basic/a \"anchor\" :on-click #(js/alert \"Hello\")]"]]
-     [:div.box
-      [:p "This is an example of an "
-       [b/a "anchor" :on-click #(js/alert "Hello")]]]]]])
+    [:pre
+     [:code
+      "[:p \"This is an example of an \" " [:br]
+      "    [basic/a \"anchor\" :on-click #(js/alert \"Hello\")]"]]
+    [:div.box
+     [:h6.title.is-6 "Result"]
+     [:p "This is an example of an "
+      [b/a "anchor" :on-click #(js/alert "Hello")]]]]])
 
 (defn img-component []
   [:div.columns
@@ -52,6 +52,7 @@
     [:pre
      [:code "[:p [basic/img \"images/bulma-logo.png\" :width 400]]"]]
     [:div.box
+     [:h6.title.is-6 "Result"]
      [:p [b/img "images/bulma-logo.png" :width 400]]]]])
 
 (defn render-vec-component []
@@ -67,6 +68,7 @@
       "[:p \"This is a ClojureScript vector \" " [:br]
       "    [basic/render-vec [:a :b :c]]]"]]
     [:div.box
+     [:h6.title.is-6 "Result"]
      [:p "This is a ClojureScript vector " [b/render-vec [:a :b :c]]]]]])
 
 (defn render-set-component []
@@ -82,6 +84,7 @@
       "[:p \"This is a ClojureScript set \" " [:br]
       "    [basic/render-set #{1 2 3}]]"]]
     [:div.box
+     [:h6.title.is-6 "Result"]
      [:p "This is a ClojureScript set " [b/render-set #{1 2 3}]]]]])
 
 (defn render-map-component []
@@ -103,6 +106,7 @@
       "    [:p \"Below is a ClojureScript map\"]" [:br]
       "    [render-map m]])" [:br]]]
     [:div.box
+     [:h6.title.is-6 "Result"]
      (let [m {:key1 "a string"
               :key2 [:a :b :c]
               :key3 #{1, 2, 3}}]
@@ -148,6 +152,7 @@
       "    :value :page3" [:br]
       "    :active true}]]" [:br]]]
     [:div.box
+     [:h6.title.is-6 "Result"]
      [b/breadcrumbs :demo.breadcrumb.value
       [{:name "Page 1"
         :value :page1}
@@ -181,6 +186,7 @@
       "                      [:p \"Something evil this way comes\"]]" [:br]
       "  :delete true :class \"is-danger\"]"]]
     [:div.box
+     [:h6.title.is-6 "Result"]
      [b/notification [:<>
                       [:h2.title.is-2 "Look out!"]
                       [:p "Something evil this way comes"]]

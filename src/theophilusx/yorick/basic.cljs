@@ -4,16 +4,19 @@
             [theophilusx.yorick.store :as store]))
 
 (defn a
-  "Creates an anchor <a> component. The required argument is the text title to
-  be used in the anchor. Optional keyword arguments include
-  `href` - a hypertext reference. Defaults to `#` if not provided
-  `on-click` - a function with no arguments to be executed when the link is clicked
-  `class` - a string or vector of strings representing CSS class names
-  `id` - an ID attribute value
-  `role` - the role attribute value
-  `aria-label` - aria-label attribute value
-  `aria-expanded` - true if aria-expanded attribute is to be set
-  `data-target` - data-target attribute value"
+  "Creates an anchor <a> component.
+  The required argument is the text title to be used in the anchor.
+  Optional keyword arguments include
+  | Key | Description |
+  |-----|-------------|
+  | `href` | a hypertext reference. Defaults to `#` if not provided |
+  | `on-click` | a function with no arguments to be executed when the link is clicked |
+  | `class` | a string or vector of strings representing CSS class names |
+  | `id` | an ID attribute value |
+  | `role` | the role attribute value |
+  | `aria-label` | aria-label attribute value |
+  | `aria-expanded` | true if aria-expanded attribute is to be set |
+  | `data-target` | data-target attribute value |"
   [title & {:keys [href on-click class id role aria-label aria-expanded
                    data-target]
                   :or {href "#"}}]
@@ -28,11 +31,14 @@
    title])
 
 (defn img
-  "A basic component to generate an HTML <img> element. The expected argument
-  is a path or link to the image file. Additional optional keyword arguments are
-  `width` - a value for the width attribute
-  `class` - a string or vector of strings specifying CSS class names
-  `id` - an id attribute value"
+  "A basic component to generate an HTML <img> element.
+  The expected argument is a path or link to the image file.
+  Additional optional keyword arguments are
+  | Key | Description |
+  |-----|-------------|
+  | `width` | a value for the width attribute |
+  | `class` | a string or vector of strings specifying CSS class names |
+  | `id` | an id attribute value |"
   [src & {:keys [width class id]}]
   [:img {:src src
          :class class
@@ -43,7 +49,7 @@
 (declare render-set)
 
 (defn render-vec
-  "Vector display component. Will render vector as an un-ordered list"
+  "Render a ClojureScript `vector` as an un-ordered list"
   [v]
   (into
    [:ul]
@@ -55,13 +61,17 @@
        :else [:li (str i)]))))
 
 (defn render-set
-  "Render a ClojureScript set as a string with elements separated by commas
-  and surrounded in parenthesis"
+  "Render a ClojureScript `set` as a string.
+  Values are separated by commas (,) and surrounded by parenthesis."
   [s]
-  [:div.box
+  [:<>
    (str "(" (string/join ", " s) ")")])
 
-(defn render-map [m]
+(defn render-map
+  "Render a ClojureScript `map` as an HTML table.
+  Uses `render-vec` and `render-set` to render values which are ClojuresScript
+  `vectors` or `maps`."
+  [m]
   [:table.table
    (into
     [:tbody]
@@ -72,7 +82,7 @@
                           [:td (render-map (get m k))]]
         (set? (get m k)) [:tr
                           [:td [:strong (str k)]]
-                          [:td (str (get m k))]]
+                          [:td (render-set (get m k))]]
         (vector? (get m k)) [:tr
                              [:td [:strong (str k)]]
                              [:td (render-vec (get m k))]]
@@ -80,7 +90,30 @@
                   [:td [:strong (str k)]]
                   [:td (str (get m k))]])))])
 
-(defn breadcrumbs [id crumbs & {:keys [class position separator size]}]
+(defn breadcrumbs
+  "Renders a breadcrumb link line.
+  Creates a list of page links representing a breadcrumb trail. The `sid`
+  argument is a state path keyword where periods represent path separators e.g.
+  `:ui.breadcrumb.current` represents the path keys `[:ui :breadcrumb :current]`.
+  The `crumbs` argument is a vector of maps representing each link in the trail.
+  Each map consists of the following keys
+  | Key       | Description                                                   |
+  |-----------|---------------------------------------------------------------|
+  | `:name`   | Text to use in the link                                       |
+  | `:icon`   | An icon data map describing an icon to add to the link        |
+  |           | See `theophilusx.yorick.icon` for description of icon data map|
+  | `:active` | True if this link is active                                   |
+  | `:value`  | The value to set in the global state atom when the link is    |
+  |           | selected                                                      |
+  This component also accepts optional keyword arguments
+  | Key | Description |
+  | `:class`      | A string or vector of strings representing CSS class names |
+  | `:position`   | Position of the breadcrumbs, either `:center` or `:right`  |
+  | `:separator`  | Type of link separator to use. Possible values are         |
+  |              | `:arrow`, `:bullet`, `:dot`, `:succeeds`                    |
+  | `:size`      | Size of the breadcrumbs. Possible values are `:small`,      |
+  |              | `:medium`, `:large`                                         |"
+  [sid crumbs & {:keys [class position separator size]}]
   [:nav.breadcrumb {:class [class
                             (when position
                               (case position
@@ -109,7 +142,7 @@
         [:li {:class (when (:active c)
                        "is-active")}
          [:a {:href "#"
-              :on-click #(store/assoc-in! store/global-state (spath id)
+              :on-click #(store/assoc-in! store/global-state (spath sid)
                                           (:value c))}
           [:span.icon {:class (when (contains? (:icon c) :size)
                                 (case (:size (:icon c))
@@ -123,11 +156,19 @@
         [:li {:class (when (:active c)
                        "is-active")}
          [:a {:href "#"
-              :on-click #(store/assoc-in! store/global-state (spath id)
+              :on-click #(store/assoc-in! store/global-state (spath sid)
                                           (:value c))}
           (:name c)]])))])
 
-(defn notification [body & {:keys [class delete]}]
+(defn notification
+  "Simple notification component with optional close button.
+  This component displays whatever is passed in as the `body` argument as
+  a notification. Supports the following optional keyword arguments
+  | Key       | Description                                                 |
+  |-----------|-------------------------------------------------------------|
+  | `:class`  | A string or vector of strings specifying CSS class names    |
+  | `:delete` | Adds a delete (X) button to top left corner of notification |" 
+  [body & {:keys [class delete]}]
   [:div.notification {:class [class]}
    (when delete
      [:button.delete {:on-click (fn [e]

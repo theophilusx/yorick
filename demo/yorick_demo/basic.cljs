@@ -26,7 +26,10 @@
      :header [c/card-header "a - An HTML anchor component"]]]
    [:div.column
     [:div.content
-     [:p "[:p \"This is an example of an \" [basic/a \"anchor\" :on-click #(js/alert \"Hello\")]"]
+     [:pre
+      [:code
+            "[:p \"This is an example of an \" " [:br]
+            "    [basic/a \"anchor\" :on-click #(js/alert \"Hello\")]"]]
      [:div.box
       [:p "This is an example of an "
        [b/a "anchor" :on-click #(js/alert "Hello")]]]]]])
@@ -46,7 +49,8 @@
               [:li [:strong ":id"] " an id attribute value"]]]
      :header [c/card-header "img - An HTML image component"]]]
    [:div.column
-    [:p "[basic/img \"images/bulma-logo.png\" :width 400]"]
+    [:pre
+     [:code "[:p [basic/img \"images/bulma-logo.png\" :width 400]]"]]
     [:div.box
      [:p [b/img "images/bulma-logo.png" :width 400]]]]])
 
@@ -58,7 +62,10 @@
              "It takes only one argument, the vector to render."]
      :header [c/card-header "render-vec - Render a ClojureScript vector"]]]
    [:div.column
-    [:p "[:p \"This is a ClojureScript vector \" [basic/render-vec [:a :b :c]]]"]
+    [:pre
+     [:code
+      "[:p \"This is a ClojureScript vector \" " [:br]
+      "    [basic/render-vec [:a :b :c]]]"]]
     [:div.box
      [:p "This is a ClojureScript vector " [b/render-vec [:a :b :c]]]]]])
 
@@ -70,9 +77,114 @@
              "one argument, the set to render."]
      :header [c/card-header "render-set - Render a ClojureScript set"]]]
    [:div.column
-    [:p "[:p \"This is a ClojureScript set \" [basic/render-set #{1 2 3}]]"]
+    [:pre
+     [:code
+      "[:p \"This is a ClojureScript set \" " [:br]
+      "    [basic/render-set #{1 2 3}]]"]]
     [:div.box
      [:p "This is a ClojureScript set " [b/render-set #{1 2 3}]]]]])
+
+(defn render-map-component []
+  [:div.columns
+   [:div.column
+    [c/card [:p "The " [:strong "render-map"] " component can render a "
+             "ClojureScript map as an HTML table. Keys in the map will be "
+             "rendered as table headings and cells will be rendered as string or "
+             "with " [:strong "render-vec"] " and " [:strong "render-set"]
+             " when appropriate"]
+     :header [c/card-header "render-map - Render a ClojureScript map"]]]
+   [:div.column
+    [:pre
+     [:code
+      "(let [m {:key1 \"a string\"" [:br]
+      "         :key2 [:a :b :c]" [:br]
+      "         :key3 #{1 2 3}}]" [:br]
+      "  [:<>" [:br]
+      "    [:p \"Below is a ClojureScript map\"]" [:br]
+      "    [render-map m]])" [:br]]]
+    [:div.box
+     (let [m {:key1 "a string"
+              :key2 [:a :b :c]
+              :key3 #{1, 2, 3}}]
+       [:<>
+        [:p "Below is a ClojureScript map"]
+        [b/render-map m]])]]])
+
+(defn breadcrumb-component []
+  [:div.columns
+   [:div.column
+    [c/card [:<>
+             [:p "The " [:strong "breadcrumbs"] " component provides a trail "
+              "of breadcrumb links which can be used to show the path to the "
+              "current page and navigate to previous pages in the trail. "
+              "The component expects at least 2 arguments, a " [:em "sid"]
+              " keyword representing the path into the global state atom where "
+              "the current selected link state will be stored and " [:em "crubms"]
+              ", a vector of maps which define each link in the breadcrumb trail"]
+             [:p "The " [:em "sid"] " keyword argument uses a period as a path "
+              "separator e.g. :ui.page.current is translated to the vector "
+              "[:ui :page :current] and used as the keys for storing the value "
+              "associated with a breadcrumb link when it is clicked."]
+             [:p "The " [:em "crumbs"] " argument is a vector of maps where "
+              "each map defines a link in the breadcrumb trail. Available keys "
+              "for the map are"]
+             [:ul
+              [:li [:strong ":name"] " The text to use in the link name"]
+              [:li [:strong ":value"] " value to store when the link is clicked"]
+              [:li [:strong ":active"] " true when this link is the active link"]
+              [:li [:strong ":icon"] " An icon data structure representing an icon "
+               "to be added to the link. See " [:strong "theophilusx.yorick.icon"]
+               " for details"]]]
+     :header [c/card-header "breadcrumbs - A component to render a trail of breadcrumb links"]]]
+   [:div.column
+    [:pre
+     [:code
+      "[basic/breadcrumbs :demo.breadcrumb.value" [:br]
+      "  [{:name \"Page 1\"" [:br]
+      "    :value :page1}" [:br]
+      "   {:name \"Page 2\"" [:br]
+      "    :value :page2}" [:br]
+      "   {:name \"Page 3\"" [:br]
+      "    :value :page3" [:br]
+      "    :active true}]]" [:br]]]
+    [:div.box
+     [b/breadcrumbs :demo.breadcrumb.value
+      [{:name "Page 1"
+        :value :page1}
+       {:name "Page 2"
+        :value :pgae2}
+       {:name "Page 3"
+        :value :page3
+        :active true}]]]]])
+
+(defn notification-component []
+  [:div.columns
+   [:div.column
+    [c/card [:<>
+             [:p "The " [:strong "notification"] " component provides a basic "
+              "component for rendering a notification for the user. The "
+              "component expects at least one argument, the " [:em "body"]
+              " argument, which can be pretty much anything (another component, "
+              "hiccup markup, strings etc)"]
+             [:p "The component also supports optional keyword arguments"]
+             [:ul
+              [:li [:strong ":class"] " A string or vector of strings "
+               "representing CSS class names"]
+              [:li [:strong ":delete"] " If set to true, adds a close button "
+               "to the top left corner of the notification"]]]
+     :header [c/card-header "notification - A basic notification component"]]]
+   [:div.column
+    [:pre
+     [:code
+      "[basic/notification [:<>" [:br]
+      "                      [:h2.title.is-2 \"Look out!\"]" [:br]
+      "                      [:p \"Something evil this way comes\"]]" [:br]
+      "  :delete true :class \"is-danger\"]"]]
+    [:div.box
+     [b/notification [:<>
+                      [:h2.title.is-2 "Look out!"]
+                      [:p "Something evil this way comes"]]
+      :delete true :class "is-danger"]]]])
 
 (defn basic-page []
   [:<>
@@ -97,5 +209,8 @@
      [:h4.title.is-4 "Example"]]]
    [a-component]
    [img-component]
+   [breadcrumb-component]
+   [notification-component]
    [render-vec-component]
-   [render-set-component]])
+   [render-set-component]
+   [render-map-component]])

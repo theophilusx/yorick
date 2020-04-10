@@ -23,7 +23,7 @@
               [:li [:strong ":aria-label"] " an aria-label attribute value"]
               [:li [:strong ":aria-expanded"] " true if aria-expanded attribute "
                "is to be added"]]]
-     :header [c/card-header "a - An HTML anchor component"]]]
+     :header {:title "a - An HTML anchor component"}]]
    [:div.column
     [:pre
      [:code
@@ -47,7 +47,7 @@
               [:li [:strong ":class"] " a string or vector of strings representing "
                "CSS class names"]
               [:li [:strong ":id"] " an id attribute value"]]]
-     :header [c/card-header "img - An HTML image component"]]]
+     :header {:title "img - An HTML image component"}]]
    [:div.column
     [:pre
      [:code "[:p [basic/img \"images/bulma-logo.png\" :width 400]]"]]
@@ -61,7 +61,7 @@
     [c/card [:p "The " [:strong "render-vec"] " component is a basic component "
              "which will render a ClojureScript vector as an unordered list. "
              "It takes only one argument, the vector to render."]
-     :header [c/card-header "render-vec - Render a ClojureScript vector"]]]
+     :header {:title "render-vec - Render a ClojureScript vector"}]]
    [:div.column
     [:pre
      [:code
@@ -77,7 +77,7 @@
     [c/card [:p "The " [:strong "render-set"] " component renders a ClojureScript "
              "set as a comma delimited list surrounded in parenthesis. It accepts "
              "one argument, the set to render."]
-     :header [c/card-header "render-set - Render a ClojureScript set"]]]
+     :header {:title "render-set - Render a ClojureScript set"}]]
    [:div.column
     [:pre
      [:code
@@ -95,7 +95,7 @@
              "rendered as table headings and cells will be rendered as string or "
              "with " [:strong "render-vec"] " and " [:strong "render-set"]
              " when appropriate"]
-     :header [c/card-header "render-map - Render a ClojureScript map"]]]
+     :header {:title "render-map - Render a ClojureScript map"}]]
    [:div.column
     [:pre
      [:code
@@ -139,7 +139,7 @@
               [:li [:strong ":icon"] " An icon data structure representing an icon "
                "to be added to the link. See " [:strong "theophilusx.yorick.icon"]
                " for details"]]]
-     :header [c/card-header "breadcrumbs - A component to render a trail of breadcrumb links"]]]
+     :header {:title "breadcrumbs - A component to render a trail of breadcrumb links"}]]
    [:div.column
     [:pre
      [:code
@@ -177,7 +177,7 @@
                "representing CSS class names"]
               [:li [:strong ":delete"] " If set to true, adds a close button "
                "to the top left corner of the notification"]]]
-     :header [c/card-header "notification - A basic notification component"]]]
+     :header {:title "notification - A basic notification component"}]]
    [:div.column
     [:pre
      [:code

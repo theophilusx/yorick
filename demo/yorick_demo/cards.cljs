@@ -1,9 +1,10 @@
 (ns yorick-demo.cards
-  (:require [theophilusx.yorick.card :as c]))
+  (:require [theophilusx.yorick.card :as c]
+            [theophilusx.yorick.basic :as b]))
 
 (defn simple-card []
   [:div.columns
-   [:div.column
+   [:div.column.is-half
     [:p
      "The " [:strong "card"] " component is a flexible general purpose "
      "presentation component. It can handle almost any type of content and "
@@ -14,7 +15,64 @@
       "[card/card \"This is a very simple card\"]"]]
     [:div.box
      [:h6.title.is-6 "Result"]
-     [c/card "This is a very simple card"]]]])
+     [c/card "This is a very simple card"]]
+    [:pre
+     [:code
+      "[card/card [:p \"This is a card created from \"] [:strong \"hiccup\"] \" markup\"]"]]
+    [:div.box
+     [:h6.title.is-6 "result"]
+     [c/card [:p "This is a card created from " [:strong "hiccup"] " markup"]]]
+    [:pre
+     [:code
+      "[card/card [:<>" [:br]
+      "            [basic/notificaiton [:<>" [:br]
+      "                                  [:h2 \"A Note\"]" [:br]
+      "                                  [:p \"Some random text\"]]]" [:br]
+      "            [basic/breadcrums :demo.breadcrums.value" [:br]
+      "              [{:name \"Page 1\"" [:br]
+      "                :value :page1}" [:br]
+      "               {:name \"Page 2\"" [:br]
+      "                :value :page2}" [:br]
+      "               {:name \"Page 3\"" [:br]
+      "                :value :page3" [:br]
+      "                :active true}]]]]"]]
+    [:div.box
+     [:h6.title.is-6 "Result"]
+     [c/card [:<>
+              [b/notification [:<>
+                                   [:h2 "A Note"]
+                                   [:p "Some random text"]]]
+              [b/breadcrumbs :demo.breadcrumbs.value
+               [{:name "Page 1"
+                 :value :page1}
+                {:name "Page 2"
+                 :value :page2}
+                {:name "Page 3"
+                 :value :page3
+                 :active true}]]]]]]])
+
+(defn card-with-header []
+  [:div.columns
+   [:div.column.is-half
+    [:p
+     "A " [:strong "card"] " can have a header, which is displayed to stand "
+     "out from the card body."]
+    [:p
+     "A " [:strong "card"] " " [:em "header"] " can also have an associated "
+     "icon. The icon can have an action function associated with it. "
+     "Clicking on the icon will cause the action function to be called. "
+     "The action function could be used to add or remove classes from the card, "
+     "card header, card content or card footer or execute ClojureScript code "
+     "that could perform almost any action required."]]
+   [:div.column
+    [:pre
+     [:code
+      "[card/card [:p \"This is the card body\"]" [:br]
+      "  :header {:title \"Card Header\"}]"]]
+    [:div.box
+     [:h6.title.is-6 "Result"]
+     [c/card [:p "This is the card body"]
+      :header {:title "Card Header"}]]]])
 
 (defn card-page []
   [:<>
@@ -46,8 +104,9 @@
          "CSS class names to add to the header"]]]
    [:hr]
    [:div.columns
-    [:div.column]
+    [:div.column.is-half]
     [:div.column
      [:h4.title.is-4 "Examples"]]]
-   [simple-card]])
+   [simple-card]
+   [card-with-header]])
 

@@ -1,14 +1,17 @@
 (ns yorick-demo.cards
   (:require [theophilusx.yorick.card :as c]
-            [theophilusx.yorick.basic :as b]))
+            [theophilusx.yorick.basic :as b]
+            [theophilusx.yorick.icon :as icon]))
 
 (defn simple-card []
   [:div.columns
    [:div.column.is-half
-    [:p
-     "The " [:strong "card"] " component is a flexible general purpose "
-     "presentation component. It can handle almost any type of content and "
-     "can be very simple."]]
+    [c/card
+     [:<> 
+      [:p
+       "The " [:strong "card"] " component is a flexible general purpose "
+       "presentation component. It can handle almost any type of content and "
+       "can be very simple."]]]]
    [:div.column
     [:pre
      [:code
@@ -54,16 +57,18 @@
 (defn card-with-header []
   [:div.columns
    [:div.column.is-half
-    [:p
-     "A " [:strong "card"] " can have a header, which is displayed to stand "
-     "out from the card body."]
-    [:p
-     "A " [:strong "card"] " " [:em "header"] " can also have an associated "
-     "icon. The icon can have an action function associated with it. "
-     "Clicking on the icon will cause the action function to be called. "
-     "The action function could be used to add or remove classes from the card, "
-     "card header, card content or card footer or execute ClojureScript code "
-     "that could perform almost any action required."]]
+    [c/card 
+     [:<> 
+      [:p
+       "A " [:strong "card"] " can have a header, which is displayed to stand "
+       "out from the card body."]
+      [:p
+       "A " [:strong "card"] " " [:em "header"] " can also have an associated "
+       "icon. The icon can have an action function associated with it. "
+       "Clicking on the icon will cause the action function to be called. "
+       "The action function could be used to add or remove classes from the card, "
+       "card header, card content or card footer or execute ClojureScript code "
+       "that could perform almost any action required."]]]]
    [:div.column
     [:pre
      [:code
@@ -72,7 +77,89 @@
     [:div.box
      [:h6.title.is-6 "Result"]
      [c/card [:p "This is the card body"]
-      :header {:title "Card Header"}]]]])
+      :header {:title "Card Header"}]]
+    [:pre
+     [:code
+      "[card/card [:p \"This is the card body\"]" [:br]
+      "  :header {:title \"Card Header w/ Icon\"" [:br]
+      "           :icon (icon/deficon \"info\")" [:br]
+      "           :icon-action #(js/alert \"Hello\")}]"]]
+    [:div.box
+     [:h6.title.is-6 "Result"]
+     [c/card [:p "This is the card body"]
+      :header {:title "Card Header"
+               :icon (icon/deficon "info")
+               :icon-action #(js/alert "Hello")}]]]])
+
+(defn card-with-footer []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
+     [:p
+      "A " [:strong "card"] " can also have a footer. The footer data is "
+      "added via the " [:em ":footer"] " keyword argument. The argument "
+      "value is a map which contains keys for " [:em "items"] " and "
+      [:em ":classes"] ". The :items key contains a vector of items to add to "
+      "the footer. Items can be strings, hiccup markup or components. The "
+      ":classes argument is a map which can contains the keys " [:em ":footer"]
+      " and " [:em ":footer-item"] ". The :footer key value is either a string "
+      " or a vector of strings representing CSS class names to be added to the "
+      "footer element. The :footer-item key is a string or vector of strings "
+      "representing CSS class names to be added to " [:em "each"] " item in "
+      "the footer."]]]
+   [:div.column
+    [:pre
+     [:code
+      "[card/card [:p \"This is the card body\"]" [:br]
+      "  :header {:title \"Card Header\"}" [:br]
+      "  :footer {:items [\"Footer item 1\"" [:br]
+      "                   [:p \"Footer item 2\"]}]"]]
+    [:div.box
+     [:h6.title.is-6 "Result"]
+     [c/card [:p "The is the card body"]
+      :header {:title "Card Header"}
+      :footer {:items ["Footer Item 1"
+                       "Footer Item 2"
+                       "Footer Item 3"]}]]]])
+
+(defn card-with-class []
+  [:div.columns
+   [:div.column
+    [c/card
+     [:<>
+      [:p "A " [:strong "card"] " can also be styled by providing CSS class "
+       "names. To style the card or card content, use the " [:em ":classes"]
+       " keyword argument. The value is a map with two possible keys "
+       [:em ":card"] " and " [:em ":card-content"] ". Classes specified in the "
+       [:em ":card"] " key of the map will be applied to the outer card element. "
+       "Classes specified in the " [:em ":class-content"] " will be applied to "
+       "the contents of the card. "
+       "To add CSS classes to the header, use the " [:em ":class"]
+       " key in the " [:em ":header"] " keyword map. To add CSS classes to the "
+       "footer, use the " [:em ":classes"] " key in the " [:em ":footer"] " keyword "
+       "map. The value of the " [:em ":classes"] " key in the " [:em ":footer"]
+       " map is a map with keys for " [:em ":footer"] " and " [:em "footer-item"]]
+      [:p "The value for each of the class related keywords are either a string "
+       "specifying a CSS class or a space separated list of CSS classes or a "
+       "vector of strings where each element resolves to a string representing "
+       "a CSS class name or a space separated list of CSS class names."]]]]
+   [:div.column
+    [:pre
+     [:code
+      "[card/card [:p \"This is the body of the card\"]" [:br]
+      "  :header {:title \"Card Header\"" [:br]
+      "           :class \"has-background-primary\"}" [:br]
+      "  :footer {:items [\"Footer item\"]" [:br]
+      "           :classes {:footer \"has-background-info}}" [:br]
+      "  :classses {:card-content }\"has-text-danger\"}]"]]
+    [:div.box
+     [:h6.title.is-6
+      [c/card [:p "This is the body of the card"]
+       :header {:title "Card Header"
+                :class "has-background-primary"}
+       :footer {:items ["Footer item"]
+                :classes {:footer "has-background-info"}}
+       :classes {:card-content "has-text-danger"}]]]]])
 
 (defn card-page []
   [:<>
@@ -94,19 +181,21 @@
     "The optional " [:em ":header"] " argument expects a map value. Supported "
     "keys for the map are " [:em ":title, :icon, :icon-action"] " and "
     [:em ":class"] "."]
-   [:p [:ul
-        [:li [:strong ":title"] " Text of the header title"]
-        [:li [:strong ":icon"] " An icon definition map. See "
-         [:strong "theophilusx.yorick.icon"] " for details on the map format"]
-        [:li [:strong ":icon-action"] " An optional function to execute if the "
-         "user clicks on the icon"]
-        [:li [:strong ":class"] " A string or vector of strings representing "
-         "CSS class names to add to the header"]]]
+   [:ul
+    [:li [:strong ":title"] " Text of the header title"]
+    [:li [:strong ":icon"] " An icon definition map. See "
+     [:strong "theophilusx.yorick.icon"] " for details on the map format"]
+    [:li [:strong ":icon-action"] " An optional function to execute if the "
+     "user clicks on the icon"]
+    [:li [:strong ":class"] " A string or vector of strings representing "
+     "CSS class names to add to the header"]]
    [:hr]
    [:div.columns
     [:div.column.is-half]
     [:div.column
      [:h4.title.is-4 "Examples"]]]
    [simple-card]
-   [card-with-header]])
+   [card-with-header]
+   [card-with-footer]
+   [card-with-class]])
 

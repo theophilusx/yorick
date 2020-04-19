@@ -18,7 +18,7 @@
    (when icon
      [basic/a [icons/icon-component icon]
       :class "card-header-icon"
-      :href "#"
+      ;;:href "#"
       :on-click (when (fn? icon-action)
                   #(icon-action %))])])
 

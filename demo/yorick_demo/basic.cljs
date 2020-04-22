@@ -65,11 +65,12 @@
    [:div.column
     [:pre
      [:code
-      "[:p \"This is a ClojureScript vector \" " [:br]
-      "    [basic/render-vec [:a :b :c]]]"]]
+      "[:p \"This is a ClojureScript vector \"]" [:br]
+      "[basic/render-vec [:a :b :c]]"]]
     [:div.box
      [:h6.title.is-6 "Result"]
-     [:p "This is a ClojureScript vector " [b/render-vec [:a :b :c]]]]]])
+     [:p "This is a ClojureScript vector " ]
+     [b/render-vec [:a :b :c]]]]])
 
 (defn render-set-component []
   [:div.columns
@@ -81,11 +82,12 @@
    [:div.column
     [:pre
      [:code
-      "[:p \"This is a ClojureScript set \" " [:br]
-      "    [basic/render-set #{1 2 3}]]"]]
+      "[:p \"This is a ClojureScript set \"]" [:br]
+      "[basic/render-set #{1 2 3}]"]]
     [:div.box
      [:h6.title.is-6 "Result"]
-     [:p "This is a ClojureScript set " [b/render-set #{1 2 3}]]]]])
+     [:p "This is a ClojureScript set " ]
+     [b/render-set #{1 2 3}]]]])
 
 (defn render-map-component []
   [:div.columns

@@ -82,13 +82,13 @@
      [:code
       "[card/card [:p \"This is the card body\"]" [:br]
       "  :header {:title \"Card Header w/ Icon\"" [:br]
-      "           :icon (icon/deficon \"info\")" [:br]
+      "           :icon (icon/deficon \"fa-info\")" [:br]
       "           :icon-action #(js/alert \"Hello\")}]"]]
     [:div.box
      [:h6.title.is-6 "Result"]
      [c/card [:p "This is the card body"]
       :header {:title "Card Header"
-               :icon (icon/deficon "info")
+               :icon (icon/deficon "fa-info")
                :icon-action #(js/alert "Hello")}]]]])
 
 (defn card-with-footer []

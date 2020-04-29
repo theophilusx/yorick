@@ -5,7 +5,8 @@
             [theophilusx.yorick.utils :as utils]
             [theophilusx.yorick.store :as store]
             [yorick-demo.basic :refer [basic-page]]
-            [yorick-demo.cards :refer [card-page]]))
+            [yorick-demo.cards :refer [card-page]]
+            [yorick-demo.icons :refer [icon-page]]))
 
 (println "Reloading code")
 
@@ -65,6 +66,7 @@
   (case (store/get-in store/global-state (utils/spath :ui.menu))
     :basic [basic-page]
     :cards [card-page]
+    :icons [icon-page]
     [placeholder-page]))
 
 (defn greeting []

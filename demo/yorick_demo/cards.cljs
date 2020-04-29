@@ -181,7 +181,7 @@
     "The optional " [:em ":header"] " argument expects a map value. Supported "
     "keys for the map are " [:em ":title, :icon, :icon-action"] " and "
     [:em ":class"] "."]
-   [:ul
+   [:ul.list
     [:li [:strong ":title"] " Text of the header title"]
     [:li [:strong ":icon"] " An icon definition map. See "
      [:strong "theophilusx.yorick.icon"] " for details on the map format"]

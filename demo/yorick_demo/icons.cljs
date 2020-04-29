@@ -17,7 +17,16 @@
       "[icon/icon-component {:name \"fa-house\"}]"]]
     [:div.box
      [:h6.title.is-6 "Result"]
-     [i/icon-component {:name "fa-warehouse"}]]
+     [i/icon-component {:name "fa-warehouse"}]]]])
+
+(defn icon-sizes []
+  [:div.columns
+   [:div.column
+    [c/card [:p
+             "The " [:strong "icon-componenet"] " component supports 5 icon "
+             "sizes " [:em ":small, :medium, :large, :huge"] " and a default "
+             "normal size used when no size is specified"]]]
+   [:div.column
     [:pre
      [:code
       "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
@@ -27,13 +36,13 @@
       "  \" Normal]" [:br]
       "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
       "                          :size :medium}]" [:br]
-      "  \"Medium\"]" [:br]
+      "  \" Medium\"]" [:br]
       "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
       "                          :size :large}]" [:br]
-      "  \"Large\"]" [:br]
+      "  \" Large\"]" [:br]
       "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
       "                          :size :huge}]" [:br]
-      "  \"Huge\"]"]]
+      "  \" Huge\"]"]]
     [:dir.box
      [:h6.title.is-6 "Result"]
      [:p [i/icon-component {:name "fa-warehouse"
@@ -50,6 +59,48 @@
      [:p [i/icon-component {:name "fa-warehouse"
                             :size :huge}]
       " Huge"]]]])
+
+(defn icon-colour []
+  [:div.columns
+   [:div.column
+    [c/card [:p
+             "The " [:strong ":span-class"] " keyword argument of the "
+             [:strong "icon-component"] " function can be used to set the "
+             "colour of an icon. The " [:em "Bulma"] " text colour classes "
+             "can be used to set the icon colour"]]]
+   [:div.column
+    [:pre
+     [:code
+      "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
+      "                          :span-class \"has-text-info\"}]" [:br]
+      "  \" Info Colour\"]" [:br]
+      "[:p [icon/icon-component {:name \"fa-warehouse\"}]" [:br]
+      "  \" Normal Colour]" [:br]
+      "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
+      "                          :span-class \"has-text-success\"}]" [:br]
+      "  \" Success Colour\"]" [:br]
+      "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
+      "                          :span-class \"has-text-warning\"}]" [:br]
+      "  \" Warning Colour\"]" [:br]
+      "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
+      "                          :span-class \"has-text-danger\"}]" [:br]
+      "  \" Danger Colour\"]"]]
+    [:dir.box
+     [:h6.title.is-6 "Result"]
+     [:p [i/icon-component {:name "fa-warehouse"
+                            :span-class "has-text-info"}]
+      " Info Colour"]
+     [:p [i/icon-component {:name "fa-warehouse"}]
+      " Normal Colour"]
+     [:p [i/icon-component {:name "fa-warehouse"
+                            :span-class "has-text-success"}]
+      " Success Colour"]
+     [:p [i/icon-component {:name "fa-warehouse"
+                            :span-class "has-text-warning"}]
+      " Warning Colour"]
+     [:p [i/icon-component {:name "fa-warehouse"
+                            :span-class "has-text-danger"}]
+      " Danger Colour"]]]])
 
 (defn icon-page []
   [:<>
@@ -97,5 +148,7 @@
     [:div.column]
     [:div.column
      [:h4.title.is-4 "Example"]]]
-   [icon-example]])
+   [icon-example]
+   [icon-sizes]
+   [icon-colour]])
 

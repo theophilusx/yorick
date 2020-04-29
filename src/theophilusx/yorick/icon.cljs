@@ -3,12 +3,16 @@
 
 (defn deficon
   "Create an icon data map which defines the data used to generate an icon
-  component. Arguments are
-  `name` - name of the font awesome icon
-  `position` - position of the icon (:left or :right)
-  `size` - size as keyword. Supported are `:small`, `:medium` and `:large`
-  `icon-class` - additional classes to add tot he `i` element
-  `span-class` - additional classes to add to the enclosing `span` element."
+  component. The `name` argument is the name of a font awesome icon. Supported
+  optional keyword arguments are
+  | Key           | Description                                             |
+  |---------------|---------------------------------------------------------|
+  | `:position`   | Position of the icon. Can be either `:left` or `:right` |
+  | `:size`       | Size of the icon. Can be one of `:small`, `:medium` or  |
+  |               | `:large`                                                |
+  | `:icon-class` | Additional CSS classes to add to the `<i>` element      |
+  | `:span-class` | Additional CSS classes to add to the enclosing `<span>` |
+  |               | element                                                 | "
   [name & {:keys [position span-class icon-class size]}]
   {:name name
    :position position
@@ -18,22 +22,32 @@
 
 (defn icon-component
   "Generate an icon component from `icon-data` map. The `icon-data` map is a
-  `map` created by calling `deficon`. "
+  `map` with keys for `:name`, `:position`, `:size`, `:icon-class` and
+  `:span-class`. Only `:name` is required. See the function `deficon` for a
+  convenience function to generate the map. "
   [icon-data]
   [:span.icon {:class [(:span-class icon-data)
                        (case (:position icon-data)
                          :left "is-left"
                          :right "is-right"
+                         nil)
+                       (case (:size icon-data)
+                         :small "is-small"
+                         :medium "is-medium"
+                         :large "is-large"
+                         :huge "is-large"
                          nil)]}
-   [:i.fa {:class [(:name icon-data)
-                   (:icon-class icon-data)
-                   (case (:size icon-data)
-                     :small "is-small"
-                     :medium "is-medium"
-                     :large "is-large"
-                     nil)]}]])
+   " "
+   [:i.fas {:class [(:name icon-data)
+                    (:icon-class icon-data)
+                    (case (:size icon-data)
+                      :medium "fa-lg"
+                      :large "fa-2x"
+                      :huge "fa-3x"
+                      nil)]}]
+   " "])
 
-(defn icon
+(defn icons
   "Generates a `vector` of `icon` components from icon data. The `icon-data`
   can be either a `map` or a `vector` of icon data `maps`"
   [icon-data]
@@ -42,7 +56,13 @@
     (vec (for [i icon-data]
            [icon-component i]))))
 
-(defn icon-control-class [icon-data]
+(defn icon-control-class
+  "This function is used to extract the icon position classes from a vector
+  of icon data maps. When adding icons to some elements, it is necessary to
+  add the icon position classes to the parent element that wraps around the
+  icons. This function provides that convenience. The `icon-data` can be either
+  an icon data `map` or a `vector` of icon data `maps`. "
+  [icon-data]
   (if (map? icon-data)
     (case (:position icon-data)
       :left "has-icons-left"

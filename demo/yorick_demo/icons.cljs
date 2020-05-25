@@ -104,7 +104,7 @@
 
 (defn icon-page []
   [:<>
-   [:h2.title.is-2 "Icon Component"]
+   [:h2.title.is-2 "The Icon Component"]
    [:p
     "The " [:strong "theophilusx.yorick.icon"] " namespace provides an icon "
     "component and associated helper functions that can be used to add "

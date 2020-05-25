@@ -4,10 +4,15 @@
             [theophilusx.yorick.store :as store]
             [reagent.core :as r]))
 
-(defn field [body & {:keys [label classes]}]
+(defn field
+  "Generate a field container to hold input labels or fields.
+  The `body` argument is typically a user input component or a `<div>` element
+  with the `control` class. "
+
+  [body & {:keys [label classes]}]
   [:div.field {:class [(:field classes)]}
    (when label
-     [:label.label {:class [(:label classes)]}])
+     [:label.label {:class [(:label classes)]} label])
    body])
 
 (defn horizontal-field [label body & {:keys [classes]}]
@@ -52,7 +57,7 @@
                                 (icons/icon-control-class icon-data)]}
           (apply input-helper type sid doc chg-fn :class (:input classes)
                  (into [] cat args))]
-         (for [i (icons/icon icon-data)]
+         (for [i (icons/icon-component icon-data)]
            i))
         [:div.control {:class (:control classes)}
          (apply input-helper type sid doc chg-fn :class (:input classes)

@@ -6,7 +6,8 @@
             [theophilusx.yorick.store :as store]
             [yorick-demo.basic :refer [basic-page]]
             [yorick-demo.cards :refer [card-page]]
-            [yorick-demo.icons :refer [icon-page]]))
+            [yorick-demo.icons :refer [icon-page]]
+            [yorick-demo.inputs :refer [input-page]]))
 
 (println "Reloading code")
 
@@ -67,6 +68,7 @@
     :basic [basic-page]
     :cards [card-page]
     :icons [icon-page]
+    :input [input-page]
     [placeholder-page]))
 
 (defn greeting []

@@ -15,7 +15,16 @@
      [:label.label {:class [(:label classes)]} label])
    body])
 
-(defn horizontal-field [label body & {:keys [classes]}]
+(defn horizontal-field
+  "Generate a horizontal field with `label` as the field label and `body` as
+  the contents of the field. An optional keyword argument of `:classes` is
+  supported. The value is a map which can contain keys for `:label`, `:field`
+  and `:body`. The value for the keys is either a CSS class name or a vector
+  of CSS class names. CSS class names are strings. The `:label` key lists
+  classes to be associated with the field label, the `:field` key for classes
+  associated with the outer field container and the `:body` for classes
+  associated with the field body element."
+  [label body & {:keys [classes]}]
   [:div.field.is-horizontal {:class (:field classes)}
    [:div.field-label
     [:label.label {:class (:label classes)}

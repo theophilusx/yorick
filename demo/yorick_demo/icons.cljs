@@ -145,7 +145,8 @@
     "function accepts either an icon data map or a vector of icon data maps"]
    [:hr]
    [:div.columns
-    [:div.column]
+    [:div.column.is-half
+     [:h4.title.is-4 "Description"]]
     [:div.column
      [:h4.title.is-4 "Example"]]]
    [icon-example]

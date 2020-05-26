@@ -191,7 +191,8 @@
      "CSS class names to add to the header"]]
    [:hr]
    [:div.columns
-    [:div.column.is-half]
+    [:div.column.is-half
+     [:h4.title.is-4 "Description"]]
     [:div.column
      [:h4.title.is-4 "Examples"]]]
    [simple-card]

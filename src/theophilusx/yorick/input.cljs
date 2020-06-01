@@ -33,15 +33,45 @@
     body]])
 
 (defn input-helper
-  [type id doc chg-fn & {:keys [class placeholder required disabled
-                                min max maxlength minlength readonly size]}]
+  "This function is a helper for text input field components. It is not meant
+  to be called directly, but rather used by other components. The function has
+  the following mandatory arguments:
+
+  | Argument  | Description                                                     |
+  |-----------|-----------------------------------------------------------------|
+  | `type`    | The input field type. One of the HTML input types               |
+  | `sid`     | A storage id keyword value used as an `spath` when storing      |
+  |           | input into the doc atom                                         |
+  | `doc`     | A reagent `atom` object used to store user input                |
+  | `chg-fun` | A function of 1 argument which is called whenever input data    |
+  |           | changes. The argument is the new value of the input data.       |
+  |-----------|-----------------------------------------------------------------|
+
+  The function also accepts a number of optional keyword arguments:
+
+  | Keyword        | Description                                   |
+  |----------------|-----------------------------------------------|
+  | `:class`       | CSS class names or vector of CSS class names  |
+  |                | to add to the input element                   |
+  | `:placeholder` | Text to use in the HTML placeholder attribute |
+  | `:required`    | True if the input field is a required field   |
+  | `:disabled`    | True if the field should be disabled          |
+  | `:min`         | Number for the HTML min attribute             |
+  | `:max`         | Number for the HTML max attribute             |
+  | `:maxlength`   | Number for the HTML maxlength attribute       |
+  | `:minlength`   | Number for the HTML minLength attribute       |
+  | `:readonly`    | True if the input element is to be read only  |
+  | `:size`        | Number for the HTML size attribute            |
+  |----------------|-----------------------------------------------|"
+  [type sid doc chg-fn & {:keys [class placeholder required disabled
+                                 min max maxlength minlength readonly size]}]
   [:input.input {:type (name type)
                  :class class
-                 :id (name id)
-                 :name (name id)
+                 :id (name sid)
+                 :name (name sid)
                  :placeholder placeholder
                  :required required
-                 :value (str (store/get-in doc (spath id)))
+                 :value (str (store/get-in doc (spath sid)))
                  :on-change chg-fn
                  :disabled disabled
                  :min (when min (str min))
@@ -51,7 +81,41 @@
                  :readOnly readonly
                  :size (when size (str size))}])
 
-(defn input [_ sid & {:keys [model change-fn]}]
+(defn input
+  "A basic text input component. This component is often used as the body for
+  a field or horizontal-field component. Mandatory arguments are:
+
+  | Argument | Description                                                   |
+  |----------|---------------------------------------------------------------|
+  | `type`   | Input type. An HTML input type name as a keyword e.g. `:text` |
+  | `sid`    | A storage path keyword e.g. `:data.value`.                    |
+  |----------|---------------------------------------------------------------|
+
+  This component also supports a number of optional keyword arguments:
+
+  | Keyword        | Description                                                |
+  |----------------|------------------------------------------------------------|
+  | `:model`       | A reagent atom to be used for storing user input           |
+  | `:change-fn`   | A function of 1 argument called when user enters data in   |
+  |                | the field.                                                 |
+  | `:classes`     | A map of CSS classes to add to elements in the component.  |
+  |                | The value for each key is either a string CSS class name   |
+  |                | or a vector of CSS class name strings. Supported keys are  |
+  |                | `:control` and `:input`                                    |
+  | `:icon-data`   | Either an icon data map or vector of icon data maps. See   |
+  |                |`theophilusx.yorick.icon` for details on icon data map.     |
+  |                | Add sability to add icons to an input component            |
+  | `:placeholder` | Text to use in the HTML placeholder attribute              |
+  | `:required`    | True if the input field is a required field                |
+  | `:disabled`    | True if the field should be disabled                       |
+  | `:min`         | Number for the HTML min attribute                          |
+  | `:max`         | Number for the HTML max attribute                          |
+  | `:maxlength`   | Number for the HTML maxlength attribute                    |
+  | `:minlength`   | Number for the HTML minLength attribute                    |
+  | `:readonly`    | True if the input element is to be read only               |
+  | `:size`        | Number for the HTML size attribute                         |
+  |----------------|------------------------------------------------------------|"
+  [_ sid & {:keys [model change-fn]}]
   (let [doc (or model
                 (r/atom {}))
         chg-fn (if (fn? change-fn)
@@ -66,7 +130,7 @@
                                 (icons/icon-control-class icon-data)]}
           (apply input-helper type sid doc chg-fn :class (:input classes)
                  (into [] cat args))]
-         (for [i (icons/icon-component icon-data)]
+         (for [i (icons/icons icon-data)]
            i))
         [:div.control {:class (:control classes)}
          (apply input-helper type sid doc chg-fn :class (:input classes)

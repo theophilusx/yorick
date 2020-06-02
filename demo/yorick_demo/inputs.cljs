@@ -149,6 +149,69 @@
                     [:p (str "Value entered: " (:value @doc))]])]
        [eg-fn])]]])
 
+(defn input-field-component []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
+     [:<>
+      [:p
+       "The " [:strong "inut-field"] " component is a convenience component "
+       "which combines the " [:strong "field"] " and " [:strong "input"]
+       " components. The " [:code "label"] " argument specifies a string to "
+       "use as the label for the field. The " [:code "type"] " argument is a "
+       "keyword representing the input type and corresponds to the HTML input "
+       "element types e.g. :text, :email, :password etc. The " [:code "sid"]
+       " argument is a storage identifier keyword which specifies the location "
+       "to store data within the document model atom e.g. :my-form.field-value "
+       "This component also supports a number of optional keyword arguments"]
+      [:ul
+       [:li [:strong ":classes"] " - a map of strings or vector of strings "
+        "that represent CSS class names. Supported keys are "
+        [:code ":field, :label and :input"]]
+       [:li [:strong ":placeholder"] " - string used as the HTML placeholder "
+        "attribute"]
+       [:li [:strong ":required"] " - boolean representing the HTML required "
+        "attribute"]
+       [:li [:strong ":icon-data"] " - an icon-data map or vector of icon-data "
+        "maps. See " [:code "theophilusx.yorick.icon"] " for details"]
+       [:li [:strong ":model"] " - a reagent atom to be used as the document "
+        "model"]
+       [:li [:strong ":change-fn"] " - a function of one argument which is "
+        "called when the input data changes to update the data stored in the "
+        "document model atom at the location specified by the " [:code "sid"]]
+       [:li [:strong ":disabled"] " - boolean used to set the HTML disabled "
+        "attribute"]
+       [:li [:strong ":min"] " - number used to set the HTML min attribute"]
+       [:li [:strong ":max"] " - number used to set the HTML max attribute"]
+       [:li [:strong ":minlength"] " - number used to set the HTML minLength "
+        "attribute"]
+       [:li [:strong ":maxlength"] " - number used to set the HTML maxLength "
+        "attribute"]
+       [:li [:strong ":readonly"] " - boolean used to set the HTML readonly "
+        "attribute"]
+       [:li [:strong ":size"] " - number used to set the HTML size attribute"]]]
+     :header {:title "input-field - an input field convenience component"}]]
+   [:div.column
+    [:pre
+     [:code
+      "[:p \"Example input-field component\"]" [:br]
+      "(let [doc (r/atom {})" [:br]
+      "      frm (fn []" [:br]
+      "            [:<>" [:br]
+      "              [input-field \"First Name\" :text :name.first :model doc]" [:br]
+      "              [input-field \"Last Name\" :text :name.last :model doc]" [:br]
+      "              [:p (str \"Result: \" @doc)])]]" [:br]
+      "  [frm])"]]
+    [:div.box
+     [:p "Example input-field component"]
+     (let [doc (r/atom {})
+           frm (fn []
+                 [:<>
+                  [i/input-field "First Name" :text :name.first :model doc]
+                  [i/input-field "Last Name" :text :name.last :model doc]
+                  [:p (str "Result: " @doc)]])]
+       [frm])]]])
+
 (defn input-page []
   [:<>
    [:h2.title.is-2 "Input Components"]
@@ -203,5 +266,6 @@
      [:h4.title.is-4 "Example"]]]
    [field-component]
    [horizontal-field-component]
-   [input-component]])
+   [input-component]
+   [input-field-component]])
 

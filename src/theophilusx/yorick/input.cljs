@@ -7,8 +7,13 @@
 (defn field
   "Generate a field container to hold input labels or fields.
   The `body` argument is typically a user input component or a `<div>` element
-  with the `control` class. "
+  with the `control` class. Also supports two optional keyword arguments
 
+  | Keyword    | Description                                            |
+  |------------|--------------------------------------------------------|
+  | `:label`   | A string label to use with the field                   |
+  | `:classes` | A map of strings or vector of strings representing CSS |
+  |            | class names. Supported keys are `:field` and `:label`  |"
   [body & {:keys [label classes]}]
   [:div.field {:class [(:field classes)]}
    (when label
@@ -136,10 +141,37 @@
          (apply input-helper type sid doc chg-fn :class (:input classes)
                 (into [] cat args))]))))
 
-(defn input-field [label type id & {:keys [classes placeholder required icon-data
-                                           model change-fn disabled min max
-                                           maxlength minlength readonly size]}]
-  [field [input type id :classes classes :placeholder placeholder
+(defn input-field
+  "Convenience component which combines `field` and `input` components to
+  create a simple input component. The `label` argument is text to be used assoc
+  the field label. The `type` argument specifies the input field type. It is a
+  keyword representing one of the HTML5 input types e.g. :text, :email, etc.
+  The `sid` argument is a storage identifier which specifies the key(s) to use
+  when storing the input in the document model atom. This component also
+  supports a number of optional keyword arguments.
+
+  | Keyword        | Description                                                |
+  |----------------|------------------------------------------------------------|
+  | `:classes`     | a map of CSS class name strings or vectors of class name   |
+  |                | strings. Supported keys are `:field`, `:label` and `:input`|
+  | `:placeholder` | string to use for HTML placeholder attribute               |
+  | `:required`    | boolean used for HTML required attribute                   |
+  | `:icon-data`   | an icon data map or vector of icon data maps. See the      |
+  |                | `theophilusx.yorick.icon` namespace for details            |
+  | `:model`       | A reagent atom to be used as the document model            |
+  | `:change-fn`   | a function of one argument called to update the value      |
+  |                | in the document model atom when input changes              |
+  | `:disabled`    | boolean used to set HTML disabled attribute                |
+  | `:min`         | number used to set the HTML min attribute                  |
+  | `:max`         | number used to set the HTML max attribute                  |
+  | `:minlength`   | number used to set the HTML minLength attribute            |
+  | `:maxlength`   | number used to set the HTML maxLength attribute            |
+  | `:readonly`    | boolean used to set the HTML readonly attribute            |
+  | `:size`        | number used to set the HTML size attribute                 |"
+  [label type sid & {:keys [classes placeholder required icon-data
+                            model change-fn disabled min max maxlength
+                            minlength readonly size]}]
+  [field [input type sid :classes classes :placeholder placeholder
           :required required :icon-data icon-data :model model
           :change-fn change-fn :disabled disabled :min min :max max
           :maxlength maxlength :minlength minlength :readonly readonly

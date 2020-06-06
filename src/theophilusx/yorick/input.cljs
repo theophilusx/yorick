@@ -214,24 +214,59 @@
                   :on-change chg-fn}]
          (str " " label)]]])))
 
-(defn radio [id _ & {:keys [model click-fn]}]
+(defn radio
+  "A radio button component. The `sid` argument is a keyword used as the storage
+  identifier to store data in the document model atom. The `labels` argument
+  is a vector of maps specifying each radio button. The map has the following keys
+
+  | Key        | Description                                                  |
+  |------------|--------------------------------------------------------------|
+  | `:title`   | the text or label to associate with a radio button           |
+  | `:value`   | the value to store in the document model atom when a button  |
+  |            | sis elected. If not provided, the title, converted to a      |
+  |            | keyword, is used                                             |
+  | `:checked` | if `true`, the button will be rendered checked. Only one of  |
+  |            | the button definitions should have this value set to `true`  |
+
+  The component also supports a number of optional keyword arguments
+
+  | Keyword      | Description                                              |
+  |--------------|----------------------------------------------------------|
+  | `:model`     | a reagent atom used as the document model for this       |
+  |              | component                                                |
+  | `:change-fn` | a function of one argument called when the input changes |
+  |              | to update the document model atom                        |
+  | `:classes`   | A map of strings or vector of strings specifying CSS     |
+  |              | class names. Supported keys are `:control`, `input` and  |
+  |              | `:label`                                                 |"
+  [sid labels & {:keys [model click-fn]}]
   (let [doc (or model
                 (r/atom {}))
-        clk-fn (if (fn? click-fn)
+        btns (mapv (fn [b]
+                     (let [v (or (:value b)
+                                 (value->keyword (:title b)))]
+                       (when (:checked b)
+                         (store/assoc-in! doc (spath sid) v))
+                       {:title (:title b)
+                        :value v})) labels)
+        change-fn (if (fn? click-fn)
                  click-fn
-                 #(store/assoc-in! doc (spath id)
+                 #(store/assoc-in! doc (spath sid)
                                    (value->keyword (value-of %))))]
-    (fn [id labels & {:keys [classes]}]
+    (fn [sid _ & {:keys [classes]}]
       (into
        [:div.control {:class (:control classes)}]
-       (for [l labels]
-         [:label.radio {:class (:label classes)
-                        :name (name id)
-                        :value (or (:value l)
-                                   (value->keyword (:title l)))
-                        :checked (:checked l)
-                        :on-click clk-fn}
-          (:title l)])))))
+       (for [b btns]
+         [:label.radio {:class (:label classes)}
+          [:input.radio {:type "radio"
+                         :class (:input classes)
+                         :name (name sid)
+                         :value (:value b)
+                         :checked (when (= (store/get-in doc (spath sid))
+                                           (:value b))
+                                    true)
+                         :on-click change-fn}]
+          (str " " (:title b))]))))) 
 
 (defn button [title action & {:keys [classes]}]
   [:div.field {:class (:field classes)}

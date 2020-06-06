@@ -178,7 +178,24 @@
           :size size]
    :label label :classes classes])
 
-(defn checkbox [_ sid & {:keys [model change-fn]}]
+(defn checkbox
+  "Provides a basic checkbox component. The `label` argument is a string used
+  as the label to be associated with the checkbox. The `sid` argument is a
+  keyword storage identifier used to define the storage key within the document
+  model atom. A number of optional keyword arguments are also supported
+
+  | Keyword      | Description                                               |
+  |--------------|-----------------------------------------------------------|
+  | `:model`     | a reagent atom to use as the document model for this      |
+  |              | checkbox                                                  |
+  | `:change-fn` | a function of 1 argument called when the input changes to |
+  |              | update the data in the document model                     |
+  | `:classes`   | a map of string or vectors of strings representing CSS    |
+  |              | class names. Supported keys are `:field`, `:control`,     |
+  |              | `:label` and `:input`                                     |
+  | `:checked`   | boolean used to set the HTML attribute checked            |
+  | `:required`  | boolean used to set the HTML attribute required           |"
+  [_ sid & {:keys [model change-fn]}]
   (let [doc (or model
                 (r/atom {}))
         chg-fn (if (fn? change-fn)
@@ -188,7 +205,8 @@
       [:div.field {:class (:field classes)}
        [:div.control {:class (:control classes)}
         [:label.checkbox {:class (:label classes)}
-         [:input {:type "checkbox"
+         [:input {:classs (:input classes)
+                  :type "checkbox"
                   :id (name sid)
                   :name (name sid)
                   :checked checked

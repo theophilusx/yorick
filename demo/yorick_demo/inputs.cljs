@@ -259,6 +259,76 @@
                   [:p (str "Result: " @doc)]])]
        [frm])]]])
 
+(defn radio-component []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
+     [:<>
+      [:p
+       "The " [:strong "radio"] " component provides a basic radio button "
+       "component. The " [:code "sid"] " argument is a keyword which specifies "
+       "where to store the input value within the document model atom. "
+       "The " [:code "labels"] " argument is a vector of maps which define the "
+       "buttons for the component. The following keys are supported "]
+      [:ul
+       [:li [:strong ":title"] " - a string to be used as the label for a "
+        "button"]
+       [:li [:strong ":value"] " - the value to be stored in the document model "
+        "atom when this button is selected. If not defined, the :title value, "
+        "converted to a keyword, will be used"]
+       [:li [:strong ":checked"] " - a boolean value. If true, that button will "
+        "be rendered checked. Only one button should have this attribute set to "
+        "true"]]
+      [:p
+       "The component also supports a number of optional keyword arguments"]
+      [:ul
+       [:li [:strong ":model"] " - a reagent atom used as the document model "
+        "for this component"]
+       [:li [:strong ":change-fn"] " - a function of 1 argument which is called "
+        "when input for the component changes. The argument is the new value to "
+        "be stored in the document model atom"]
+       :li [:strong ":classes"] " - a map of strings or vectors of strings "
+       "that represent CSS class names. Supported keys are "
+       [:code ":control"] " and " [:code ":label"]]]
+     :header {:title "radio - a basic radio button component"}]]
+   [:div.column
+    [:pre
+     [:code
+      "[:p \"A basic radio button group\"]" [:br]
+      "[input/radio :value [{:title \"Red\"} {:title \"Green\"} {:title \"Blue\"}]]"
+      [:br]
+      "(let [doc (r/atom {})" [:br]
+      "      frm (fn []" [:br]
+      "            [:<>" [:br]
+      "              [:p \"Another radio button example\"]" [:br]
+      "              [input/radio :pet.type [{:title \"Dog\"" [:br]
+      "                                       :value :dog" [:br]
+      "                                       :checked true}" [:br]
+      "                                      {:title \"Cat\"" [:br]
+      "                                       :value :cat}" [:br]
+      "                                      {:title \"Diamond Python\"" [:br]
+      "                                       :value :snake}]" [:br]
+      "                :model doc]" [:br]
+      "              [:p (str \"Result: \" @doc)]])]" [:br]
+      "   [frm])"]]
+    [:div.box
+     [:p "A basic radio button group"]
+     [i/radio :value [{:title "Red"} {:title "Green"} {:title "Blue"}]]
+     (let [doc (r/atom {})
+           frm (fn []
+                 [:<>
+                  [:p "Another radio button example"]
+                  [i/radio :pet.type [{:title "Dog"
+                                       :value :dog
+                                       :checked true}
+                                      {:title "Cat"
+                                       :value :cat}
+                                      {:title "Diamond Python"
+                                       :value :snake}]
+                   :model doc]
+                  [:p (str "Result: " @doc)]])]
+       [frm])]]])
+
 (defn input-page []
   [:<>
    [:h2.title.is-2 "Input Components"]
@@ -315,5 +385,6 @@
    [horizontal-field-component]
    [input-component]
    [input-field-component]
-   [checkbox-component]])
+   [checkbox-component]
+   [radio-component]])
 

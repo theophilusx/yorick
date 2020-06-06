@@ -212,6 +212,53 @@
                   [:p (str "Result: " @doc)]])]
        [frm])]]])
 
+(defn checkbox-component []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
+     [:<>
+      [:p
+       "The " [:strong "checkbox"] " component provides a basic checkbox "
+       "input component. The mandatory argument " [:code "label"] " is a string "
+       "used as the label to associate with the checkbox. The " [:code "sid"]
+       " argument is a storage identifier which determines where the input will "
+       "be stored within the document model atom. This component also supports "
+       "a number of optional keyword arguments"]
+      [:ul
+       [:li [:strong ":model"] " - a reagent atom used as the document model"]
+       [:li [:strong ":change-fn"] " - a function of 1 argument which is called "
+        "when the input changes to update the document model atom"]
+       [:li [:strong ":classes"] " - a map of strings or vector of strings "
+        "representing CSS class names. Supported keys are "
+        [:code ":field, :control, :label and :input"]]
+       [:li [:strong ":checked"] " - boolean value used to set the HTML checked "
+        "attribute"]
+       [:li [:strong ":required"] " - boolean value used to set the HTML required"
+        " attribute"]]]
+     :header {:title "checkbox - a basic checkbox component"}]]
+   [:div.column
+    [:pre
+     [:code
+      "[:p \"A basic checkbox example\"]" [:br]
+      "[input/checkbox \"I am a checkbox\" :value]" [:br]
+      "(let [doc (r/atom {})" [:br]
+      "      frm (fn []" [:br]
+      "            [:<>" [:br]
+      "              [:p \"Another checkbox example\"]" [:br]
+      "              [input/checkbox \"Check me!\" :form.checkme :model doc]" [:br]
+      "              [:p (str \"Result: \" @doc)]])]" [:br]
+      "  [frm])"]]
+    [:div.box
+     [:p "A basic checkbox example"]
+     [i/checkbox "I am a checkbox" :value]
+     (let [doc (r/atom {})
+           frm (fn []
+                 [:<>
+                  [:p "another checkbox example"]
+                  [i/checkbox "Check me!" :form.checkme :model doc]
+                  [:p (str "Result: " @doc)]])]
+       [frm])]]])
+
 (defn input-page []
   [:<>
    [:h2.title.is-2 "Input Components"]
@@ -267,5 +314,6 @@
    [field-component]
    [horizontal-field-component]
    [input-component]
-   [input-field-component]])
+   [input-field-component]
+   [checkbox-component]])
 

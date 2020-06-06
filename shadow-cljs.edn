@@ -3,7 +3,7 @@
                 "demo"]
 
  :dependencies [[reagent "0.10.0"]
-                [binaryage/devtools "1.0.0"]]
+                [binaryage/devtools "1.0.2"]]
 
  :dev-http {8080 "public"}
 

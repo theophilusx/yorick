@@ -289,7 +289,7 @@
         "be stored in the document model atom"]
        :li [:strong ":classes"] " - a map of strings or vectors of strings "
        "that represent CSS class names. Supported keys are "
-       [:code ":control"] " and " [:code ":label"]]]
+       [:code ":control"] ", " [:code ":input"] " and " [:code ":label"]]]
      :header {:title "radio - a basic radio button component"}]]
    [:div.column
     [:pre
@@ -328,6 +328,51 @@
                    :model doc]
                   [:p (str "Result: " @doc)]])]
        [frm])]]])
+
+(defn button-component []
+  [:<>
+   [:div.columns
+    [:div.column.is-half
+     [c/card
+      [:<>
+       [:p
+        "The " [:strong "button"] " component is a basic HTML button component "
+        "This component wraps an HTML button inside a " [:code "control"]
+        " and " [:code "field"] " div elements to support spacing and "
+        "alignment. The " [:code "title"] " is a string which is used as the "
+        "text on the button. The " [:code "action"] " argument is a function "
+        "of no arguments which is called when the button is clicked. This "
+        "component also supports the optional keyword argument "
+        [:code ":classes"] " which is a map of strings or vectors of strings "
+        "representing CSS class names. The supported keys in the map are "
+        [:code ":field"] ", " [:code ":control"] " and " [:code ":button"] "."]]
+      :header {:title "button - a basic button component"}]]
+    [:div.column
+     [:pre
+      [:code
+       "[:p \"A simple button example\"]" [:br]
+       "[input/button \"Click Me!\" #(js/alert \"You clicked me\")]" [:br]
+       "[:p \"A small button\"]" [:br]
+       "[input/button \"Small Button\" #(js/alert \"Clicked small button\")" [:br]
+       "  :classes {:button \"is-small\"}]" [:br]
+       "[:p \"A large button\"]" [:br]
+       "[input/button \"Large Button\" #(js/alert \"Clicked large button\")" [:br]
+       "  :classes {:button \"is-large\"}]" [:br]
+       "[:p \"A button with colour\"]" [:br]
+       "[input/button \"Coloured\" #(js/alert \"You clicked a coloured button\")"
+       [:br] "   :classes {:button \"is-primary\"}]"]]
+     [:div.box
+      [:p "A simple button example"]
+      [i/button "Click Me!" #(js/alert "You clicked me")]
+      [:p "A small button"]
+      [i/button "Small Button" #(js/alert "Clicked small button")
+        :classes {:button "is-small"}]
+      [:p "A large button"]
+      [i/button "Large Button" #(js/alert "Clicked large button")
+       :classes {:button "is-large"}]
+      [:p "A button with colour"]
+      [i/button "Coloured" #(js/alert "You clicked a coloured button")
+       :classes {:button "is-primary"}]]]]])
 
 (defn input-page []
   [:<>
@@ -386,5 +431,6 @@
    [input-component]
    [input-field-component]
    [checkbox-component]
-   [radio-component]])
+   [radio-component]
+   [button-component]])
 

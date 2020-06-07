@@ -262,13 +262,20 @@
                          :class (:input classes)
                          :name (name sid)
                          :value (:value b)
-                         :checked (when (= (store/get-in doc (spath sid))
+                         :defaultChecked (when (= (store/get-in doc (spath sid))
                                            (:value b))
                                     true)
                          :on-click change-fn}]
           (str " " (:title b))]))))) 
 
-(defn button [title action & {:keys [classes]}]
+(defn button
+  "A basic button component. The `title` argument is a string which will be
+  used for the button text. The `action` argument is a function with no
+  arguments that is called when the button is clicked. The component also
+  supports an optional `:classes` keyword argument, which is a map of
+  strings or vectors of strings representing CSS class names. The map supports
+  the keys `:field`, `:control` and `:button`."
+  [title action & {:keys [classes]}]
   [:div.field {:class (:field classes)}
    [:div.control {:class (:control classes)}
     [:button.button {:class (:button classes)

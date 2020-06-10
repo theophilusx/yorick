@@ -133,9 +133,9 @@
       "      eg-fn (fn []" [:br]
       "              [:<>" [:br]
       "                [:p \"Basic password input field example\"]" [:br]
-      "                [input/field [input/input :password :value :model doc" [:br]
+      "                [input/field [input/input :password :pwd :model doc" [:br]
       "                              :placeholder \"enter password\"] :label \"Password:\"]" [:br]
-      "                [:p (str \"Value entered: \" (:value @doc))]])]" [:br]
+      "                [:p (str \"Value entered: \" (:pwd @doc))]])]" [:br]
       "  [eg-fn])"]]
     [:div.box
      [:p "A basic text input field"]
@@ -144,9 +144,9 @@
            eg-fn (fn []
                    [:<>
                     [:p "Basic password input field example"]
-                    [i/field [i/input :password :value :model doc
+                    [i/field [i/input :password :pwd :model doc
                               :placeholder "enter password"] :lable "Password:"]
-                    [:p (str "Value entered: " (:value @doc))]])]
+                    [:p (str "Value entered: " (:pwd @doc))]])]
        [eg-fn])]]])
 
 (defn input-field-component []
@@ -374,6 +374,83 @@
       [i/button "Coloured" #(js/alert "You clicked a coloured button")
        :classes {:button "is-primary"}]]]]])
 
+(defn editable-field-component []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
+     [:<>
+      [:p
+       "The " [:strong "editable-field"] " component is a utility component "
+       "which displays a value followed by a 'pencil' icon, which when clicked "
+       "allows for editing of the value. When editing the value, buttons are "
+       "provided to save or cancel the edit."]
+      [:p
+       "The " [:code "type"] " argument is a keyword representing the HTML "
+       "input type e.g. :text, :email, :password. The " [:code "src"]
+       " argument is a reagent atom representing the data to be edited. "
+       "The " [:code "sid"] " argument is a storage identifier keyword which "
+       "defines the path into the reagent document model atom where the data "
+       "to edit is stored."]
+      [:p
+       "This component also supports two optional keyword arguments. The "
+       [:code ":label"] " argument is a string representing a label to be used "
+       "as a label for the data being displayed or edited. The "
+       [:code ":classes"] " argument is a map of string or vectors of strings "
+       "representing CSS class names. The following keys are supported: "]
+      [:ul
+       [:li [:strong ":edit-input"] " - CSS class names to be associated with "
+        "the input element when values are being edited"]
+       [:li [:strong ":display-input"] " - CSS class names to be associated with "
+        "the div wrapping the data when being displayed"]
+       [:li [:strong ":save-btn-field"] " - CSS class names to be associated "
+        "with the field div that wraps the save button component"]
+       [:li [:strong ":save-btn-control"] " - CSS class names associated with "
+        "the control div which wraps the save button component."]
+       [:li [:strong ":save-btn-button"] " - CSS class names associated with "
+        "the button element within the save button component."]
+       [:li [:strong ":cancel-btn-field"] " - CSS class names associated with "
+        "the field div that wraps the cancel button component"]
+       [:li [:strong ":cancel-btn-control"] " - CSS class names associated with "
+        "the control div that wraps the cancel button component"]
+       [:li [:strong ":cancel-btn-button"] " - CSS class names associated with "
+        "the button element used in the cancel button component"]
+       [:li [:strong ":label"] " - CSS class names to associate with the label "
+        "element associated with the data"]
+       [:li [:strong ":field-edit"] " - CSS class names to associate with the "
+        "field div used to wrap the edit component"]
+       [:li [:strong ":field-edit-body"] " - CSS class names to associate with "
+        "the field body div used in the edit component"]
+       [:li [:strong ":field-display"] " - CSS class names to associate with "
+        "the field div used to wrap the data display component"]
+       [:li [:strong ":field-display-body"] " - CSS class names to associate "
+        "with the field body div used to wrap display of data"]]]
+     :header {:title "editable-field - a editable field component"}]]
+   [:div.column
+    [:pre
+     [:code
+      "(let [doc (r/atom {:name {:first \"John\" :last \"Doe\"}})" [:br]
+      "      frm (fn []" [:br]
+      "            [:<>"
+      "              [:p \"Editable field exmaple\"]" [:br]
+      "              [input/editable-field :text doc :name.first" [:br]
+      "                :label \"First Name:\"]" [:br]
+      "              [input/editable-field :text doc :name.last" [:br]
+      "                :label \"Last Name:\"]" [:br]
+      "              [:p (str \"Result: \" @doc)])]]" [:br]
+      "  [frm])"]]
+    [:div.box
+     (let [doc (r/atom {:name {:first "John" :last "Doe"}})
+           frm (fn []
+                 [:<>
+                  [:p "Editable field example"]
+                  [i/editable-field :text doc :name.first
+                   :label "First Name:"]
+                  [i/editable-field :text doc :name.last
+                   :label "Last Name:"]
+                  [:p (str "Result: " @doc)]])]
+       [frm])]]])
+
+
 (defn input-page []
   [:<>
    [:h2.title.is-2 "Input Components"]
@@ -432,5 +509,6 @@
    [input-field-component]
    [checkbox-component]
    [radio-component]
-   [button-component]])
+   [button-component]
+   [editable-field-component]])
 

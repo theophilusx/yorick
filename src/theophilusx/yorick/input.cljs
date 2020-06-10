@@ -283,7 +283,47 @@
                      :on-click action}
      title]]])
 
-(defn editable-field [_ src sid & _]
+(defn editable-field
+  "Provides a utility component which will display a value with a 'pencil'
+  icon, which when clicked, will change the displayed value to be a text
+  input area where the value can be edited. Adds a 'save' and 'cancel' button
+  to save or cancel the edit. The `type` argument is a keyword representing one
+  of the HTML input types e.g. :text, :email. The `src` argument is a reagent
+  atom representing the document model atom holding the data to be edited. The
+  `sid` argument is a storage identifier keyword which specifies the path into
+  the document model atom where the value to edit is stored. This component also
+  supports two optional keyword arguments, `:label` and `:classes`. The `:label`
+  keyword argument is a string which specifies a text label to associate with
+  the field. The `:classes` keyword argument is a map of strings or vectors of
+  strings representing CSS class names. The map supports the following keys
+
+  | Key                   | Description                                         |
+  |-----------------------|-----------------------------------------------------
+  | `:edit-input`         | CSS classes to associate with the edit input        |
+  |                       | element                                             |
+  | `:display-input`      | CSS classes to associated with the div around       |
+  |                       | display of the value                                |
+  | `:save-btn-field`     | CSS classes to associate with the field div         |
+  |                       | wrapping the save button                            |
+  | `:save-btn-control`   | CSS classes to associate with the control div that  |
+  |                       | wraps the save button                               |
+  | `:save-btn-button`    | CSS classes to associate with the save button       |
+  |                       | element                                             |
+  | `:cancel-btn-field`   | CSS classes to associate with the field div wrapping|
+  |                       | the cancel button                                   |
+  | `:cancel-btn-control` | CSS classes to associate with the control div       |
+  |                       | wrapping the cancel button                          |
+  | `:cancel-btn-button`  | CSS classes to associate with the cancel button     |
+  | `:label`              | CSS classes to associate with the label             |
+  | `:field-edit`         | CSS classes to associate with the field when editing|
+  |                       | values                                              |
+  | `:field-edit-body`    | CSS classes to associate with the field body when   |
+  |                       | editing values                                      |
+  | `:field-display`      | CSS classes to associate with the field when        |
+  |                       | displaying values                                   |
+  | `:field-display-body` | CSS classes to associate with the field body when   |
+  |                       | displaying values                                   |"
+  [_ src sid & _]
   (let [doc (r/atom {:value (store/get-in src (spath sid))
                      :editing false})
         save-fn (fn []
@@ -294,24 +334,31 @@
                     (store/update! doc :editing not))]
     (fn [type _ _ & {:keys [label classes]}]
       (if (:editing @doc)
-        [horizontal-field label [field [:<>
-                                        [input type :value :model doc]
-                                        [button "Save" save-fn
-                                         :classes (:save-button classes)]
-                                        [button "Cancel" cancel-fn
-                                         :classes (:cancel-button classes)]]
-                                 :classes {:field "has-addons"}]
-         :classes (:field-edit classes)]
-        [horizontal-field label [field [:<>
-                                        (if (= type :password)
-                                          "********"
-                                          (str (:value @doc)))
-                                        [:span.icon
-                                         {:on-click #(store/update!
-                                                      doc
-                                                      :editing not)}
-                                         [:i.fa.fa-pencil]]]]
-         :classes (:field-view classes)]))))
+        [horizontal-field label [:<>
+                                 [input type :value :model doc
+                                  :class (:edit-input classes)]
+                                 [button "Save" save-fn
+                                  :classes {:field (:save-btn-field classes)
+                                            :control (:save-btn-control classes)
+                                            :button (:save-btn-button classes)}]
+                                 [button "Cancel" cancel-fn
+                                  :classes {:field (:cancel-btn-field classes)
+                                            :control (:cancel-btn-control classes)
+                                            :button (:cancel-btn-button classes)}]]
+         :classes {:field (:field-edit classes)
+                   :label (:label classes)
+                   :body (:field-edit-body classes)}]
+        [horizontal-field label [:<>
+                                 [:div {:class (:display-input classes)}
+                                  (if (= type :password)
+                                    "******** "
+                                    (str (:value @doc) " "))
+                                  [:span.icon
+                                   {:on-click #(store/update! doc :editing not)}
+                                   [:i.fas.fa-edit]]]]
+         :classes {:field (:field-display classes)
+                   :label (:label classes)
+                   :body (:field-display-body classes)}]))))
 
 (defn textarea [_ sid & {:keys [model change-fn]}]
   (let [doc (or model

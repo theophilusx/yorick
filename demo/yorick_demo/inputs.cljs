@@ -450,6 +450,49 @@
                   [:p (str "Result: " @doc)]])]
        [frm])]]])
 
+(defn textarea-component []
+  [:div.columns
+   [:div.column
+    [c/card
+     [:<>
+      [:p
+       "The " [:strong "textarea"] " component provides a basic text area "
+       "component for free-form text input. The " [:code "label"] " argument "
+       "is a string of text used as a label for the text area. The "
+       [:code "sid"] " argument is a storage identifier keyword used to "
+       "determine the location within the document model atom to store the "
+       "data entered into the text area. The component also supports a number "
+       "of optional keyword arguments"]
+      [:ul
+       [:li [:strong ":model"] " - A reagent atom used as the document model"]
+       [:li [:strong ":change-fn"] " - A function of one argument called when "
+        "the input data changes. The argument is the updated data. Used to "
+        "determine where the data will be stored."]
+       [:li [:strong ":classes"] " - A map of CSS class names or vectors of CSS "
+        "class names to be associated with elements within the component. "
+        "Supported keys are " [:code ":field, :label and :textarea"]]
+       [:li [:strong ":placeholder"] " - A string of text to be used as the "
+        "placeholder text in the text area box."]]]
+     :header {:title "textarea - a basic text area component"}]]
+   [:div.column
+    [:pre
+     [:code
+      "[:p \"A basic textarea example\"]" [:br]
+      "(let [doc (r/atom {})" [:br]
+      "      frm (fn []" [:br]
+      "            [:<>" [:br]
+      "              [input/textarea \"Text Area Label\" :text.value :model doc]"
+      [:br]
+      "              [:p (str \"Result: \" @doc)]])]" [:br]
+      "  [fmt])"]]
+    [:div.box
+     [:p "A basic textarea example"]
+     (let [doc (r/atom {})
+           frm (fn []
+                 [:<>
+                  [i/textarea "Text Area Label" :text.value :model doc]
+                  [:p (str "Result: " @doc)]])]
+       [frm])]]])
 
 (defn input-page []
   [:<>
@@ -510,5 +553,6 @@
    [checkbox-component]
    [radio-component]
    [button-component]
-   [editable-field-component]])
+   [editable-field-component]
+   [textarea-component]])
 

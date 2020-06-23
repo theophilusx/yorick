@@ -360,7 +360,24 @@
                    :label (:label classes)
                    :body (:field-display-body classes)}]))))
 
-(defn textarea [_ sid & {:keys [model change-fn]}]
+(defn textarea
+  "A basic text area component. The `label` argument is a string containing
+  the text to be used as a label for the text area. The `sid` argument is a
+  storage identifier keyword used to determine where the data entered is
+  stored within the document model atom. The component supports the following
+  optional keyword arguments
+
+  | Keyword        | Description                                               |
+  |----------------|-----------------------------------------------------------|
+  | `:model`       | A reagent `atom` representing the document model used to  |
+  |                | store input                                               |
+  | `:change-fn`   | A function of one argument called when the data changes.  |
+  |                | The argument is the new data.                             |
+  | `:classes`     | A `map` of CSS class names or vectors of CSS class names  |
+  |                | which are added to component elements. Supported keys are |
+  |                | `:field`, `:label` and ':textarea`                        |
+  | ':placeholder` | A `string` of text used as a placeholder in the text area |"
+  [_ sid & {:keys [model change-fn]}]
   (let [doc (or model
                 (r/atom {}))
         chg-fn (if (fn? change-fn)

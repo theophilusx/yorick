@@ -394,14 +394,48 @@
                              :name (name sid)
                              :on-change chg-fn}]]])))
 
-(defn defoption [title & {:keys [value option-class disabled label]}]
+(defn defoption
+  "Define an option for a selection list. The `title` argument is a string used 
+  as the text label for the option. This component supports a number of optional 
+  keyword arguments
+
+  | Keyword         | Description                                            |
+  |-----------------|--------------------------------------------------------|
+  | `:value`        | A value to use when this option is selected            |
+  | `:option-class` | A string or vector of strings representing CSS classes |
+  | `:disabled`     | boolean. If true, this option will be disabled         |
+  | `:label`        | A shorter label to be used rather than the title       |"
+  [title & {:keys [value option-class disabled label]}]
   [:option {:class option-class
             :disabled disabled
             :label label
             :value (str (or value title))}
    title])
 
-(defn select [sid options & {:keys [model change-fn selected]}]
+(defn select
+  "A basic select list component. The `sid` argument is a storage identifier 
+  keyword. The `options` argument is a vector of option component representing 
+  each option for the select list. Each option can be defined using the 
+  `defoption` function. The component also supports a number of optional keyword
+  arguments
+
+  | Keyword         | Description                                             |
+  |-----------------|---------------------------------------------------------|
+  | `:model`        | A reagent atom to be used as the document model where   |
+  |                 | the selected value will be stored                       |
+  | `:change-fn`    | A function of one argument that is called when a value  |
+  |                 | is selected. The argument is the new data value selected|
+  | `:selected`     | The value to be selected by default when the list is    |
+  |                 | rendered                                                |
+  | `:select-class` | A string or vector of strings representing CSS class    |
+  |                 | names to associate with the select element              |
+  | `:multiple`     | Boolean. If true, allow multiple options to be selected |
+  | `:rounded`      | Boolean. If true, use rounded corners                   |
+  | `:select-size`  | Sets the size of the select box. Can be `:large`,       |
+  |                 | `:medium` or `:small`                                   |
+  | `:icon-data`    | An icon-data map defining an icon to include with the   |
+  |                 | select box (see `theophilusx/yorick/icon`               |"
+  [sid options & {:keys [model change-fn selected]}]
   (let [doc (or model
                 (r/atom {}))
         chg-fn (if (fn? change-fn)

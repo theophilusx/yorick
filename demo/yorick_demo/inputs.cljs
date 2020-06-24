@@ -561,6 +561,33 @@
                                          (i/defoption "Three")]
                     :model doc]
                    [:p (str "Result: " @doc)]])]
+        [frm])]
+     [:pre
+      [:code
+       "[:p \"A more complex select box example\"]" [:br]
+       "(let [doc (r/atom {})" [:br]
+       "      frm (fn []" [:br]
+       "            [:<>" [:br]
+       "              [input/select :pet.value [(input/defoption \"A Dog\"" [:br]
+       "                                          :value :dog)" [:br]
+       "                                        (input/defoption \"A Cat\"" [:br]
+       "                                           :value :cat)" [:br]
+       "                                        (input/defoption \"A Mouse\"" [:br]
+       "                                           :value :mouse :selected true)]" [:br]
+       "                :model doc :rounded true]" [:br]
+       "             [:p (str \"Result: \" @doc)]])]" [:br]
+       "  [frm])"]]
+     [:div.box
+      [:p "A more complex select box example"]
+      (let [doc (r/atom {})
+            frm (fn []
+                  [:<>
+                   [i/select :pet.value [(i/defoption "A Dog" :value :dog)
+                                         (i/defoption "A Cat" :value :cat)
+                                         (i/defoption "A Mouse" :value :mouse
+                                           :selected true)]
+                    :model doc :rounded true]
+                   [:p (str "Result: " @doc)]])]
         [frm])]]]])
 
 (defn input-page []

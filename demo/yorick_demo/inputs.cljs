@@ -7,7 +7,7 @@
   [:div.columns
    [:div.column.is-half
     [c/card
-     [:<>
+     [:div.content
       [:p
        "The " [:strong "field"] " component is a general purpose component "
        "used as a container for other input components. The component has a "
@@ -47,7 +47,7 @@
   [:div.columns
    [:div.column.is-half
     [c/card
-     [:<>
+     [:div.content
       [:p
        "The " [:strong "horizontal-field"] " component is similar to the "
        [:strong "field"] " component, except that instead of putting label "
@@ -84,7 +84,7 @@
   [:div.columns
    [:div.column.is-half
     [c/card
-     [:<>
+     [:div.content
       [:p
        "A basic text input component. This component is typically wrapped "
        "inside a " [:em "field"] " or " [:em "horizontal-field"] " component. "
@@ -153,7 +153,7 @@
   [:div.columns
    [:div.column.is-half
     [c/card
-     [:<>
+     [:div.content
       [:p
        "The " [:strong "inut-field"] " component is a convenience component "
        "which combines the " [:strong "field"] " and " [:strong "input"]
@@ -216,7 +216,7 @@
   [:div.columns
    [:div.column.is-half
     [c/card
-     [:<>
+     [:div.content
       [:p
        "The " [:strong "checkbox"] " component provides a basic checkbox "
        "input component. The mandatory argument " [:code "label"] " is a string "
@@ -263,7 +263,7 @@
   [:div.columns
    [:div.column.is-half
     [c/card
-     [:<>
+     [:div.content
       [:p
        "The " [:strong "radio"] " component provides a basic radio button "
        "component. The " [:code "sid"] " argument is a keyword which specifies "
@@ -334,7 +334,7 @@
    [:div.columns
     [:div.column.is-half
      [c/card
-      [:<>
+      [:div.content
        [:p
         "The " [:strong "button"] " component is a basic HTML button component "
         "This component wraps an HTML button inside a " [:code "control"]
@@ -378,7 +378,7 @@
   [:div.columns
    [:div.column.is-half
     [c/card
-     [:<>
+     [:div.content
       [:p
        "The " [:strong "editable-field"] " component is a utility component "
        "which displays a value followed by a 'pencil' icon, which when clicked "
@@ -452,9 +452,9 @@
 
 (defn textarea-component []
   [:div.columns
-   [:div.column
+   [:div.column.is-half
     [c/card
-     [:<>
+     [:div.content
       [:p
        "The " [:strong "textarea"] " component provides a basic text area "
        "component for free-form text input. The " [:code "label"] " argument "
@@ -493,6 +493,75 @@
                   [i/textarea "Text Area Label" :text.value :model doc]
                   [:p (str "Result: " @doc)]])]
        [frm])]]])
+
+(defn select-component []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p
+       "The " [:strong "select"] " component provides a basic select list. The "
+       [:code "sid"] " argument is a storage identifier keyword. The "
+       [:code "options"] " argument is a vector of option maps which define "
+       "each of the options for the select list. The " [:strong "defoption"]
+       "function can be used to assist in defining the option definition maps"]
+      [:p
+       "The " [:strong "defoption"] " function is a helper function which "
+       "assists in defining the option maps used in a select component. It has "
+       "one compulsory argument, " [:code "title"] ", which defines the option "
+       "title. The function also accepts a number of optional keyword arguments"]
+      [:ul
+       [:li [:strong ":value"] " - sets the value to be used when the option "
+        "is selected. If not specified, the " [:code "title"] " argument is used"]
+       [:li [:strong ":option-class"] " - a string or vector of strings "
+        "representing CSS class names to add to the option element"]
+       [:li [:strong ":disabled"] " - boolean which if true disables this option"]
+       [:li [:strong ":label"] " - a shorthand label which is used if supported "
+        "by the browser instead of the title"]]
+      [:p
+       "The " [:strong "select"] " component also supports a number of optional "
+       "keyword arguments"]
+      [:ul
+       [:li [:strong ":model"] " - a reagent atom used as the document model "
+        "for data storage"]
+       [:li [:strong ":change-fn"] " - a function of one argument which is "
+        "called when the input data changes. The argument is the new data."]
+       [:li [:strong ":selected"] " - the value to use as the default selected "
+        "option."]
+       [:li [:strong ":multiple"] " - boolean. If true, allow multiple options "
+        "to be selected"]
+       [:li [:strong ":rounded"] " - boolean. If true, use rounded corners on "
+        "the selection box"]
+       [:li [:strong ":select-size"] " - sets the size of the select box. Can "
+        "be " [:code ":large, :medium or :small"]]
+       [:li [:strong ":icon-data"] " - an icon data map defining an icon to "
+        "associate with the select box. See " [:strong "theophilusx/yorick/icon"]]]]
+     :header {:title "select - a basic select box component"}]]
+   [:div.column
+    [:div.content
+     [:pre
+                [:code
+        "[:p \"A simple select box\"]" [:br]
+        "(let [doc (r/atom {})" [:br]
+        "      frm (fn []" [:br]
+        "            [:<>" [:br]
+        "              [input/select :sel.value [(defoption \"One\")" [:br]
+        "                                        (defoption \"Two\")" [:br]
+        "                                        (defoption \"Three\")]" [:br]
+        "                            :model doc]" [:br]
+        "              [:p (str \"Result: \" @doc)]])]" [:br]
+         "  [frm])"]]
+     [:div.box
+      [:p "A simple select box"]
+      (let [doc (r/atom {})
+            frm (fn []
+                  [:<>
+                   [i/select :sel.value [(i/defoption "One")
+                                         (i/defoption "Two")
+                                         (i/defoption "Three")]
+                    :model doc]
+                   [:p (str "Result: " @doc)]])]
+        [frm])]]]])
 
 (defn input-page []
   [:<>
@@ -554,5 +623,6 @@
    [radio-component]
    [button-component]
    [editable-field-component]
-   [textarea-component]])
+   [textarea-component]
+   [select-component]])
 

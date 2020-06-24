@@ -399,18 +399,26 @@
   as the text label for the option. This component supports a number of optional 
   keyword arguments
 
-  | Keyword         | Description                                            |
-  |-----------------|--------------------------------------------------------|
-  | `:value`        | A value to use when this option is selected            |
-  | `:option-class` | A string or vector of strings representing CSS classes |
-  | `:disabled`     | boolean. If true, this option will be disabled         |
-  | `:label`        | A shorter label to be used rather than the title       |"
-  [title & {:keys [value option-class disabled label]}]
+  | Keyword         | Description                                               |
+  |-----------------|-----------------------------------------------------------|
+  | `:value`        | A value to use when this option is selected               |
+  | `:option-class` | A string or vector of strings representing CSS classes    |
+  | `:disabled`     | boolean. If true, this option will be disabled            |
+  | `:label`        | A shorter label to be used rather than the title          |
+  | `:selected`     | Boolean. True if this option is to be selected by default |"
+  [title & {:keys [value option-class disabled label selected]}]
   [:option {:class option-class
             :disabled disabled
             :label label
-            :value (str (or value title))}
+            :value (str (or value title))
+            :selected selected}
    title])
+
+(defn default-option [options]
+  (let [selected (first (filter #(:selected (second %)) options))]
+    (if selected
+      (second selected)
+      (second (first options)))))
 
 (defn select
   "A basic select list component. The `sid` argument is a storage identifier 
@@ -425,8 +433,6 @@
   |                 | the selected value will be stored                       |
   | `:change-fn`    | A function of one argument that is called when a value  |
   |                 | is selected. The argument is the new data value selected|
-  | `:selected`     | The value to be selected by default when the list is    |
-  |                 | rendered                                                |
   | `:select-class` | A string or vector of strings representing CSS class    |
   |                 | names to associate with the select element              |
   | `:multiple`     | Boolean. If true, allow multiple options to be selected |
@@ -435,37 +441,33 @@
   |                 | `:medium` or `:small`                                   |
   | `:icon-data`    | An icon-data map defining an icon to include with the   |
   |                 | select box (see `theophilusx/yorick/icon`               |"
-  [sid options & {:keys [model change-fn selected]}]
+  [sid options & {:keys [model change-fn]}]
   (let [doc (or model
                 (r/atom {}))
         chg-fn (if (fn? change-fn)
                  change-fn
                  #(store/assoc-in! doc (spath sid) (value-of %)))]
-    (store/assoc-in! doc (spath sid) (or selected
-                                         (:value (second (first options)))))
+    (store/assoc-in! doc (spath sid) (:value (default-option options)))
     (fn [sid options & {:keys [select-class multiple rounded select-size
-                        icon-data selected]}]
-      [:div.select {:class [select-class
-                            (when rounded "is-rounded")
-                            (case select-size
-                              :small "is-small"
-                              :medium "is-medium"
-                              :large "is-large"
-                              nil)
-                            (when multiple "is-multiple")]}
-       (into
-        [:select {:id (name sid)
-                  :name (name sid)
-                  :multiple (when multiple true false)
-                  :size (when multiple
-                          (str multiple))
-                  :defaultValue (if selected
-                                  selected
-                                  (:value (second (first options))))
-                  :on-change chg-fn}]
-        (for [o options]
-          o))
-       [icons/icon-component icon-data]])))
+                                               icon-data size]}]
+                       [:div.select {:class [select-class
+                                             (when rounded "is-rounded")
+                                             (case select-size
+                                               :small  "is-small"
+                                               :medium "is-medium"
+                                               :large  "is-large"
+                                               nil)
+                                             (when multiple "is-multiple")]}
+                        (into
+                         [:select {:id        (name sid)
+                                   :name      (name sid)
+                                   :multiple  (when multiple true false)
+                                   :size      (when size
+                                                (str size))
+                                   :on-change chg-fn}]
+                         (for [o options]
+                           o))
+                        [icons/icon-component icon-data]])))
 
 (defn select-field [sid options & {:keys [title classes multiple rounded
                                           select-size icon-data model

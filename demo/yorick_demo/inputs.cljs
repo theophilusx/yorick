@@ -590,6 +590,70 @@
                    [:p (str "Result: " @doc)]])]
         [frm])]]]])
 
+(defn select-field-component []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p
+       "The " [:strong "select-field"] " component is a convenience component "
+       "which wraps a select box inside a " [:code "field"] " div and adds a "
+       [:code "label"] " element. This helps to ensure appropriate spacing when "
+       "rendering the select box. The " [:code "sid"] " argument is a storage "
+       "identifier keyword. The " [:code "options"] " argument is a vector of "
+       "option elements for the select box. (see " [:strong "defoption"]
+       " for definition of select options. The component also supports a number "
+       "optonal keyword arguments:"]
+      [:ul
+       [:li [:strong ":title"] " - a string used as the label to associate with "
+        "the select box."]
+       [:li [:strong ":classes"] " - a map of strings or vectors of strings "
+        "representing CSS class names. The following keys are supported - "
+        [:code ":field, :title, and :select"]]
+       [:li [:strong ":multiple"] " - boolean. If true, allow selection of "
+        "multiple options"]
+       [:li [:strong ":rounded"] " - Boolean. If true, use rounded corners "
+        "for the select box"]
+       [:li [:strong ":select-size"] " - Keyword. Set the size of the select "
+        "box. Possible values are " [:code ":small, :medium and :large"]]
+       [:li [:strong ":icon-data"] " - an icon data map. (see "
+        [:strong "theophilusx/yorick/icon"] " for details. Adds an icon to the "
+        "select box."]
+       [:li [:strong ":model"] " - a reagent atom used as the document model "
+        "store."]
+       [:li [:strong ":change-fn"] " - a function of one argument called when "
+        "the input data changes. Argument is the new data. Used to update the "
+        "document model store."]]]
+     :header {:title "select-field - a select field component"}]]
+   [:div.column
+    [:pre
+     [:code
+      "[:p \"A select-field example\"" [:br]
+      "(let [doc (r/atom {})" [:br]
+      "      frm (fn []" [:br]
+      "            [:<>" [:br]
+      "              [input/select-field :car.value [(input/defoption \"Holden\")"
+      [:br]
+      "                                              (input/defoption \"Audi\")"
+      [:br]
+      "                                              (input/defoption \"Saab\")]"
+      [:br]
+      "                :title \"My Car\" :select-size :large :model doc]" [:br]
+      "              [:p (str \"Result: \" @doc)]])]" [:br]
+      "  [frm])"]]
+    [:div.box
+     [:p "A select-field example"]
+     (let [doc (r/atom {})
+           frm (fn []
+                 [:<>
+                  [i/select-field :car.value [(i/defoption "Holden")
+                                              (i/defoption "Audi")
+                                              (i/defoption "Saab")]
+                   :title "My Car" :select-size :large :model doc
+                   :icon-data {:name "fa-car" :position :left}]
+                  [:p (str "Result: " @doc)]])]
+       [frm])]]])
+
 (defn input-page []
   [:<>
    [:h2.title.is-2 "Input Components"]
@@ -651,5 +715,6 @@
    [button-component]
    [editable-field-component]
    [textarea-component]
-   [select-component]])
+   [select-component]
+   [select-field-component]])
 

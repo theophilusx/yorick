@@ -440,7 +440,8 @@
   | `:select-size`  | Sets the size of the select box. Can be `:large`,       |
   |                 | `:medium` or `:small`                                   |
   | `:icon-data`    | An icon-data map defining an icon to include with the   |
-  |                 | select box (see `theophilusx/yorick/icon`               |"
+  |                 | select box (see `theophilusx/yorick/icon`               |
+  | `:size`         | Number of options to display in select box              |"
   [sid options & {:keys [model change-fn]}]
   (let [doc (or model
                 (r/atom {}))
@@ -449,35 +450,71 @@
                  #(store/assoc-in! doc (spath sid) (value-of %)))]
     (store/assoc-in! doc (spath sid) (:value (default-option options)))
     (fn [sid options & {:keys [select-class multiple rounded select-size
-                                               icon-data size]}]
-                       [:div.select {:class [select-class
-                                             (when rounded "is-rounded")
-                                             (case select-size
-                                               :small  "is-small"
-                                               :medium "is-medium"
-                                               :large  "is-large"
-                                               nil)
-                                             (when multiple "is-multiple")]}
-                        (into
-                         [:select {:id        (name sid)
-                                   :name      (name sid)
-                                   :multiple  (when multiple true false)
-                                   :size      (when size
-                                                (str size))
-                                   :on-change chg-fn}]
-                         (for [o options]
-                           o))
-                        [icons/icon-component icon-data]])))
+                              icon-data size]}]
+      [:div.control {:class (when icon-data
+                              (icons/icon-control-class icon-data))}
+       [:div.select {:class [select-class
+                             (when rounded "is-rounded")
+                             (case select-size
+                               :small  "is-small"
+                               :medium "is-medium"
+                               :large  "is-large"
+                               nil)
+                             (when multiple "is-multiple")]}
+        (into
+         [:select {:id        (name sid)
+                   :name      (name sid)
+                   :multiple  (when multiple true false)
+                   :size      (when size
+                                (str size))
+                   :on-change chg-fn}]
+         (for [o options]
+           o))]
+       (when icon-data
+         [:span.icon {:class [(case (:size icon-data)
+                               :small "is-small"
+                               :medium "is-medium"
+                               :large "is-large"
+                               nil)
+                             (case (:position icon-data)
+                               :left "is-left"
+                               :right "is-right"
+                               nil)]}
+          [:i {:class ["fa" (:name icon-data)]}]])])))
 
-(defn select-field [sid options & {:keys [title classes multiple rounded
-                                          select-size icon-data model
-                                          change-fn selected]}]
+(defn select-field
+  "This component is a convenience component which wraps a select component 
+  inside a field div to ensure appropriate spacing and layout. The `sid` 
+  argument is a storage identifier keyword. The `options` argument is a vector 
+  of option elements (see `defoption` for details). The following optional 
+  keyword arguments are also supported
+
+  | Keyword        | Description                                               |
+  |----------------|-----------------------------------------------------------|
+  | `:title`       | A string used as the label to associated with the select  |
+  |                | box                                                       | 
+  | `:classes`     | A map of string or vectors of strings representing CSS    |
+  |                | class names. The following keys are supported - `:field`, |
+  |                | `:title` and `:select`                                    |
+  | `:multiple`    | A boolean which if true allows multiple options to be     |
+  |                | selected                                                  |
+  | `:rounded`     | A boolean which if true will set rounded corners on       |
+  |                | select box                                                |
+  | `:select-size` | Specifies the size of the select box. Possible values are |
+  |                | `:small`, `:medium` and `:large`.                         |
+  | `:icon-data`   | An icon definition map. See `theophilusx/yorick/icon` for |
+  |                | details.                                                  |
+  | `:model`       | A reagent atom used as the document model store           |
+  | `:change-fn`   | A function of one argument called when the input data     |
+  |                | changes. The argument is the new data value               |"
+  [sid options & {:keys [title classes multiple rounded select-size icon-data
+                         model change-fn]}]
   [:div.field {:class (:field classes)}
    (when title
-     [:div.label title])
-   [select sid options :classes classes :multiple multiple
+     [:div.label {:class (:title classes)} title])
+   [select sid options :select-class (:select classes) :multiple multiple
     :rounded rounded :select-size select-size :icon-data icon-data
-    :selected selected :model model :change-fn change-fn]])
+    :model model :change-fn change-fn]])
 
 (defn file [sid & {:keys [action model change-fn]}]
   (let [doc (or model

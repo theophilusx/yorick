@@ -516,7 +516,37 @@
     :rounded rounded :select-size select-size :icon-data icon-data
     :model model :change-fn change-fn]])
 
-(defn file [sid & {:keys [action model change-fn]}]
+(defn file
+  "Provides a basic file selection component. The required `sid` argument is a
+  storage identifier keyword that determines where the selected filename will be
+  stored within the document model atom. Additional optional keyword arguments 
+  are supported:
+
+  | Keyword      | Description                                                 |
+  |--------------|-------------------------------------------------------------|
+  | `:model`     | A reagent atom to be used as the document model store       |
+  | `:change-fn` | A function of one argument which is called when the input   |
+  |              | data changes. The argument is the change event object. This |
+  |              | function is responsible for storing the selected filename(s)|
+  |              | into the document model atom and for calling the action     |
+  |              | function to perform some action using the filename          |
+  | `:action`    | A function of 1 argument which is called when a fiile has   |
+  |              | been selected. The argument is the `File` object for the    |
+  |              | file which was selected This function is called by the      |
+  |              | default change-fn function.                                 | 
+  | `:classes`   | A map of strings or vectors of strings representing CSS     |
+  |              | class names. Supported keys are `:field`, `:file`, `:label` |
+  |              | `:input` and `:file-cta`                                    |
+  | `:label`     | The text label to associate with the file selector box      |
+  | `:right`     | Place label to the right of the selection box if true       |
+  | `:fullwidth` | Use the full width of the surrounding container if true     |
+  | `:boxed`     | Use a boxed version of the upload component. Useful for     |
+  |              | managing layout                                             |
+  | `:size`      | Set the size of the selection box. Possible values are      |
+  |              | `:small`, `:medium` and `:large`.                           |
+  | `:position`  | Set the position of the select box within enclosing         |
+  |              | container. Possible values are `:center` and `:right`       |"
+  [sid & {:keys [action model change-fn]}]
   (let [doc (or model
                 (r/atom {}))
         chg-fn (if (fn? change-fn)
@@ -530,35 +560,36 @@
                            (action file)))))))]
     (fn [id & {:keys [classes label right fullwidth boxed size position]}]
       [:div.field {:class (:field classes)}
-   [:div.file.has-name {:class [(:file classes)
-                                (when right "is-right")
-                                (when fullwidth "is-fullwidth")
-                                (when boxed "is-boxed")
-                                (case size
-                                  :small "is-small"
-                                  :medium "is-medium"
-                                  :large "is-large"
-                                  nil)
-                                (case position
-                                  :center "is-centered"
-                                  :right "is-right"
-                                  nil)]}
-    [:label.file-label {:class (:label classes)}
-     [:input.file-input {:class (:input classes)
-                         :id (name id)
-                         :name (name id)
-                         :type "file"
-                         :on-change chg-fn}]
-     [:span.file-cta {:class (:file-cta classes)}
-      [:span.file-icon
-       [:i.fa.fa-upload]]
-      [:span.file-label
-       (or label
-           "Choose a file")]
-      [:span.file-name
-       (if (store/get-in doc (spath id))
-         (str (store/get-in doc (spath id)))
-         "No file chosen")]]]]])))
+       [:div.file.has-name {:class [(:file classes)
+                                    (when right "is-right")
+                                    (when fullwidth "is-fullwidth")
+                                    (when boxed "is-boxed")
+                                    (case size
+                                      :small "is-small"
+                                      :medium "is-medium"
+                                      :large "is-large"
+                                      nil)
+                                    (case position
+                                      :center "is-centered"
+                                      :centre "is-centered"
+                                      :right "is-right"
+                                      nil)]}
+        [:label.file-label {:class (:label classes)}
+         [:input.file-input {:class (:input classes)
+                             :id (name id)
+                             :name (name id)
+                             :type "file"
+                             :on-change chg-fn}]
+         [:span.file-cta {:class (:file-cta classes)}
+          [:span.file-icon
+           [:i.fa.fa-upload]]
+          [:span.file-label
+           (or label
+               "Choose a file")]
+          [:span.file-name
+           (if (store/get-in doc (spath id))
+             (str (store/get-in doc (spath id)))
+             "No file chosen")]]]]])))
 
 (defn search [_ & _]
   (let [doc (r/atom {})]

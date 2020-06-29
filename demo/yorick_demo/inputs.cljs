@@ -654,6 +654,85 @@
                   [:p (str "Result: " @doc)]])]
        [frm])]]])
 
+(defn file-component []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p
+       "The " [:strong "file"] " component provides a file select box. The "
+       "mandatory argument " [:code "sid"] " is a storage identifier keyword "
+       "used to determine the storage location for entered data. The component "
+       "also supports a number of optional keyword arguments"]
+      [:ul
+       [:li [:strong ":model"] " - a reagent atom to be used as the document "
+        "model store"]
+       [:li [:strong ":change-fn"] " - a function of one argument which is "
+        "called when the input data changes. The argument is the event object "
+        "associated with the component. The function should test for the "
+        [:code ":action"] " keyword argument and if found, execute it with the "
+        "File object of the selected file if one has been selected."]
+       [:li [:strong ":action"] " - a function of 1 argument which is to be "
+        "called if a file has been selected. This function can be used to "
+        "perform some action if a file is selected."]
+       [:li [:strong ":classes"] " - a map of strings or vectors of strings "
+        "representing CSS class names. Supported keys include "
+        [:code ":field, :file, :label, :input and :file-cta"]]
+       [:li [:strong ":label"] " - a string to be used as the label to "
+        "associate with the file select box"]
+       [:li [:strong ":right"] " - a boolean which if true, will cause the "
+        "label to be placed on the right of the select box."]
+       [:li [:strong ":fullwidth"] " - if true, make the file select box the "
+        "full width of the enclosing container."]
+       [:li [:strong ":boxed"] " - enclose the component inside a box"]
+       [:li [:strong ":size"] " - set the size of the file upload box. "
+        "Available values are " [:code ":small, :medium and :large"]]
+       [:li [:strong ":position"] " - set the position of the file upload "
+        "box within the enclosing container. Possible values are "
+        [:code ":center and :right"]]]]
+     :header {:title "file - file selector box component"}]]
+   [:div.column
+    [:pre
+     [:code
+      "[:p \"A basic file selector example\"]" [:br]
+      "(let [doc (r/atom {})" [:br]
+      "      frm (fn []" [:br]
+      "            [:<>" [:br]
+      "              [input/file :file1.value :model doc" [:br]
+      "                :action #(js/alert (str \"You selected \" %))]" [:br]
+      "              [:p (str \"Result: \" @doc)]])]" [:br]
+      "  [frm])"]]
+    [:div.box
+     [:p "A basic file selector example"]
+     (let [doc (r/atom {})
+           frm (fn []
+                 [:<>
+                  [i/file :file1.value :model doc
+                   :action #(js/alert (str "You selected " (.-name %)))]
+                  [:p (str "Result: " @doc)]])]
+       [frm])]
+    [:pre
+     [:code
+      "[:p \"A more complex file selector example\"]" [:br]
+      "(let [doc (r/atom {})" [:br]
+      "      frm (fn []" [:br]
+      "            [:<>" [:br]
+      "              [input/file :file2.value :model doc :label \"My File\"" [:br]
+      "                :boxed true :action #(js/alert (str \"You selected \" %))]" [:br]
+      "              [:p (str \"Result: \" @doc)]])]" [:br]
+      "  [frm])"
+      ]]
+    [:div.box
+     [:p "A more complex file selector example"]
+     (let [doc (r/atom {})
+           frm (fn []
+                 [:<>
+                  [i/file :file1.value :model doc :label "My File"
+                   :boxed true :action #(js/alert (str "You selected " (.-name %)))]
+                  [:p (str "Result: " @doc)]])]
+       [frm])]
+    ]])
+
 (defn input-page []
   [:<>
    [:h2.title.is-2 "Input Components"]
@@ -716,5 +795,6 @@
    [editable-field-component]
    [textarea-component]
    [select-component]
-   [select-field-component]])
+   [select-field-component]
+   [file-component]])
 

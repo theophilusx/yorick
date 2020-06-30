@@ -720,18 +720,16 @@
       "              [input/file :file2.value :model doc :label \"My File\"" [:br]
       "                :boxed true :action #(js/alert (str \"You selected \" %))]" [:br]
       "              [:p (str \"Result: \" @doc)]])]" [:br]
-      "  [frm])"
-      ]]
+      "  [frm])"]]
     [:div.box
      [:p "A more complex file selector example"]
      (let [doc (r/atom {})
            frm (fn []
                  [:<>
-                  [i/file :file1.value :model doc :label "My File"
+                  [i/file :file2.value :model doc :label "My File"
                    :boxed true :action #(js/alert (str "You selected " (.-name %)))]
                   [:p (str "Result: " @doc)]])]
-       [frm])]
-    ]])
+       [frm])]]])
 
 (defn input-page []
   [:<>

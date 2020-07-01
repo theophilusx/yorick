@@ -591,7 +591,13 @@
              (str (store/get-in doc (spath id)))
              "No file chosen")]]]]])))
 
-(defn search [_ & _]
+(defn search
+  "A simple search box component. The `action` argument is a function of 1
+  argument which is executed when the user clicks on the search button. The
+  argument is the search string entered by the user. The component supports
+  an optional `placeholder` keyword argument, which is text to use as a
+  placeholder in the search box input field."
+  [_ & _]
   (let [doc (r/atom {})]
     (fn [action & {:keys [placeholder]}]
       [:<>

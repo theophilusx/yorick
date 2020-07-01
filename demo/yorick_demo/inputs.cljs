@@ -727,9 +727,33 @@
            frm (fn []
                  [:<>
                   [i/file :file2.value :model doc :label "My File"
-                   :boxed true :action #(js/alert (str "You selected " (.-name %)))]
+                   :boxed true :action #(js/alert (str "You selected "
+                                                       (.-name %)))]
                   [:p (str "Result: " @doc)]])]
        [frm])]]])
+
+(defn search-component []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p
+       "The " [:strong "search"] " component is a simple search box. The "
+       [:code "action"] " argument is a function of 1 argument which is called "
+       "when the user clicks on the search button. The argument is the string "
+       "entered into the search box by the user. The component also supports "
+       "an optional keyword argument " [:code "placeholder"] ", which is a "
+       "string that will be used as a placeholder in the input field of the "
+       "search box."]]
+     :header {:title "search - a basic search box component"}]]
+   [:div.column
+    [:pre
+     [:code
+      "[:p \"A simple search box exmaple\"]" [:br]
+      "[input/search #(js/alert (str \"You are searching for \" %))]"]]
+    [:div.box
+     [:p "A simple search box example"]
+     [i/search #(js/alert (str "You are searching for " %))]]]])
 
 (defn input-page []
   [:<>
@@ -794,5 +818,6 @@
    [textarea-component]
    [select-component]
    [select-field-component]
-   [file-component]])
+   [file-component]
+   [search-component]])
 

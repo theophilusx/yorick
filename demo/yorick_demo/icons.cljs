@@ -6,10 +6,22 @@
 (defn icon-example []
   [:div.columns
    [:div.column
-    [c/card [:p
-             "The " [:strong "theophilusx.yorick.icon/icon"] " function can "
-             "be used to add a single icon or a list of icons specified in a "
-             "vector of icon data maps."]
+    [c/card
+     [:div.content
+      [:p
+       "The " [:strong "theophilusx.yorick.icon/icon"] " function can "
+       "be used to add a single icon or a list of icons specified in a "
+       "vector of icon data maps."]
+      [:p
+       "The " [:strong "icon-componenet"] " component supports 5 icon "
+       "sizes " [:em ":small, :medium, :large, :huge"] " and a default "
+       "normal size used when no size is specified"]
+      [:p
+       "The " [:strong ":span-class"] " keyword argument of the "
+       [:strong "icon-component"] " function can be used to set the "
+       "colour of an icon. The " [:em "Bulma"] " text colour classes "
+       "can be used to set the icon colour"]
+      ]
      :header {:title "icon-component Render an icon"}]]
    [:div.column
     [:pre
@@ -17,16 +29,7 @@
       "[icon/icon-component {:name \"fa-house\"}]"]]
     [:div.box
      [:h6.title.is-6 "Result"]
-     [i/icon-component {:name "fa-warehouse"}]]]])
-
-(defn icon-sizes []
-  [:div.columns
-   [:div.column
-    [c/card [:p
-             "The " [:strong "icon-componenet"] " component supports 5 icon "
-             "sizes " [:em ":small, :medium, :large, :huge"] " and a default "
-             "normal size used when no size is specified"]]]
-   [:div.column
+     [i/icon-component {:name "fa-warehouse"}]]
     [:pre
      [:code
       "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
@@ -58,17 +61,7 @@
       " Large"]
      [:p [i/icon-component {:name "fa-warehouse"
                             :size :huge}]
-      " Huge"]]]])
-
-(defn icon-colour []
-  [:div.columns
-   [:div.column
-    [c/card [:p
-             "The " [:strong ":span-class"] " keyword argument of the "
-             [:strong "icon-component"] " function can be used to set the "
-             "colour of an icon. The " [:em "Bulma"] " text colour classes "
-             "can be used to set the icon colour"]]]
-   [:div.column
+      " Huge"]]
     [:pre
      [:code
       "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
@@ -100,10 +93,11 @@
       " Warning Colour"]
      [:p [i/icon-component {:name "fa-warehouse"
                             :span-class "has-text-danger"}]
-      " Danger Colour"]]]])
+      " Danger Colour"]]
+    ]])
 
 (defn icon-page []
-  [:<>
+  [:div.content
    [:h2.title.is-2 "The Icon Component"]
    [:p
     "The " [:strong "theophilusx.yorick.icon"] " namespace provides an icon "
@@ -149,7 +143,5 @@
      [:h4.title.is-4 "Description"]]
     [:div.column
      [:h4.title.is-4 "Example"]]]
-   [icon-example]
-   [icon-sizes]
-   [icon-colour]])
+   [icon-example]])
 

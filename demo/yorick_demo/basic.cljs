@@ -4,25 +4,26 @@
 
 (defn a-component []
   [:div.columns
-   [:div.column
-    [c/card [:<>
-             [:p "The " [:strong "a"] " component generates a basic HTML <a> "
-              "element. The component expects to be called with one argument "
-              [:em "title"] " which is the text to be used in the link. "
-              "The component also accepts a number of keyword arguments."]
-             [:ul
-              [:li [:strong ":href"] " a hypertext link that will be the target "
-               "of the link. If not supplied, defaults to " [:em "#"]]
-              [:li [:strong ":on-click"] " a function to execute when the link "
-               "is clicked on"]
-              [:li [:strong ":class"] " a string or vector of strings representing "
-               "CSS class names to apply to the <a> element"]
-              [:li [:strong ":id"] " an ID attribute value"]
-              [:li [:strong ":role"] " a role attribute value"]
-              [:li [:strong ":data-target"] " a data-target attribute value"]
-              [:li [:strong ":aria-label"] " an aria-label attribute value"]
-              [:li [:strong ":aria-expanded"] " true if aria-expanded attribute "
-               "is to be added"]]]
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p "The " [:strong "a"] " component generates a basic HTML <a> "
+       "element. The component expects to be called with one argument "
+       [:em "title"] " which is the text to be used in the link. "
+       "The component also accepts a number of keyword arguments."]
+      [:ul
+       [:li [:strong ":href"] " a hypertext link that will be the target "
+        "of the link. If not supplied, defaults to " [:em "#"]]
+       [:li [:strong ":on-click"] " a function to execute when the link "
+        "is clicked on"]
+       [:li [:strong ":class"] " a string or vector of strings representing "
+        "CSS class names to apply to the <a> element"]
+       [:li [:strong ":id"] " an ID attribute value"]
+       [:li [:strong ":role"] " a role attribute value"]
+       [:li [:strong ":data-target"] " a data-target attribute value"]
+       [:li [:strong ":aria-label"] " an aria-label attribute value"]
+       [:li [:strong ":aria-expanded"] " true if aria-expanded attribute "
+        "is to be added"]]]
      :header {:title "a - An HTML anchor component"}]]
    [:div.column
     [:pre
@@ -36,17 +37,18 @@
 
 (defn img-component []
   [:div.columns
-   [:div.column
-    [c/card [:<>
-             [:p "The " [:strong "img"] " component generates an HTML <img> "
-              "element. The component expects an argument which specifies "
-              "the local or remote path i.e. the <img> src attribute. Optional "
-              "supported keyword arguments include "]
-             [:ul
-              [:li [:strong ":width"] " a width attribute value"]
-              [:li [:strong ":class"] " a string or vector of strings representing "
-               "CSS class names"]
-              [:li [:strong ":id"] " an id attribute value"]]]
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p "The " [:strong "img"] " component generates an HTML <img> "
+       "element. The component expects an argument which specifies "
+       "the local or remote path i.e. the <img> src attribute. Optional "
+       "supported keyword arguments include "]
+      [:ul
+       [:li [:strong ":width"] " a width attribute value"]
+       [:li [:strong ":class"] " a string or vector of strings representing "
+        "CSS class names"]
+       [:li [:strong ":id"] " an id attribute value"]]]
      :header {:title "img - An HTML image component"}]]
    [:div.column
     [:pre
@@ -57,10 +59,12 @@
 
 (defn render-vec-component []
   [:div.columns
-   [:div.column
-    [c/card [:p "The " [:strong "render-vec"] " component is a basic component "
-             "which will render a ClojureScript vector as an unordered list. "
-             "It takes only one argument, the vector to render."]
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p "The " [:strong "render-vec"] " component is a basic component "
+       "which will render a ClojureScript vector as an unordered list. "
+       "It takes only one argument, the vector to render."]]
      :header {:title "render-vec - Render a ClojureScript vector"}]]
    [:div.column
     [:pre
@@ -74,10 +78,12 @@
 
 (defn render-set-component []
   [:div.columns
-   [:div.column
-    [c/card [:p "The " [:strong "render-set"] " component renders a ClojureScript "
-             "set as a comma delimited list surrounded in parenthesis. It accepts "
-             "one argument, the set to render."]
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p "The " [:strong "render-set"] " component renders a ClojureScript "
+       "set as a comma delimited list surrounded in parenthesis. It accepts "
+       "one argument, the set to render."]]
      :header {:title "render-set - Render a ClojureScript set"}]]
    [:div.column
     [:pre
@@ -91,12 +97,14 @@
 
 (defn render-map-component []
   [:div.columns
-   [:div.column
-    [c/card [:p "The " [:strong "render-map"] " component can render a "
-             "ClojureScript map as an HTML table. Keys in the map will be "
-             "rendered as table headings and cells will be rendered as string or "
-             "with " [:strong "render-vec"] " and " [:strong "render-set"]
-             " when appropriate"]
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p "The " [:strong "render-map"] " component can render a "
+       "ClojureScript map as an HTML table. Keys in the map will be "
+       "rendered as table headings and cells will be rendered as string or "
+       "with " [:strong "render-vec"] " and " [:strong "render-set"]
+       " when appropriate"]]
      :header {:title "render-map - Render a ClojureScript map"}]]
    [:div.column
     [:pre
@@ -118,29 +126,30 @@
 
 (defn breadcrumb-component []
   [:div.columns
-   [:div.column
-    [c/card [:<>
-             [:p "The " [:strong "breadcrumbs"] " component provides a trail "
-              "of breadcrumb links which can be used to show the path to the "
-              "current page and navigate to previous pages in the trail. "
-              "The component expects at least 2 arguments, a " [:em "sid"]
-              " keyword representing the path into the global state atom where "
-              "the current selected link state will be stored and " [:em "crubms"]
-              ", a vector of maps which define each link in the breadcrumb trail"]
-             [:p "The " [:em "sid"] " keyword argument uses a period as a path "
-              "separator e.g. :ui.page.current is translated to the vector "
-              "[:ui :page :current] and used as the keys for storing the value "
-              "associated with a breadcrumb link when it is clicked."]
-             [:p "The " [:em "crumbs"] " argument is a vector of maps where "
-              "each map defines a link in the breadcrumb trail. Available keys "
-              "for the map are"]
-             [:ul
-              [:li [:strong ":name"] " The text to use in the link name"]
-              [:li [:strong ":value"] " value to store when the link is clicked"]
-              [:li [:strong ":active"] " true when this link is the active link"]
-              [:li [:strong ":icon"] " An icon data structure representing an icon "
-               "to be added to the link. See " [:strong "theophilusx.yorick.icon"]
-               " for details"]]]
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p "The " [:strong "breadcrumbs"] " component provides a trail "
+       "of breadcrumb links which can be used to show the path to the "
+       "current page and navigate to previous pages in the trail. "
+       "The component expects at least 2 arguments, a " [:em "sid"]
+       " keyword representing the path into the global state atom where "
+       "the current selected link state will be stored and " [:em "crubms"]
+       ", a vector of maps which define each link in the breadcrumb trail"]
+      [:p "The " [:em "sid"] " keyword argument uses a period as a path "
+       "separator e.g. :ui.page.current is translated to the vector "
+       "[:ui :page :current] and used as the keys for storing the value "
+       "associated with a breadcrumb link when it is clicked."]
+      [:p "The " [:em "crumbs"] " argument is a vector of maps where "
+       "each map defines a link in the breadcrumb trail. Available keys "
+       "for the map are"]
+      [:ul
+       [:li [:strong ":name"] " The text to use in the link name"]
+       [:li [:strong ":value"] " value to store when the link is clicked"]
+       [:li [:strong ":active"] " true when this link is the active link"]
+       [:li [:strong ":icon"] " An icon data structure representing an icon "
+        "to be added to the link. See " [:strong "theophilusx.yorick.icon"]
+        " for details"]]]
      :header {:title "breadcrumbs - A component to render a trail of breadcrumb links"}]]
    [:div.column
     [:pre
@@ -166,19 +175,20 @@
 
 (defn notification-component []
   [:div.columns
-   [:div.column
-    [c/card [:<>
-             [:p "The " [:strong "notification"] " component provides a basic "
-              "component for rendering a notification for the user. The "
-              "component expects at least one argument, the " [:em "body"]
-              " argument, which can be pretty much anything (another component, "
-              "hiccup markup, strings etc)"]
-             [:p "The component also supports optional keyword arguments"]
-             [:ul
-              [:li [:strong ":class"] " A string or vector of strings "
-               "representing CSS class names"]
-              [:li [:strong ":delete"] " If set to true, adds a close button "
-               "to the top left corner of the notification"]]]
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p "The " [:strong "notification"] " component provides a basic "
+       "component for rendering a notification for the user. The "
+       "component expects at least one argument, the " [:em "body"]
+       " argument, which can be pretty much anything (another component, "
+       "hiccup markup, strings etc)"]
+      [:p "The component also supports optional keyword arguments"]
+      [:ul
+       [:li [:strong ":class"] " A string or vector of strings "
+        "representing CSS class names"]
+       [:li [:strong ":delete"] " If set to true, adds a close button "
+        "to the top left corner of the notification"]]]
      :header {:title "notification - A basic notification component"}]]
    [:div.column
     [:pre
@@ -195,7 +205,7 @@
       :delete true :class "is-danger"]]]])
 
 (defn basic-page []
-  [:<>
+  [:div.content
    [:h2.title.is-2 "Basic Components"]
    [:p
     "The " [:strong "theophilusx.yorick.basic"] " namespace contains basic "

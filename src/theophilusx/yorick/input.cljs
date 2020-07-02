@@ -626,14 +626,33 @@
            [icons/icon-component icon-data])
          (or button-text "Search")]]])))
 
-(defn range-field [sid _ _ & {:keys [model change-fn value]}]
+(defn range-field
+  "A simple range input component. The `sid` argument is a storage identifier
+  keyword. The `min` and `max` arguments set the minimum and maximum values for
+  the range. A number of optional keyword arguments are supported:
+
+  | Keyword      | Description                                              |
+  |--------------|----------------------------------------------------------|
+  | `:model`     | a reagent atom to use as the document model store        |
+  | `:change-fn` | a function of 1 argument which is called to update the   |
+  |              | document model store when input changes. The argument is |
+  |              | the new input data                                       |
+  | `:value`     | The default value to use as initial value for the range  |
+  | `:label`     | A string label to associate with the range field         |
+  | `:classes`   | A map of strings or vectors of strings representing CSS  |
+  |              | class names. Supported keys are `:input`, `:field` and   |
+  |              | `:label`                                                 |
+  | `:required`  | If true, set the HTML required attribute on the input    |
+  | `:disabled`  | If true, set the HTML disabled attribute on the input    |
+  | `:step`      | Set the step size for the range. Defaults to 1           |"
+  [sid _ _ & {:keys [model change-fn value]}]
   (let [doc (or model
                 (r/atom {}))
         chg-fn (if (fn? change-fn)
                  change-fn
                  (fn [e]
-                   (store/assoc-in! doc (spath sid) (value-of e))))]
-    (store/assoc-in! doc (spath sid) value)
+                   (store/assoc-in! doc (spath sid) (js/parseInt (value-of e)))))]
+    (store/assoc-in! doc (spath sid) (or value 0))
     (fn [sid min max & {:keys [label classes required disabled step]}]
       [field [:div.field.has-addons
               [:span {:style {:paddingRight "5px"}}(str min " ")]

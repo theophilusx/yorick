@@ -743,9 +743,20 @@
        [:code "action"] " argument is a function of 1 argument which is called "
        "when the user clicks on the search button. The argument is the string "
        "entered into the search box by the user. The component also supports "
-       "an optional keyword argument " [:code "placeholder"] ", which is a "
-       "string that will be used as a placeholder in the input field of the "
-       "search box."]]
+       "a number of optional keyword arguments:"]
+      [:ul
+       [:li [:strong ":placeholder"] " - text to be used as a placeholder in "
+        "the search box"]
+       [:li [:strong ":classes"] " - a map of strings or vectors of strings "
+        "representing CSS class names. Supported keys are "
+        [:code ":field, :input"] " and " [:code ":button"]]
+       [:li [:strong ":icon-data"] " - an icon data map. See "
+        [:code "theophilusx/yorick/icon"] " for details regarding the icon data "
+        "map format"]
+       [:li [:strong ":button-text"] " - the text to be used on the search "
+        "button. Will default to " [:code "Search"] " if not specified. Use "
+        [:code "nil"] " as the value to have no text and just an icon "
+        "(specifying the icon with " [:code ":icon-data"] ")"]]]
      :header {:title "search - a basic search box component"}]]
    [:div.column
     [:pre
@@ -770,7 +781,7 @@
       :classes {:button "has-background-link has-text-white"}]]]])
 
 (defn input-page []
-  [:<>
+  [:div.content
    [:h2.title.is-2 "Input Components"]
    [:p
     "The " [:strong "theophilusx.yorick.input"] " namespace provides various "

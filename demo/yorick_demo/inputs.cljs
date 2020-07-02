@@ -1,7 +1,8 @@
 (ns yorick-demo.inputs
   (:require [theophilusx.yorick.card :as c]
             [theophilusx.yorick.input :as i]
-            [reagent.core :as r]))
+            [reagent.core :as r]
+            [theophilusx.yorick.icon :as icons]))
 
 (defn field-component []
   [:div.columns
@@ -753,7 +754,20 @@
       "[input/search #(js/alert (str \"You are searching for \" %))]"]]
     [:div.box
      [:p "A simple search box example"]
-     [i/search #(js/alert (str "You are searching for " %))]]]])
+     [i/search #(js/alert (str "You are searching for " %))]]
+    [:pre
+     [:code
+      "[:p \"Search box with placeholder, icon and colour\"]" [:br]
+      "[input/search #(js/alert (str \"You are searching for \" %))" [:br]
+      "  :placeholder \"enter search terms\" :button-text \"\"" [:br]
+      "  :icon-data (icons/deficon \"fa-search\")" [:br]
+      "  :classes {:button \"has-background-link has-text-white\"}]"]]
+    [:div.box
+     [:p "Search box with placeholder, icon and colour"]
+     [i/search #(js/alert (str "You are searching for " %))
+      :placeholder "enter search terms" :button-text ""
+      :icon-data (icons/deficon "fa-search")
+      :classes {:button "has-background-link has-text-white"}]]]])
 
 (defn input-page []
   [:<>

@@ -592,19 +592,39 @@
              "No file chosen")]]]]])))
 
 (defn search
-  "A simple search box component. The `action` argument is a function of 1
-  argument which is executed when the user clicks on the search button. The
-  argument is the search string entered by the user. The component supports
-  an optional `placeholder` keyword argument, which is text to use as a
-  placeholder in the search box input field."
+  "A simple search box component. The `action` argument is a function of one
+  argument which is executed when the user hits the search button. The argument
+  is the text entered into the search field. The component also accepts a number
+  of optional keyword arguments
+
+  | Keyword        | Description                                            |
+  |----------------|--------------------------------------------------------|
+  | `:placeholder` | Text to be used as a placeholder in the search box     |
+  | `:classes`     | A map of strings or vector of strings representing CSS |
+  |                | class names. Supported keys are `:field`, `:input` and |
+  |                | `:button`                                              |
+  | `:icon-data`   | An icon data map (see `theophilusx/yorick/icon`)       |
+  | `:button-text` | Text to be used on the search button. Defaults to      |
+  |                | `Search` if none provided. Set to nil when you just    |
+  |                | want an icon and use `:icon-data` to set the icon      |"
   [_ & _]
   (let [doc (r/atom {})]
-    (fn [action & {:keys [placeholder]}]
-      [:<>
-       [field [:<>
-               [input :text :search :placeholder placeholder :model doc]
-               [button "Search" #(action (:search @doc))]]
-        :classes {:field "has-addons"}]])))
+    (fn [action & {:keys [placeholder classes icon-data button-text]}]
+      [:div.field.has-addons {:class (:field classes)}
+       [:div.control
+        [:input.input {:class (:input classes)
+                       :type "text"
+                       :placeholder placeholder
+                       :value (str (store/get doc :search))
+                       :on-change #(store/put! doc :search (value-of %))}]]
+       [:div.control {:class (when icon-data
+                               (icons/icon-control-class icon-data))}
+        [:button.button {:class (:button classes)
+                         :type "button"
+                         :on-click #(action (:search @doc))}
+         (when icon-data
+           [icons/icon-component icon-data])
+         (or button-text "Search")]]])))
 
 (defn range-field [sid _ _ & {:keys [model change-fn value]}]
   (let [doc (or model

@@ -780,6 +780,74 @@
       :icon-data (icons/deficon "fa-search")
       :classes {:button "has-background-link has-text-white"}]]]])
 
+(defn range-component []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p
+       "The " [:strong "range-field"] " component provides a basic range input "
+       "field with a minimum and maximum range values. The " [:code "sid"]
+       " argument is a storage identifier keyword. The " [:code "min"]
+       " and " [:code "max"] " arguments set the minimum and maximum values "
+       "for the range. The component also supports a number of optional "
+       "keyword arguments:"]
+      [:ul
+       [:li [:strong ":model"] " a reagent atom to use as the document model "
+        "store"]
+       [:li [:strong ":change-fn"] " a function of one argument to use as the "
+        "function to update the value in the document model store. The argument "
+        "is the new value entered by the user"]
+       [:li [:strong ":value"] " a default initial value for the range"]
+       [:li [:strong ":label"] " a text label to associate with the range field"]
+       [:li [:strong ":classes"] " a map of strings or vectors of strings "
+        "representing CSS class names. The allowed keys are "
+        [:code ":field, :input"] " and " [:code ":label"]]
+       [:li [:strong ":required"] " a boolean value. If true, set the HTML "
+        "required attribute"]
+       [:li [:strong ":disabled"] " a boolean value. If true, set the HTML "
+        "disabled attribute"]
+       [:li [:strong ":step"] " set the step size for the range. Defaults to "
+        "1 if not supplied"]]]
+     :header {:title "range-field - a basic range input field"}]]
+   [:div.column
+    [:pre
+     [:code
+      "[:p \"A simple range example\"]" [:br]
+      "(let [doc (r/atom {})" [:br]
+      "      frm (fn []" [:br]
+      "            [:<>" [:br]
+      "              [input/range-field :range1.value 0 100 :model doc]" [:br]
+      "              [:p (str \"Result: \" @doc)]])]" [:br]
+      "  [frm])"]]
+    [:div.box
+     [:p "A simple range example"]
+     (let [doc (r/atom {})
+           frm (fn []
+                 [:<>
+                  [i/range-field :range1.value 0 100 :model doc]
+                  [:p (str "Result: " @doc)]])]
+       [frm])]
+    [:pre
+     [:code
+      "[:p \"Range with label, step and default value\"]" [:br]
+      "(let [doc (r/atom {})" [:br]
+      "      frm (fn []" [:br]
+      "            [:<>" [:br]
+      "              [input/range-field :range2.value 0 1000 :model doc" [:br]
+      "                 :value 100 :step 10 :label \"Quantity\"]" [:br]
+      "              [:p (str \"Result: \" @doc)]])]" [:br]
+      "  [frm])"]]
+    [:div.box
+     [:p "Range with label, step and default value"]
+     (let [doc (r/atom {})
+           frm (fn []
+                 [:<>
+                  [i/range-field :range2.value 0 1000 :model doc
+                   :value 100 :step 10 :label "Quantity"]
+                  [:p (str "Result: " @doc)]])]
+       [frm])]]])
+
 (defn input-page []
   [:div.content
    [:h2.title.is-2 "Input Components"]
@@ -844,5 +912,6 @@
    [select-component]
    [select-field-component]
    [file-component]
-   [search-component]])
+   [search-component]
+   [range-component]])
 

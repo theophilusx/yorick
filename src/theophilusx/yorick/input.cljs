@@ -641,7 +641,26 @@
                (str " " (store/get-in doc (spath sid)))]]
        :label label :classes classes])))
 
-(defn number-input [sid & {:keys [model change-fn value]}]
+(defn number-input
+  "A basic number input component. The `sid` is a storage identifier keyword
+  which sets the location for storing input data in the document model atom.
+  The component also accepts a number of optional keyword arguments:
+
+  | Keyword      | Description                                           |
+  |--------------|-------------------------------------------------------|
+  | `:model`     | a reagent atom to be used as the document model store |
+  | `:change-fn` | a function of one argument called when the input data |
+  |              | changes. The argument is the new input data.          |
+  | `:value`     | the default value used to initialise the component    |
+  | `:min`       | Set the minimum acceptable value                      |
+  | `:max`       | Set the maximum acceptable value                      |
+  | `:step`      | The step size for the numbers                         |
+  | `:classes`   | a map of strings or vectors of string representing    |
+  |              | CSS class names. Supported keys are `:control` and    |
+  |              | `:input`                                              |
+  | `:attrs`     | a map of HTML attribute values. Keys are the HTML     |
+  |              | attribute names as keywords e.g. `:id`                |"
+  [sid & {:keys [model change-fn value]}]
   (let [doc (or model
                 (r/atom {}))
         chg-fn (if (fn? change-fn)

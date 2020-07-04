@@ -115,15 +115,8 @@
        [:li [:strong ":icon-data"] " - either an icon-data map or a vector of "
         "icon-data maps. See " [:strong "theophilusx.yorick.icon"] " for "
         "details on the " [:code "icon-data"] " map."]
-       [:li [:strong ":placeholder"] " - placeholder text to use in the input"]
-       [:li [:strong ":required"] " - set HTML required attribute (boolean)"]
-       [:li [:strong ":disabled"] " - set HTML disabled attribute (boolean)"]
-       [:li [:strong ":min"] " - set the HTML min attribute (number)"]
-       [:li [:strong ":max"] " - set the HTML max attribute (number)"]
-       [:li [:strong ":minlength"] " - set the HTML minLength attribute (number)"]
-       [:li [:strong ":maxlength"] " - set the HTML maxLength attribute (number)"]
-       [:li [:strong ":readonly"] " - set the HTML readonly attribute (boolean)"]
-       [:li [:strong ":size"] " - set the HTML size attribute (number)"]]]
+       [:li [:strong ":attrs"] " - a map of HTML attribute values. Keys are "
+        "the HTML attribute names as keywords e.g. `:placeholder`"]]]
      :header {:title "input - general purpose input component"}]]
    [:div.column
     [:pre
@@ -135,7 +128,8 @@
       "              [:<>" [:br]
       "                [:p \"Basic password input field example\"]" [:br]
       "                [input/field [input/input :password :pwd :model doc" [:br]
-      "                              :placeholder \"enter password\"] :label \"Password:\"]" [:br]
+      "                               :attrs {:placeholder \"enter password\"}]" [:br]
+      "                 :label \"Password:\"] " [:br]
       "                [:p (str \"Value entered: \" (:pwd @doc))]])]" [:br]
       "  [eg-fn])"]]
     [:div.box
@@ -146,7 +140,8 @@
                    [:<>
                     [:p "Basic password input field example"]
                     [i/field [i/input :password :pwd :model doc
-                              :placeholder "enter password"] :lable "Password:"]
+                              :attrs {:placeholder "enter password"}]
+                     :lable "Password:"]
                     [:p (str "Value entered: " (:pwd @doc))]])]
        [eg-fn])]]])
 
@@ -169,10 +164,6 @@
        [:li [:strong ":classes"] " - a map of strings or vector of strings "
         "that represent CSS class names. Supported keys are "
         [:code ":field, :label and :input"]]
-       [:li [:strong ":placeholder"] " - string used as the HTML placeholder "
-        "attribute"]
-       [:li [:strong ":required"] " - boolean representing the HTML required "
-        "attribute"]
        [:li [:strong ":icon-data"] " - an icon-data map or vector of icon-data "
         "maps. See " [:code "theophilusx.yorick.icon"] " for details"]
        [:li [:strong ":model"] " - a reagent atom to be used as the document "
@@ -180,17 +171,8 @@
        [:li [:strong ":change-fn"] " - a function of one argument which is "
         "called when the input data changes to update the data stored in the "
         "document model atom at the location specified by the " [:code "sid"]]
-       [:li [:strong ":disabled"] " - boolean used to set the HTML disabled "
-        "attribute"]
-       [:li [:strong ":min"] " - number used to set the HTML min attribute"]
-       [:li [:strong ":max"] " - number used to set the HTML max attribute"]
-       [:li [:strong ":minlength"] " - number used to set the HTML minLength "
-        "attribute"]
-       [:li [:strong ":maxlength"] " - number used to set the HTML maxLength "
-        "attribute"]
-       [:li [:strong ":readonly"] " - boolean used to set the HTML readonly "
-        "attribute"]
-       [:li [:strong ":size"] " - number used to set the HTML size attribute"]]]
+       [:li [:strong ":attrs"] " - a map of HTML attribute values. Keys are "
+        "the HTML attribute names as keywords e.g. `:placeholder`"]]]
      :header {:title "input-field - an input field convenience component"}]]
    [:div.column
     [:pre
@@ -234,8 +216,8 @@
         [:code ":field, :control, :label and :input"]]
        [:li [:strong ":checked"] " - boolean value used to set the HTML checked "
         "attribute"]
-       [:li [:strong ":required"] " - boolean value used to set the HTML required"
-        " attribute"]]]
+       [:li [:strong ":attrs"] " - a map of HTML attribute values. Keys are the "
+        "HTML attribute names as a keyword e.g. `:required`"]]]
      :header {:title "checkbox - a basic checkbox component"}]]
    [:div.column
     [:pre
@@ -290,7 +272,9 @@
         "be stored in the document model atom"]
        :li [:strong ":classes"] " - a map of strings or vectors of strings "
        "that represent CSS class names. Supported keys are "
-       [:code ":control"] ", " [:code ":input"] " and " [:code ":label"]]]
+       [:code ":control"] ", " [:code ":input"] " and " [:code ":label"]
+       [:li [:strong ":attrs"] " - a map of HTML attribute values. Keys are the "
+        "HTML attribute name as a keyword e.g. `:disabled`"]]]
      :header {:title "radio - a basic radio button component"}]]
    [:div.column
     [:pre
@@ -343,10 +327,13 @@
         "alignment. The " [:code "title"] " is a string which is used as the "
         "text on the button. The " [:code "action"] " argument is a function "
         "of no arguments which is called when the button is clicked. This "
-        "component also supports the optional keyword argument "
-        [:code ":classes"] " which is a map of strings or vectors of strings "
-        "representing CSS class names. The supported keys in the map are "
-        [:code ":field"] ", " [:code ":control"] " and " [:code ":button"] "."]]
+        "component also supports optional keyword arguments"]
+       [:ul
+        [:li [:strong ":classes"] " - a map of strings or vectors of strings "
+         "representing CSS class names. The supported keys in the map are "
+         [:code ":field"] ", " [:code ":control"] " and " [:code ":button"] "."]
+        [:li [:strong ":attrs"] " - a map of HTML attribute values. The keys "
+         "are the HTML attribute names as keywords e.g. " [:code ":disabled"]]]]
       :header {:title "button - a basic button component"}]]
     [:div.column
      [:pre
@@ -472,8 +459,8 @@
        [:li [:strong ":classes"] " - A map of CSS class names or vectors of CSS "
         "class names to be associated with elements within the component. "
         "Supported keys are " [:code ":field, :label and :textarea"]]
-       [:li [:strong ":placeholder"] " - A string of text to be used as the "
-        "placeholder text in the text area box."]]]
+       [:li [:strong ":attrs"] " - a map of HTML attribute values. The keys are "
+        "the HTML attribute name as a keyword e.g. " [:code ":placeholder"]]]]
      :header {:title "textarea - a basic text area component"}]]
    [:div.column
     [:pre
@@ -482,8 +469,9 @@
       "(let [doc (r/atom {})" [:br]
       "      frm (fn []" [:br]
       "            [:<>" [:br]
-      "              [input/textarea \"Text Area Label\" :text.value :model doc]"
+      "              [input/textarea \"Text Area Label\" :text.value :model doc"
       [:br]
+      "                :attrs {:placeholder \"Write text here\"}]" [:br]
       "              [:p (str \"Result: \" @doc)]])]" [:br]
       "  [fmt])"]]
     [:div.box
@@ -491,7 +479,8 @@
      (let [doc (r/atom {})
            frm (fn []
                  [:<>
-                  [i/textarea "Text Area Label" :text.value :model doc]
+                  [i/textarea "Text Area Label" :text.value :model doc
+                   :attrs {:placeholder "Write text here"}]
                   [:p (str "Result: " @doc)]])]
        [frm])]]])
 
@@ -536,7 +525,9 @@
        [:li [:strong ":select-size"] " - sets the size of the select box. Can "
         "be " [:code ":large, :medium or :small"]]
        [:li [:strong ":icon-data"] " - an icon data map defining an icon to "
-        "associate with the select box. See " [:strong "theophilusx/yorick/icon"]]]]
+        "associate with the select box. See " [:strong "theophilusx/yorick/icon"]]
+       [:li [:strong ":attrs"] " - a map of HTML attribute values. The keys are "
+        "HTML attribute names as keywords e.g. " [:code ":disabled"]]]]
      :header {:title "select - a basic select box component"}]]
    [:div.column
     [:div.content
@@ -624,7 +615,9 @@
         "store."]
        [:li [:strong ":change-fn"] " - a function of one argument called when "
         "the input data changes. Argument is the new data. Used to update the "
-        "document model store."]]]
+        "document model store."]
+       [:li [:strong ":attrs"] " - a map of HTML attribute values. The keys are "
+        "HTML attribute names as keywords e.g. " [:code ":disabled"]]]]
      :header {:title "select-field - a select field component"}]]
    [:div.column
     [:pre
@@ -745,8 +738,6 @@
        "entered into the search box by the user. The component also supports "
        "a number of optional keyword arguments:"]
       [:ul
-       [:li [:strong ":placeholder"] " - text to be used as a placeholder in "
-        "the search box"]
        [:li [:strong ":classes"] " - a map of strings or vectors of strings "
         "representing CSS class names. Supported keys are "
         [:code ":field, :input"] " and " [:code ":button"]]
@@ -756,7 +747,9 @@
        [:li [:strong ":button-text"] " - the text to be used on the search "
         "button. Will default to " [:code "Search"] " if not specified. Use "
         [:code "nil"] " as the value to have no text and just an icon "
-        "(specifying the icon with " [:code ":icon-data"] ")"]]]
+        "(specifying the icon with " [:code ":icon-data"] ")"]
+       [:li [:strong ":attrs"] " - a map of HTML attribute values. The keys are "
+        "HTML attribute names as keywords e.g. " [:code ":disabled"]]]]
      :header {:title "search - a basic search box component"}]]
    [:div.column
     [:pre
@@ -803,12 +796,10 @@
        [:li [:strong ":classes"] " a map of strings or vectors of strings "
         "representing CSS class names. The allowed keys are "
         [:code ":field, :input"] " and " [:code ":label"]]
-       [:li [:strong ":required"] " a boolean value. If true, set the HTML "
-        "required attribute"]
-       [:li [:strong ":disabled"] " a boolean value. If true, set the HTML "
-        "disabled attribute"]
        [:li [:strong ":step"] " set the step size for the range. Defaults to "
-        "1 if not supplied"]]]
+        "1 if not supplied"]
+       [:li [:strong ":attrs"] " - a map of HTML attribute values. The keys are "
+        "HTML attribute names as keywords e.g. " [:code ":disabled"]]]]
      :header {:title "range-field - a basic range input field"}]]
    [:div.column
     [:pre

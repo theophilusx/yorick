@@ -684,7 +684,30 @@
                                       (str (store/get-in doc (spath sid))))
                              :class (cs (:input classes))})]])))
 
-(defn number-field [sid & {:keys [model change-fn value min max step attrs
+(defn number-field
+  "A number input field component. Essentially, this is the `number-input`
+  component wrapped in a `field` component. The `sid` argument is a storage
+  identifier keyword used to determine where the input data will be stored
+  within the document model store. The component supports the following optional
+  keyword arguments:
+
+  | Keyword      | Description                                            |
+  |--------------|--------------------------------------------------------|
+  | `:model`     | a reagent atom to use as the document model store      |
+  | `:change-fn` | a function of 1 argument called when the input data    |
+  |              | changes. The argument is the new input data. Used to   |
+  |              | update the document model store                        |
+  | `:value`     | a default value to use to initialise the component     |
+  | `:min`       | the minimum acceptable value for input                 |
+  | `:max`       | the maximum acceptable value for input                 |
+  | `:step`      | the step size for number increment/decrement           |
+  | `:classes`   | a map of strings or vectors of strings representing    |
+  |              | CSS class names. Supported keys are `:field`, `:label` |
+  |              | `:control` and `:input`                                |
+  | `:label`     | a string to use as the label for the input field       |
+  | `:attrs`     | a map of HTML attribute values. The keys are HTML      |
+  |              | attribute names as keywords e.g `:id`                  |"
+  [sid & {:keys [model change-fn value min max step attrs
                                   classes label]}]
   [field [number-input sid :model model :change-fn change-fn :min min
           :max max :step step :classes classes :value value :attrs attrs]

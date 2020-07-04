@@ -18,12 +18,8 @@
         "is clicked on"]
        [:li [:strong ":class"] " a string or vector of strings representing "
         "CSS class names to apply to the <a> element"]
-       [:li [:strong ":id"] " an ID attribute value"]
-       [:li [:strong ":role"] " a role attribute value"]
-       [:li [:strong ":data-target"] " a data-target attribute value"]
-       [:li [:strong ":aria-label"] " an aria-label attribute value"]
-       [:li [:strong ":aria-expanded"] " true if aria-expanded attribute "
-        "is to be added"]]]
+       [:li [:strong ":attrs"] " - a map of HTML attribute values. The keys are "
+        "HTML attribute names as keywords e.g. " [:code ":id"]]]]
      :header {:title "a - An HTML anchor component"}]]
    [:div.column
     [:pre
@@ -45,17 +41,17 @@
        "the local or remote path i.e. the <img> src attribute. Optional "
        "supported keyword arguments include "]
       [:ul
-       [:li [:strong ":width"] " a width attribute value"]
-       [:li [:strong ":class"] " a string or vector of strings representing "
+       [:li [:strong ":class"] " - a string or vector of strings representing "
         "CSS class names"]
-       [:li [:strong ":id"] " an id attribute value"]]]
+       [:li [:strong ":attrs"] " - a map of HTML attribute values. Keys are the "
+        "HTML attribute names as keywords e.g. " [:code ":id"]]]]
      :header {:title "img - An HTML image component"}]]
    [:div.column
     [:pre
-     [:code "[:p [basic/img \"images/bulma-logo.png\" :width 400]]"]]
+     [:code "[:p [basic/img \"images/bulma-logo.png\" :attrs {:width 400}]]"]]
     [:div.box
      [:h6.title.is-6 "Result"]
-     [:p [b/img "images/bulma-logo.png" :width 400]]]]])
+     [:p [b/img "images/bulma-logo.png" :attrs {:width 400}]]]]])
 
 (defn render-vec-component []
   [:div.columns

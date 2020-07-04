@@ -7,7 +7,13 @@
            (goog.i18n.NumberFormat Format)))
 
 (defn cs [& names]
-  (string/join " " (filter identity names)))
+  (let [v (filter identity (map #(cond
+                                   (string? %) %
+                                   (keyword? %) (name %)
+                                   (vector? %) (string/join " " %)
+                                   :default nil) names))]
+    (if (seq v)
+      (string/join " " v)))) 
 
 (defn value-of [e]
   (-> e .-target .-value))

@@ -886,6 +886,59 @@
                   [:p (str "Result: " @doc)]])]
        [frm])]]])
 
+(defn number-field-component []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p
+       "The " [:strong "number-field"] " component is a basic number input "
+       "field. It is essentially the " [:code "number-input"] " component "
+       "wrapped in a " [:code "field"] " component. The " [:code "sid"]
+       " argument is a storage identifier keyword used to determine where to "
+       "store input data within the document model store. The component "
+       "supports a number of optional keyword arguments:"]
+      [:ul
+       [:li [:strong ":model"] " - a reagent atom to use as the document model "
+        "store."]
+       [:li [:strong ":change-fn"] " - a function of one argument which is "
+        "called when the input data changes. The argument is the new input data. "
+        "Used to update the value in the document model store."]
+       [:li [:strong ":value"] " a default value used to initialise the "
+        "component"]
+       [:li [:strong ":min"] " - set a minimum acceptable input value"]
+       [:li [:strong ":max"] " - set a maximum acceptable input value"]
+       [:li [:strong ":step"] " - set the increment/decrement step size"]
+       [:li [:strong ":classes"] " - a map of strings or vectors of strings "
+        "representing CSS class names. Supported keys are "
+        [:code ":field, :label, :control"] " and " [:code ":input"]]
+       [:li [:strong ":label"] " - a string to use as the field label"]
+       [:li [:strong ":attrs"] " - a map of HTML attribute values. Keys are "
+        "HTML attribute names as keywords e.g. " [:code ":id"]]]]
+     :header {:title "number-field - a basic number input field"}]]
+   [:div.column
+    [:pre
+     [:code
+      "[:p \"A number input field example\"]" [:br]
+      "(let [doc (r/atom {})" [:br]
+      "      frm (fn []" [:br]
+      "            [:<>" [:br]
+      "              [input/number-field :num2.value :min 100 :max 1000" [:br]
+      "                 :step 10 :model doc :label \"Your Number\"" [:br]
+      "                 :value 500 :attrs {:maxLength \"4\"}]" [:br]
+      "             [:p (str \"Result: \" @doc)]])]" [:br]
+      "  [frm])"]]
+    [:div.box
+     [:p "A number input field example"]
+     (let [doc (r/atom {})
+           frm (fn []
+                 [:<>
+                  [i/number-field :num2.value :min 100 :max 1000
+                   :step 10 :model doc :label "Your Number"
+                   :value 500 :attrs {:maxLength "4"}]
+                  [:p (str "Result: " @doc)]])]
+       [frm])]]])
+
 (defn input-page []
   [:div.content
    [:h2.title.is-2 "Input Components"]
@@ -952,5 +1005,6 @@
    [file-component]
    [search-component]
    [range-component]
-   [number-input-component]])
+   [number-input-component]
+   [number-field-component]])
 

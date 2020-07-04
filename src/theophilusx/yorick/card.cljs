@@ -1,6 +1,7 @@
 (ns theophilusx.yorick.card
   (:require [theophilusx.yorick.icon :as icons]
-            [theophilusx.yorick.basic :as basic]))
+            [theophilusx.yorick.basic :as basic]
+            [theophilusx.yorick.utils :refer [cs]]))
 
 (defn card-header
   "Generate a card header from a map of values.
@@ -13,12 +14,11 @@
   | `:icon-action` | A function to execute when the icon is clicked             |
   | `:class`       | A string or vector of strings representing CSS class names |"
   [{:keys [title icon icon-action class]}]
-  [:header.card-header {:class [class]}
+  [:header.card-header {:class (cs class)}
    [:p.card-header-title title]
    (when icon
      [basic/a [icons/icon-component icon]
       :class "card-header-icon"
-      ;;:href "#"
       :on-click (when (fn? icon-action)
                   #(icon-action %))])])
 
@@ -34,9 +34,9 @@
   |            | CSS class names                                               |"
   [{:keys [items classes]}]
   (into
-   [:footer.card-footer {:class [(:footer classes)]}]
+   [:footer.card-footer {:class (cs (:footer classes))}]
    (for [i items]
-     [:p.card-footer-item {:class [(:footer-item classes)]}
+     [:p.card-footer-item {:class (cs (:footer-item classes))}
       i])))
 
 (defn card
@@ -47,15 +47,18 @@
   represents the content of the card.
 
   The component also accepts optional keyword arguments
+
   | Key       | Description                                                    |
   |-----------|----------------------------------------------------------------|
   | `:header` | A map representing the card header data. See below for details |
   | `:footer` | A map representing the card footer data. See below for details |
-  | `:classes` | A map containing CSS class name strings. See below for details|
+  | `:classes`| A map containing CSS class name strings. See below for details |
 
   The `:header` map argument defines the data to be used in the card header.
   The following keys are supported
+
   | Key            | Description                                                |
+  |----------------|------------------------------------------------------------|
   | `:title`       | The title string to be placed in the card header           |
   | `:icon`        | An icon data map. See `theophilusx.yorick.icon`            |
   | `:icon-action` | A function to execute when the icon is clicked             |
@@ -63,7 +66,9 @@
 
   The `:footer` map argument defines the data to be used in the card footer.
   The following keys are supported
-  | Key | Description |
+
+  | Key        | Description                                                  |
+  |------------|--------------------------------------------------------------|
   | `:items`   | A vector of items to add to the footer. An item can be       |
   |            | a string, hiccup markup or another component                 |
   | `:classes` | a map with keys for `:footer` and `:footer-item`, where the  |
@@ -71,10 +76,10 @@
   |            | CSS class names to add to the footer or each item in the     |
   |            | footer                                                       |"
   [body & {:keys [header footer classes]}]
-  [:div.card {:class [(:card classes)]}
+  [:div.card {:class (cs (:card classes))}
    (when header
      [card-header header])
-   [:div.card-content {:class [(:card-content classes)]}
+   [:div.card-content {:class (cs (:card-content classes))}
     body]
    (when footer
      [card-footer footer])])

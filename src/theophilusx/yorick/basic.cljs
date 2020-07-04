@@ -1,5 +1,5 @@
 (ns theophilusx.yorick.basic
-  (:require [theophilusx.yorick.utils :refer [spath]]
+  (:require [theophilusx.yorick.utils :refer [cs spath]]
             [clojure.string :as string]
             [theophilusx.yorick.store :as store]))
 
@@ -8,42 +8,32 @@
   The required argument is the text title to be used in the anchor.
   Optional keyword arguments include
   | Key | Description |
-  |-----|-------------|
-  | `href` | a hypertext reference. Defaults to `#` if not provided |
-  | `on-click` | a function with no arguments to be executed when the link is clicked |
-  | `class` | a string or vector of strings representing CSS class names |
-  | `id` | an ID attribute value |
-  | `role` | the role attribute value |
-  | `aria-label` | aria-label attribute value |
-  | `aria-expanded` | true if aria-expanded attribute is to be set |
-  | `data-target` | data-target attribute value |"
-  [title & {:keys [href on-click class id role aria-label aria-expanded
-                   data-target]
+  |-------------|------------------------------------------------------------|
+  | `:href`     | a hypertext reference. Defaults to `#` if not provided     |
+  | `:on-click` | a function with no arguments to be executed when the       |
+  |             | link is clicked                                            |
+  | `:class`    | a string or vector of strings representing CSS class names |
+  | `:attrs`    | a map of HTML attribute values. Keys are HTML attribute    |
+  |             | names as keywords e.g. `:role`                             |"
+  [title & {:keys [href on-click class attrs]
                   :or {href "#"}}]
-  [:a {:href href
-       :on-click on-click
-       :class class
-       :id id
-       :role role
-       :aria-label aria-label
-       :aria-expanded aria-expanded
-       :data-target data-target}
+  [:a (merge attrs {:href href
+                    :on-click on-click
+                    :class (cs class)})
    title])
 
 (defn img
   "A basic component to generate an HTML <img> element.
   The expected argument is a path or link to the image file.
   Additional optional keyword arguments are
-  | Key | Description |
-  |-----|-------------|
-  | `width` | a value for the width attribute |
-  | `class` | a string or vector of strings specifying CSS class names |
-  | `id` | an id attribute value |"
-  [src & {:keys [width class id]}]
-  [:img {:src src
-         :class class
-         :width width
-         :id id}])
+  | Key      | Description                                                 |
+  |----------|-------------------------------------------------------------|
+  | `:class` | a string or vector of strings specifying CSS class names    |
+  | `:attrs` | a map of HTML attribute values. Keys are the HTML attribute |
+  |          | names as keywords e.g. `:id`                                |"
+  [src & {:keys [class attrs]}]
+  [:img (merge attrs {:src src
+                      :class (cs class)})])
 
 (declare render-map)
 (declare render-set)
@@ -105,35 +95,37 @@
   | `:active` | True if this link is active                                   |
   | `:value`  | The value to set in the global state atom when the link is    |
   |           | selected                                                      |
+
   This component also accepts optional keyword arguments
-  | Key | Description |
+
+  | Key           | Description                                                |
   | `:class`      | A string or vector of strings representing CSS class names |
   | `:position`   | Position of the breadcrumbs, either `:center` or `:right`  |
   | `:separator`  | Type of link separator to use. Possible values are         |
-  |              | `:arrow`, `:bullet`, `:dot`, `:succeeds`                    |
-  | `:size`      | Size of the breadcrumbs. Possible values are `:small`,      |
-  |              | `:medium`, `:large`                                         |"
+  |               | `:arrow`, `:bullet`, `:dot`, `:succeeds`                   |
+  | `:size`       | Size of the breadcrumbs. Possible values are `:small`,     |
+  |               | `:medium`, `:large`                                        | "
   [sid crumbs & {:keys [class position separator size]}]
-  [:nav.breadcrumb {:class [class
-                            (when position
-                              (case position
-                                :center "is-centered"
-                                :right "is-right"
-                                nil))
-                            (when separator
-                              (case separator
-                                :arrow "has-arrow-separator"
-                                :bullet "has-bullet-separator"
-                                :dot "has-dot-separator"
-                                :succeeds "has-succeeds-separator"
-                                nil))
-                            (when size
-                              (case size
-                                :small "is-small"
-                                :medium "is-medium"
-                                :large "is-large"
-                                :normal ""
-                                nil))]
+  [:nav.breadcrumb {:class (cs class
+                               (when position
+                                 (case position
+                                   :center "is-centered"
+                                   :right "is-right"
+                                   nil))
+                               (when separator
+                                 (case separator
+                                   :arrow "has-arrow-separator"
+                                   :bullet "has-bullet-separator"
+                                   :dot "has-dot-separator"
+                                   :succeeds "has-succeeds-separator"
+                                   nil))
+                               (when size
+                                 (case size
+                                   :small "is-small"
+                                   :medium "is-medium"
+                                   :large "is-large"
+                                   :normal ""
+                                   nil)))
                     :aria-label "breadcrumbs"}
    (into
     [:ul]
@@ -169,15 +161,10 @@
   | `:class`  | A string or vector of strings specifying CSS class names    |
   | `:delete` | Adds a delete (X) button to top left corner of notification |" 
   [body & {:keys [class delete]}]
-  [:div.notification {:class [class]}
+  [:div.notification {:class (cs class)}
    (when delete
      [:button.delete {:on-click (fn [e]
                                   (let [note (.-parentNode (.-target e))
                                         parent (.-parentNode note)]
-                                    (println (str "Note: " note))
-                                    (.dir js/console note)
-                                    (println (str "Parent: " parent))
-                                    (.dir js/console parent)
-                                    (.removeChild parent note) 
-                                    ))}])
+                                    (.removeChild parent note)))}])
    body])

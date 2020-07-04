@@ -1,5 +1,6 @@
 (ns theophilusx.yorick.icon
-  (:require [clojure.string :as string]))
+  (:require [clojure.string :as string]
+            [theophilusx.yorick.utils :refer [cs]]))
 
 (defn deficon
   "Create an icon data map which defines the data used to generate an icon
@@ -26,25 +27,25 @@
   `:span-class`. Only `:name` is required. See the function `deficon` for a
   convenience function to generate the map. "
   [icon-data]
-  [:span.icon {:class [(:span-class icon-data)
-                       (case (:position icon-data)
-                         :left "is-left"
-                         :right "is-right"
-                         nil)
-                       (case (:size icon-data)
-                         :small "is-small"
-                         :medium "is-medium"
-                         :large "is-large"
-                         :huge "is-large"
-                         nil)]}
+  [:span.icon {:class (cs (:span-class icon-data)
+                          (case (:position icon-data)
+                            :left "is-left"
+                            :right "is-right"
+                            nil)
+                          (case (:size icon-data)
+                            :small "is-small"
+                            :medium "is-medium"
+                            :large "is-large"
+                            :huge "is-large"
+                            nil))}
    " "
-   [:i.fas {:class [(:name icon-data)
-                    (:icon-class icon-data)
-                    (case (:size icon-data)
-                      :medium "fa-lg"
-                      :large "fa-2x"
-                      :huge "fa-3x"
-                      nil)]}]
+   [:i.fas {:class (cs (:name icon-data)
+                       (:icon-class icon-data)
+                       (case (:size icon-data)
+                         :medium "fa-lg"
+                         :large "fa-2x"
+                         :huge "fa-3x"
+                         nil))}]
    " "])
 
 (defn icons

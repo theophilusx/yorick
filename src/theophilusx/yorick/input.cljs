@@ -1,5 +1,5 @@
 (ns theophilusx.yorick.input
-  (:require [theophilusx.yorick.utils :refer [spath value-of value->keyword]]
+  (:require [theophilusx.yorick.utils :refer [cs spath value-of value->keyword]]
             [theophilusx.yorick.icon :as icons]
             [theophilusx.yorick.store :as store]
             [reagent.core :as r]))
@@ -15,9 +15,9 @@
   | `:classes` | A map of strings or vector of strings representing CSS |
   |            | class names. Supported keys are `:field` and `:label`  |"
   [body & {:keys [label classes]}]
-  [:div.field {:class [(:field classes)]}
+  [:div.field {:class (cs (:field classes))}
    (when label
-     [:label.label {:class [(:label classes)]} label])
+     [:label.label {:class (cs (:label classes))} label])
    body])
 
 (defn horizontal-field
@@ -30,11 +30,11 @@
   associated with the outer field container and the `:body` for classes
   associated with the field body element."
   [label body & {:keys [classes]}]
-  [:div.field.is-horizontal {:class (:field classes)}
+  [:div.field.is-horizontal {:class (cs (:field classes))}
    [:div.field-label
-    [:label.label {:class (:label classes)}
+    [:label.label {:class (cs (:label classes))}
      label]]
-   [:div.field-body {:class [(:body classes)]}
+   [:div.field-body {:class (cs (:body classes))}
     body]])
 
 (defn input-helper
@@ -43,48 +43,30 @@
   the following mandatory arguments:
 
   | Argument  | Description                                                     |
-  |-----------|-----------------------------------------------------------------|
-  | `type`    | The input field type. One of the HTML input types               |
-  | `sid`     | A storage id keyword value used as an `spath` when storing      |
-  |           | input into the doc atom                                         |
-  | `doc`     | A reagent `atom` object used to store user input                |
-  | `chg-fun` | A function of 1 argument which is called whenever input data    |
-  |           | changes. The argument is the new value of the input data.       |
-  |-----------|-----------------------------------------------------------------|
+  |-----------|--------------------------------------------------------------|
+  | `type`    | The input field type. One of the HTML input types            |
+  | `sid`     | A storage id keyword value used as an `spath` when storing   |
+  |           | input into the doc atom                                      |
+  | `doc`     | A reagent `atom` object used to store user input             |
+  | `chg-fun` | A function of 1 argument which is called whenever input data |
+  |           | changes. The argument is the new value of the input data.    |
+  |-----------|--------------------------------------------------------------|
 
   The function also accepts a number of optional keyword arguments:
 
-  | Keyword        | Description                                   |
-  |----------------|-----------------------------------------------|
-  | `:class`       | CSS class names or vector of CSS class names  |
-  |                | to add to the input element                   |
-  | `:placeholder` | Text to use in the HTML placeholder attribute |
-  | `:required`    | True if the input field is a required field   |
-  | `:disabled`    | True if the field should be disabled          |
-  | `:min`         | Number for the HTML min attribute             |
-  | `:max`         | Number for the HTML max attribute             |
-  | `:maxlength`   | Number for the HTML maxlength attribute       |
-  | `:minlength`   | Number for the HTML minLength attribute       |
-  | `:readonly`    | True if the input element is to be read only  |
-  | `:size`        | Number for the HTML size attribute            |
-  |----------------|-----------------------------------------------|"
-  [type sid doc chg-fn & {:keys [class placeholder required disabled
-                                 min max maxlength minlength readonly size]}]
-  [:input.input {:type (name type)
-                 :class class
-                 :id (name sid)
-                 :name (name sid)
-                 :placeholder placeholder
-                 :required required
-                 :value (str (store/get-in doc (spath sid)))
-                 :on-change chg-fn
-                 :disabled disabled
-                 :min (when min (str min))
-                 :max (when max (str max))
-                 :maxLength (when maxlength (str maxlength))
-                 :minLength (when minlength (str minlength))
-                 :readOnly readonly
-                 :size (when size (str size))}])
+  | Keyword  | Description                                                   |
+  |----------|---------------------------------------------------------------|
+  | `:class` | CSS class names or vector of CSS class names to add to the    |
+  |          | input element                                                 |
+  | `:attrs` | A map of HTML attributes. Each key is the HTML attribute name |
+  |          | as a keyword e.g. `:required`                                 |"
+  [type sid doc chg-fn & {:keys [class attrs]}]
+  [:input.input (merge attrs {:type (name type)
+                              :class (cs class)
+                              :id (name sid)
+                              :name (name sid)
+                              :value (str (store/get-in doc (spath sid)))
+                              :on-change chg-fn})])
 
 (defn input
   "A basic text input component. This component is often used as the body for
@@ -98,28 +80,20 @@
 
   This component also supports a number of optional keyword arguments:
 
-  | Keyword        | Description                                                |
-  |----------------|------------------------------------------------------------|
-  | `:model`       | A reagent atom to be used for storing user input           |
-  | `:change-fn`   | A function of 1 argument called when user enters data in   |
-  |                | the field.                                                 |
-  | `:classes`     | A map of CSS classes to add to elements in the component.  |
-  |                | The value for each key is either a string CSS class name   |
-  |                | or a vector of CSS class name strings. Supported keys are  |
-  |                | `:control` and `:input`                                    |
-  | `:icon-data`   | Either an icon data map or vector of icon data maps. See   |
-  |                |`theophilusx.yorick.icon` for details on icon data map.     |
-  |                | Add sability to add icons to an input component            |
-  | `:placeholder` | Text to use in the HTML placeholder attribute              |
-  | `:required`    | True if the input field is a required field                |
-  | `:disabled`    | True if the field should be disabled                       |
-  | `:min`         | Number for the HTML min attribute                          |
-  | `:max`         | Number for the HTML max attribute                          |
-  | `:maxlength`   | Number for the HTML maxlength attribute                    |
-  | `:minlength`   | Number for the HTML minLength attribute                    |
-  | `:readonly`    | True if the input element is to be read only               |
-  | `:size`        | Number for the HTML size attribute                         |
-  |----------------|------------------------------------------------------------|"
+  | Keyword      | Description                                                |
+  |--------------|------------------------------------------------------------|
+  | `:model`     | A reagent atom to be used for storing user input           |
+  | `:change-fn` | A function of 1 argument called when user enters data in   |
+  |              | the field.                                                 |
+  | `:classes`   | A map of CSS classes to add to elements in the component.  |
+  |              | The value for each key is either a string CSS class name   |
+  |              | or a vector of CSS class name strings. Supported keys are  |
+  |              | `:control` and `:input`                                    |
+  | `:icon-data` | Either an icon data map or vector of icon data maps. See   |
+  |              |`theophilusx.yorick.icon` for details on icon data map.     |
+  |              | Add sability to add icons to an input component            |
+  | `:attrs`     | A map of HTML attributes. The map keys are the HTML        |
+  |              | attribute as a keyword e.g. `:required`                    |"
   [_ sid & {:keys [model change-fn]}]
   (let [doc (or model
                 (r/atom {}))
@@ -127,19 +101,16 @@
                  change-fn
                  (fn [e]
                    (store/assoc-in! doc (spath sid) (value-of e))))]
-    (fn [type sid & {:keys [classes icon-data]
-                    :as args}]
+    (fn [type sid & {:keys [classes icon-data attr]}]
       (if icon-data
         (into
-         [:div.control {:class [(:control classes)
-                                (icons/icon-control-class icon-data)]}
-          (apply input-helper type sid doc chg-fn :class (:input classes)
-                 (into [] cat args))]
+         [:div.control {:class (cs (:control classes)
+                                   (icons/icon-control-class icon-data))}
+          (input-helper type sid doc chg-fn :class (:input classes) :attr attr)]
          (for [i (icons/icons icon-data)]
            i))
-        [:div.control {:class (:control classes)}
-         (apply input-helper type sid doc chg-fn :class (:input classes)
-                (into [] cat args))]))))
+        [:div.control {:class (cs (:control classes))}
+         (input-helper type sid doc chg-fn :class (:input classes) :attr attr)]))))
 
 (defn input-field
   "Convenience component which combines `field` and `input` components to
@@ -150,32 +121,20 @@
   when storing the input in the document model atom. This component also
   supports a number of optional keyword arguments.
 
-  | Keyword        | Description                                                |
-  |----------------|------------------------------------------------------------|
-  | `:classes`     | a map of CSS class name strings or vectors of class name   |
-  |                | strings. Supported keys are `:field`, `:label` and `:input`|
-  | `:placeholder` | string to use for HTML placeholder attribute               |
-  | `:required`    | boolean used for HTML required attribute                   |
-  | `:icon-data`   | an icon data map or vector of icon data maps. See the      |
-  |                | `theophilusx.yorick.icon` namespace for details            |
-  | `:model`       | A reagent atom to be used as the document model            |
-  | `:change-fn`   | a function of one argument called to update the value      |
-  |                | in the document model atom when input changes              |
-  | `:disabled`    | boolean used to set HTML disabled attribute                |
-  | `:min`         | number used to set the HTML min attribute                  |
-  | `:max`         | number used to set the HTML max attribute                  |
-  | `:minlength`   | number used to set the HTML minLength attribute            |
-  | `:maxlength`   | number used to set the HTML maxLength attribute            |
-  | `:readonly`    | boolean used to set the HTML readonly attribute            |
-  | `:size`        | number used to set the HTML size attribute                 |"
-  [label type sid & {:keys [classes placeholder required icon-data
-                            model change-fn disabled min max maxlength
-                            minlength readonly size]}]
-  [field [input type sid :classes classes :placeholder placeholder
-          :required required :icon-data icon-data :model model
-          :change-fn change-fn :disabled disabled :min min :max max
-          :maxlength maxlength :minlength minlength :readonly readonly
-          :size size]
+  | Keyword      | Description                                                |
+  |--------------|------------------------------------------------------------|
+  | `:classes`   | a map of CSS class name strings or vectors of class name   |
+  |              | strings. Supported keys are `:field`, `:label` and `:input`|
+  | `:icon-data` | an icon data map or vector of icon data maps. See the      |
+  |              | `theophilusx.yorick.icon` namespace for details            |
+  | `:model`     | A reagent atom to be used as the document model            |
+  | `:change-fn` | a function of one argument called to update the value      |
+  |              | in the document model atom when input changes              |
+  | `:attrs`     | A map of HTML attributes. Keys in the map are the HTML     |
+  |              | attribute as a keyword e.g. `:required`                    |"
+  [label type sid & {:keys [classes icon-data model change-fn attrs]}]
+  [field [input type sid :classes (:input classes) :icon-data icon-data
+          :moodel model :change-fn change-fn :attrs attrs]
    :label label :classes classes])
 
 (defn checkbox
@@ -194,24 +153,24 @@
   |              | class names. Supported keys are `:field`, `:control`,     |
   |              | `:label` and `:input`                                     |
   | `:checked`   | boolean used to set the HTML attribute checked            |
-  | `:required`  | boolean used to set the HTML attribute required           |"
+  | `:attrs`     | a map of HTML attributes. The keys are the HTML attribute |
+  |              | name as a keyword e.g. `:required`                        |"
   [_ sid & {:keys [model change-fn]}]
   (let [doc (or model
                 (r/atom {}))
         chg-fn (if (fn? change-fn)
                  change-fn
                  #(store/update-in! doc (spath sid) not))]
-    (fn [label sid & {:keys [classes checked required]}]
-      [:div.field {:class (:field classes)}
-       [:div.control {:class (:control classes)}
-        [:label.checkbox {:class (:label classes)}
-         [:input {:classs (:input classes)
-                  :type "checkbox"
-                  :id (name sid)
-                  :name (name sid)
-                  :checked checked
-                  :required required
-                  :on-change chg-fn}]
+    (fn [label sid & {:keys [classes checked attrs]}]
+      [:div.field {:class (cs (:field classes))}
+       [:div.control {:class (cs (:control classes))}
+        [:label.checkbox {:class (cs (:label classes))}
+         [:input (merge attrs {:classs (cs (:input classes))
+                               :type "checkbox"
+                               :id (name sid)
+                               :name (name sid)
+                               :checked checked
+                               :on-change chg-fn})]
          (str " " label)]]])))
 
 (defn radio
@@ -238,7 +197,9 @@
   |              | to update the document model atom                        |
   | `:classes`   | A map of strings or vector of strings specifying CSS     |
   |              | class names. Supported keys are `:control`, `input` and  |
-  |              | `:label`                                                 |"
+  |              | `:label`                                                 |
+  | `:attrs`     | a map of HTML attributes. Keys are the HTML attribute    |
+  |              | name as a keyword e.g. `:required`                       |"
   [sid labels & {:keys [model click-fn]}]
   (let [doc (or model
                 (r/atom {}))
@@ -253,19 +214,20 @@
                  click-fn
                  #(store/assoc-in! doc (spath sid)
                                    (value->keyword (value-of %))))]
-    (fn [sid _ & {:keys [classes]}]
+    (fn [sid _ & {:keys [classes attrs]}]
       (into
-       [:div.control {:class (:control classes)}]
+       [:div.control {:class (cs (:control classes))}]
        (for [b btns]
-         [:label.radio {:class (:label classes)}
-          [:input.radio {:type "radio"
-                         :class (:input classes)
-                         :name (name sid)
-                         :value (:value b)
-                         :defaultChecked (when (= (store/get-in doc (spath sid))
-                                           (:value b))
-                                    true)
-                         :on-click change-fn}]
+         [:label.radio {:class (cs (:label classes))}
+          [:input.radio (merge attrs {:type "radio"
+                                      :class (:input classes)
+                                      :name (name sid)
+                                      :value (:value b)
+                                      :defaultChecked
+                                      (when (= (store/get-in doc (spath sid))
+                                               (:value b))
+                                        true)
+                                      :on-click change-fn})]
           (str " " (:title b))]))))) 
 
 (defn button
@@ -274,13 +236,15 @@
   arguments that is called when the button is clicked. The component also
   supports an optional `:classes` keyword argument, which is a map of
   strings or vectors of strings representing CSS class names. The map supports
-  the keys `:field`, `:control` and `:button`."
-  [title action & {:keys [classes]}]
-  [:div.field {:class (:field classes)}
-   [:div.control {:class (:control classes)}
-    [:button.button {:class (:button classes)
-                     :type "button"
-                     :on-click action}
+  the keys `:field`, `:control` and `:button`. The `:attrs` optional keyword
+  argument is a map of HTML attributes. Keys for the map are HTML attribute
+  names as keywords e.g. `:disabled`."
+  [title action & {:keys [classes attrs]}]
+  [:div.field {:class (cs (:field classes))}
+   [:div.control {:class (cs (:control classes))}
+    [:button.button (merge attrs {:class (cs (:button classes))
+                                  :type "button"
+                                  :on-click action})
      title]]])
 
 (defn editable-field
@@ -367,32 +331,32 @@
   stored within the document model atom. The component supports the following
   optional keyword arguments
 
-  | Keyword        | Description                                               |
-  |----------------|-----------------------------------------------------------|
-  | `:model`       | A reagent `atom` representing the document model used to  |
-  |                | store input                                               |
-  | `:change-fn`   | A function of one argument called when the data changes.  |
-  |                | The argument is the new data.                             |
-  | `:classes`     | A `map` of CSS class names or vectors of CSS class names  |
-  |                | which are added to component elements. Supported keys are |
-  |                | `:field`, `:label` and ':textarea`                        |
-  | ':placeholder` | A `string` of text used as a placeholder in the text area |"
+  | Keyword     | Description                                               |
+  |-------------|-----------------------------------------------------------|
+  | `:model`    | A reagent `atom` representing the document model used to  |
+  |             | store input                                               |
+  | `:change-fn`| A function of one argument called when the data changes.  |
+  |             | The argument is the new data.                             |
+  | `:classes`  | A `map` of CSS class names or vectors of CSS class names  |
+  |             | which are added to component elements. Supported keys are |
+  |             | `:field`, `:label` and ':textarea`                        |
+  | `:attrs`    | a map of HTML attribute values. The keys are the HTML     |
+  |             | attribute name as a keyword e.g. `:placeholder`           |"
   [_ sid & {:keys [model change-fn]}]
   (let [doc (or model
                 (r/atom {}))
         chg-fn (if (fn? change-fn)
                  change-fn
                  #(store/assoc-in! doc (spath sid) (value-of %)))]
-    (fn [label sid & {:keys [classes placeholder]}]
-      [:div.field {:class (:field classes)}
+    (fn [label sid & {:keys [classes attrs]}]
+      [:div.field {:class (cs (:field classes))}
        (when label
-         [:label.label {:class (:label classes)} label])
-       [:p.control {:class (:control classes)}
-        [:textarea.textarea {:class (:textarea classes)
-                             :placeholder placeholder
-                             :id (name sid)
-                             :name (name sid)
-                             :on-change chg-fn}]]])))
+         [:label.label {:class (cs (:label classes))} label])
+       [:p.control {:class (cs (:control classes))}
+        [:textarea.textarea (merge attrs {:class (cs (:textarea classes))
+                                          :id (name sid)
+                                          :name (name sid)
+                                          :on-change chg-fn})]]])))
 
 (defn defoption
   "Define an option for a selection list. The `title` argument is a string used 
@@ -441,7 +405,9 @@
   |                 | `:medium` or `:small`                                   |
   | `:icon-data`    | An icon-data map defining an icon to include with the   |
   |                 | select box (see `theophilusx/yorick/icon`               |
-  | `:size`         | Number of options to display in select box              |"
+  | `:size`         | Number of options to display in select box              |
+  | `:attrs`        | a map of HTML attribute values. The keys are the HTML   |
+  |                 | attribute as a keyword e.g. `:disabled`                 |"
   [sid options & {:keys [model change-fn]}]
   (let [doc (or model
                 (r/atom {}))
@@ -450,37 +416,37 @@
                  #(store/assoc-in! doc (spath sid) (value-of %)))]
     (store/assoc-in! doc (spath sid) (:value (default-option options)))
     (fn [sid options & {:keys [select-class multiple rounded select-size
-                              icon-data size]}]
-      [:div.control {:class (when icon-data
-                              (icons/icon-control-class icon-data))}
-       [:div.select {:class [select-class
-                             (when rounded "is-rounded")
-                             (case select-size
-                               :small  "is-small"
-                               :medium "is-medium"
-                               :large  "is-large"
-                               nil)
-                             (when multiple "is-multiple")]}
+                              icon-data size attrs]}]
+      [:div.control {:class (cs (when icon-data
+                                  (icons/icon-control-class icon-data)))}
+       [:div.select {:class (cs (when rounded "is-rounded")
+                                (case select-size
+                                  :small  "is-small"
+                                  :medium "is-medium"
+                                  :large  "is-large"
+                                  nil)
+                                (when multiple "is-multiple"))}
         (into
-         [:select {:id        (name sid)
-                   :name      (name sid)
-                   :multiple  (when multiple true false)
-                   :size      (when size
-                                (str size))
-                   :on-change chg-fn}]
+         [:select (merge attrs {:class (cs select-class)
+                                :id        (name sid)
+                                :name      (name sid)
+                                :multiple  (when multiple true false)
+                                :size      (when size
+                                             (str size))
+                                :on-change chg-fn})]
          (for [o options]
            o))]
        (when icon-data
-         [:span.icon {:class [(case (:size icon-data)
-                               :small "is-small"
-                               :medium "is-medium"
-                               :large "is-large"
-                               nil)
-                             (case (:position icon-data)
-                               :left "is-left"
-                               :right "is-right"
-                               nil)]}
-          [:i {:class ["fa" (:name icon-data)]}]])])))
+         [:span.icon {:class (cs (case (:size icon-data)
+                                   :small "is-small"
+                                   :medium "is-medium"
+                                   :large "is-large"
+                                   nil)
+                                 (case (:position icon-data)
+                                   :left "is-left"
+                                   :right "is-right"
+                                   nil))}
+          [:i {:class (cs "fa" (:name icon-data))}]])])))
 
 (defn select-field
   "This component is a convenience component which wraps a select component 
@@ -506,15 +472,17 @@
   |                | details.                                                  |
   | `:model`       | A reagent atom used as the document model store           |
   | `:change-fn`   | A function of one argument called when the input data     |
-  |                | changes. The argument is the new data value               |"
+  |                | changes. The argument is the new data value               |
+  | `:attrs`       | a map of HTML attribute values. Keys are HTML attribute   |
+  |                | names as keywords e.g. `:disabled`                        |"
   [sid options & {:keys [title classes multiple rounded select-size icon-data
-                         model change-fn]}]
+                         model change-fn attrs]}]
   [:div.field {:class (:field classes)}
    (when title
-     [:div.label {:class (:title classes)} title])
+     [:div.label {:class (cs (:title classes))} title])
    [select sid options :select-class (:select classes) :multiple multiple
     :rounded rounded :select-size select-size :icon-data icon-data
-    :model model :change-fn change-fn]])
+    :model model :change-fn change-fn :attrs attrs]])
 
 (defn file
   "Provides a basic file selection component. The required `sid` argument is a
@@ -558,29 +526,29 @@
                          (store/assoc-in! doc (spath sid) (.-name file))
                          (when (fn? action)
                            (action file)))))))]
-    (fn [id & {:keys [classes label right fullwidth boxed size position]}]
-      [:div.field {:class (:field classes)}
-       [:div.file.has-name {:class [(:file classes)
-                                    (when right "is-right")
-                                    (when fullwidth "is-fullwidth")
-                                    (when boxed "is-boxed")
-                                    (case size
-                                      :small "is-small"
-                                      :medium "is-medium"
-                                      :large "is-large"
-                                      nil)
-                                    (case position
-                                      :center "is-centered"
-                                      :centre "is-centered"
-                                      :right "is-right"
-                                      nil)]}
-        [:label.file-label {:class (:label classes)}
-         [:input.file-input {:class (:input classes)
-                             :id (name id)
-                             :name (name id)
-                             :type "file"
-                             :on-change chg-fn}]
-         [:span.file-cta {:class (:file-cta classes)}
+    (fn [id & {:keys [classes label right fullwidth boxed size position attrs]}]
+      [:div.field {:class (cs (:field classes))}
+       [:div.file.has-name {:class (cs (:file classes)
+                                       (when right "is-right")
+                                       (when fullwidth "is-fullwidth")
+                                       (when boxed "is-boxed")
+                                       (case size
+                                         :small "is-small"
+                                         :medium "is-medium"
+                                         :large "is-large"
+                                         nil)
+                                       (case position
+                                         :center "is-centered"
+                                         :centre "is-centered"
+                                         :right "is-right"
+                                         nil))}
+        [:label.file-label {:class (cs (:label classes))}
+         [:input.file-input (merge attrs {:class (cs (:input classes))
+                                          :id (name id)
+                                          :name (name id)
+                                          :type "file"
+                                          :on-change chg-fn})]
+         [:span.file-cta {:class (cs (:file-cta classes))}
           [:span.file-icon
            [:i.fa.fa-upload]]
           [:span.file-label
@@ -599,27 +567,28 @@
 
   | Keyword        | Description                                            |
   |----------------|--------------------------------------------------------|
-  | `:placeholder` | Text to be used as a placeholder in the search box     |
   | `:classes`     | A map of strings or vector of strings representing CSS |
   |                | class names. Supported keys are `:field`, `:input` and |
   |                | `:button`                                              |
   | `:icon-data`   | An icon data map (see `theophilusx/yorick/icon`)       |
   | `:button-text` | Text to be used on the search button. Defaults to      |
   |                | `Search` if none provided. Set to nil when you just    |
-  |                | want an icon and use `:icon-data` to set the icon      |"
+  |                | want an icon and use `:icon-data` to set the icon      |
+  | `:attrs`       | a map of HTML attribute values. Keys are HTML          |
+  |                | attribute names as keywords e.g. `:disabled`           |"
   [_ & _]
   (let [doc (r/atom {})]
-    (fn [action & {:keys [placeholder classes icon-data button-text]}]
-      [:div.field.has-addons {:class (:field classes)}
+    (fn [action & {:keys [classes icon-data button-text attrs]}]
+      [:div.field {:class (cs "has-addons"
+                              (:field classes))}
        [:div.control
-        [:input.input {:class (:input classes)
-                       :type "text"
-                       :placeholder placeholder
-                       :value (str (store/get doc :search))
-                       :on-change #(store/put! doc :search (value-of %))}]]
-       [:div.control {:class (when icon-data
-                               (icons/icon-control-class icon-data))}
-        [:button.button {:class (:button classes)
+        [:input.input (merge attrs {:class (cs (:input classes))
+                                    :type "text"
+                                    :value (str (store/get doc :search))
+                                    :on-change #(store/put! doc :search (value-of %))})]]
+       [:div.control {:class (cs (when icon-data
+                                   (icons/icon-control-class icon-data)))}
+        [:button.button {:class (cs (:button classes))
                          :type "button"
                          :on-click #(action (:search @doc))}
          (when icon-data
@@ -642,8 +611,6 @@
   | `:classes`   | A map of strings or vectors of strings representing CSS  |
   |              | class names. Supported keys are `:input`, `:field` and   |
   |              | `:label`                                                 |
-  | `:required`  | If true, set the HTML required attribute on the input    |
-  | `:disabled`  | If true, set the HTML disabled attribute on the input    |
   | `:step`      | Set the step size for the range. Defaults to 1           |"
   [sid _ _ & {:keys [model change-fn value]}]
   (let [doc (or model
@@ -653,22 +620,20 @@
                  (fn [e]
                    (store/assoc-in! doc (spath sid) (js/parseInt (value-of e)))))]
     (store/assoc-in! doc (spath sid) (or value 0))
-    (fn [sid min max & {:keys [label classes required disabled step]}]
+    (fn [sid min max & {:keys [label classes step attrs]}]
       [field [:div.field.has-addons
               [:span {:style {:paddingRight "5px"}}(str min " ")]
-              [:input {:type "range"
-                       :class (:input classes)
-                       :required required
-                       :min (str min)
-                       :max (str max)
-                       :step (if step
-                               (str step)
-                               "1")
-                       :id (name sid)
-                       :name (name sid)
-                       :value (str (store/get-in doc (spath sid)))
-                       :on-change chg-fn
-                       :disabled disabled}]
+              [:input (merge attrs {:type "range"
+                                    :class (:input classes)
+                                    :min (str min)
+                                    :max (str max)
+                                    :step (if step
+                                            (str step)
+                                            "1")
+                                    :id (name sid)
+                                    :name (name sid)
+                                    :value (str (store/get-in doc (spath sid)))
+                                    :on-change chg-fn})]
               [:span {:style {:paddingRight "5px"
                               :paddingLeft "5px"}}
                (str " " max " ")]
@@ -685,33 +650,23 @@
                    (store/assoc-in! doc (spath sid) (js/parseInt (value-of e)))))]
     (when value
       (store/assoc-in! doc (spath sid) value))
-    (fn [sid & {:keys [min max step required disabled maxlength minlength
-                      readonly size classes]}]
-      [:div.control {:class (:control classes)}
-       [:input {:type "number"
-                :id (name sid)
-                :name (name sid)
-                :min (when min (str min))
-                :max (when max (str max))
-                :step (if step
-                        (str step)
-                        "1")
-                :on-change chg-fn
-                :required required
-                :disabled disabled
-                :maxLength (when maxlength (str maxlength))
-                :minLength (when minlength (str minlength))
-                :readOnly readonly
-                :size (when size (str size))
-                :value (when (store/get-in doc (spath sid))
-                         (str (store/get-in doc (spath sid))))
-                :class (:input classes)}]])))
+    (fn [sid & {:keys [min max step classes attrs]}]
+      [:div.control {:class (cs (:control classes))}
+       [:input (merge attrs {:type "number"
+                             :id (name sid)
+                             :name (name sid)
+                             :min (when min (str min))
+                             :max (when max (str max))
+                             :step (if step
+                                     (str step)
+                                     "1")
+                             :on-change chg-fn
+                             :value (when (store/get-in doc (spath sid))
+                                      (str (store/get-in doc (spath sid))))
+                             :class (cs (:input classes))})]])))
 
-(defn number-field [sid & {:keys [model change-fn value min max step maxlength
-                                  minlength readonly size required disabled
+(defn number-field [sid & {:keys [model change-fn value min max step attrs
                                   classes label]}]
   [field [number-input sid :model model :change-fn change-fn :min min
-          :max max :step step :maxlength maxlength :minlength minlength
-          :readonly readonly :size size :required required :disabled disabled
-          :classes classes :value value]
+          :max max :step step :classes classes :value value :attrs attrs]
    :label label :classes classes])

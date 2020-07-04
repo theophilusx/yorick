@@ -839,6 +839,53 @@
                   [:p (str "Result: " @doc)]])]
        [frm])]]])
 
+(defn number-input-component []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p
+       "The " [:strong "number-input"] " component is a base number input "
+       "component. It is typically used inside a field component e.g. "
+       [:code "field"] " or " [:code "horizontal-field"] ". The " [:code "sid"]
+       " argument is a storage identifier keyword which determines where the "
+       "input value is stored within the document model store. The component "
+       "also supports a number of optional keyword arguments:"]
+      [:ul
+       [:li [:strong ":model"] " - a reagent atom to use as the document "
+        "model store"]
+       [:li [:strong ":change-fn"] " - a function of 1 argument called when "
+        "the input data changes. Used to update the document model store"]
+       [:li [:strong ":value"] " - a default value used to initialise the "
+        "component"]
+       [:li [:strong ":min"] " - set  the minimum acceptable input value"]
+       [:li [:strong ":max"] " - set the maximum acceptable input value"]
+       [:li [:strong ":step"] " - set the step value for input numbers"]
+       [:li [:strong ":classes"] " - a map of strings or vectors of strings "
+        "representing CSS class names. Allowed keys are " [:code ":control"]
+        " and " [:code ":input"]]
+       [:li [:strong ":attrs"] " - a map of HTML attribute values. The keys "
+        "are HTML attribute names as keywords e.g. " [:code ":id"]]]]
+     :header {:title "number-input - a basic number input component"}]]
+   [:div.column
+    [:pre
+     [:code
+      "[:p \"A number input component example\"]" [:br]
+      "(let [doc (r/atom {})" [:br]
+      "      frm (fn []" [:br]
+      "            [:<>" [:br]
+      "              [input/field [input/number-input :num1.value :model doc]]" [:br]
+      "              [:p (str \"Result: \" @doc)]])]" [:br]
+      "  [frm])"]]
+    [:div.box
+     [:p "A number input component"]
+     (let [doc (r/atom {})
+           frm (fn []
+                 [:<>
+                  [i/field [i/number-input :num1.value :model doc]]
+                  [:p (str "Result: " @doc)]])]
+       [frm])]]])
+
 (defn input-page []
   [:div.content
    [:h2.title.is-2 "Input Components"]
@@ -904,5 +951,6 @@
    [select-field-component]
    [file-component]
    [search-component]
-   [range-component]])
+   [range-component]
+   [number-input-component]])
 

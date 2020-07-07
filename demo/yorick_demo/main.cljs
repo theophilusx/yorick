@@ -8,7 +8,8 @@
             [yorick-demo.cards :refer [card-page]]
             [yorick-demo.icons :refer [icon-page]]
             [yorick-demo.inputs :refer [input-page]]
-            [yorick-demo.media :refer [media-page]]))
+            [yorick-demo.media :refer [media-page]]
+            [yorick-demo.modals :refer [modal-page]]))
 
 (println "Reloading code")
 
@@ -71,6 +72,7 @@
     :icons [icon-page]
     :input [input-page]
     :media [media-page]
+    :modal [modal-page]
     [placeholder-page]))
 
 (defn greeting []

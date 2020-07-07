@@ -1,48 +1,66 @@
 (ns theophilusx.yorick.modal
-  (:require [theophilusx.yorick.utils :refer [spath]]
+  (:require [theophilusx.yorick.utils :refer [cs spath]]
             [theophilusx.yorick.store :as store]))
 
-(defn modal [body id & {:keys [modal-class background-class content-class
-                               close-class]}]
-  [:div.modal {:class [modal-class
-                       (when (store/get-in store/global-state (spath id))
-                         "is-active")]}
-   [:div.modal-background
-    {:class background-class
-     :on-click #(store/assoc-in! store/global-state (spath id) false)}]
-   (into
-    [:div.modal-content {:class content-class}]
-    (for [c body]
-      c))
-   [:button.modal-close.is-large {:class close-class
-                                  :aria-label "close"
-                                  :on-click #(store/assoc-in! store/global-state (spath id) false)}]])
+(defn modal
+  "A basic modal overlay component. The `body` argument is the content to put
+  into the overlay. It can be HTML, a string or another component. The `sid`
+  argument is a storage identifier keyword used to determine where to store
+  the modal state (either active or inactive). The `model` argument is a
+  reagent atom used as the document model store. This component also supports
+  an optional keyword argument `:classes`, which is a map of strings or vectors
+  of strings representing CSS class names. The supported keys are:
 
-(defn modal-card [body id & {:keys [modal-class background-class card-class
-                                    header header-class body-class
-                                    footer footer-class close-class]}]
-  [:div.modal {:class [modal-class
-                       (when (store/get-in store/global-state (spath id))
-                         "is-active")]}
+  | Keyword       | Description                                               |
+  |---------------|-----------------------------------------------------------|
+  | `:modal`      | CSS class names to associate with the enclosing modal div |
+  | `:background` | CSS class names to associate with the modal background    |
+  |               | transparency                                              |
+  | `:content`    | CSS class names to associate with the content div         |
+  | `:close`      | CSS class names to associate with the close div           |"
+  [body sid model & {:keys [classes]}]
+  [:div.modal {:class (cs (:modal classes)
+                          (when (store/get-in model (spath sid))
+                            "is-active"))}
    [:div.modal-background
-    {:class background-class
-     :on-click #(store/assoc-in! store/global-state (spath id) false)}]
-   [:div.modal-card {:class card-class}
-    (when header
-      (into
-       [:header.modal-card-head {:class header-class}]
-       (for [h header]
-         h)))
-    (into
-     [:section.modal-card-body {:class body-class}]
-     (for [b body]
-       b))
-    (when footer
-      (into
-       [:footer.modal-card-foot {:class footer-class}]
-       (for [f footer]
-         f)))]
+    {:class (cs (:background classes))
+     :on-click #(store/assoc-in! model (spath sid) false)}]
+   [:div.modal-content {:class (cs (:content classes))}
+    body]
    [:button.modal-close.is-large
-    {:class close-class
+    {:class (cs (:close classes))
      :aria-label "close"
-     :on-click #(store/assoc-in! store/global-state (spath id) false)}]])
+     :on-click #(store/assoc-in! model (spath sid) false)}]])
+
+(defn modal-card
+  "A specialised modal overlay based around the `card` component. The `body`
+  argument is the content for the body of the card. It can be a string, HTML
+  or another component. The `sid` argument is a storage identifier keyword used
+  to determine where state is managed for the modal. The `model` argument is a
+  reagent atom used as the store for the modal state. The component also
+  supports some optional keyword arguments:
+
+  | Keyword    | Description                                                   |
+  |------------|---------------------------------------------------------------|
+  | `:header`  | The modal card header. Should be a component or Hiccup markup |
+  | `:footer`  | The modal card footer. Should be a component or hiccup markup |
+  | `:classes` | A map of strings or vectors of strings representing CSS class |
+  |            | names. Supported keys are `:modal`, `:background`, `:card`    |
+  |            | `:header`, `:body`, `:footer` and `:close`                    |"
+  [body sid model & {:keys [header footer classes]}]
+  [:div.modal {:class (cs (:modal classes)
+                          (when (store/get-in model (spath sid))
+                            "is-active"))}
+   [:div.modal-background
+    {:class (cs (:background classes))}]
+   [:div.modal-card {:class (cs (:card classes))}
+    (when header
+      [:header.modal-card-head {:class (cs (:header classes))}
+       [:div.modal-card-title header]
+       [:button.delete {:aria-label "close"
+                        :on-click #(store/assoc-in! model (spath sid) false)}]])
+    [:section.modal-card-body {:class (cs (:body classes))}
+     body]
+    (when footer
+      [:footer.modal-card-foot {:class (cs (:footer classes))}
+       footer])]])

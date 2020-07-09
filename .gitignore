@@ -1,10 +1,8 @@
 node_modules/
 public/js
-
 /target
 /checkouts
 /src/gen
-
 pom.xml
 pom.xml.asc
 *.iml
@@ -15,6 +13,6 @@ pom.xml.asc
 .lein-*
 .nrepl-*
 .DS_Store
-
+.clj-kondo
 .hgignore
 .hg/

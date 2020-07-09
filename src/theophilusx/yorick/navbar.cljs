@@ -257,7 +257,7 @@
   | `:default-link` | the default (active) link set when navbar first loaded  |
   | `:brand`        | Brand definition (use defnavbar-item to define)         |
   | `:menus`        | the navbar menus = vector of defnavbar-item items       |
-  | `:end-menu`     | vector of menus to be added after main menus i.e. to    |
+  | `:end-menus`    | vector of menus to be added after main menus i.e. to    |
   |                 | the right                                               |"
   [nb-def]
   (let [model (r/atom (merge {:has-shadow true
@@ -270,10 +270,10 @@
     (set-choice (:sid @model) (:default-link @model))
     (fn [nb-def]
       (swap! model assoc :menus (:menus nb-def)
-             :end-menu (:end-menu nb-def))
+                         :end-menu (:end-menus nb-def))
       [:nav.navbar {:class (cs  (:class @model)
                                 (when (:has-shadow @model) "has-shadow"))
-                    :role       "navigation"
+                    :role  "navigation"
                     :aria-label "main navigation"}
        (when (:brand @model)
          [brand model])

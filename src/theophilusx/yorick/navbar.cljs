@@ -225,7 +225,7 @@
   | `:div`      | A basic div element e.g. arbitrary content wrapped in a div |
   | `:dropdown` | A dropdown menu element                                     |
   | `:raw`      | A raw element. Just used 'as-is'.                           |
-  | `:divider   | A horizontal divider used in dropdown menus                 |"
+  | `:divider`  | A horizontal divider used in dropdown menus                 |"
   [& {:keys [type title classes href id contents selectable
              icon-data is-hoverable]
       :or {type :a

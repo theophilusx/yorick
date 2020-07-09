@@ -9,7 +9,8 @@
             [yorick-demo.icons :refer [icon-page]]
             [yorick-demo.inputs :refer [input-page]]
             [yorick-demo.media :refer [media-page]]
-            [yorick-demo.modals :refer [modal-page]]))
+            [yorick-demo.modals :refer [modal-page]]
+            [yorick-demo.navbars :refer [navbar-page]]))
 
 (println "Reloading code")
 
@@ -44,7 +45,7 @@
                                      :id :modal)
                                    (sb/defsidebar-item
                                      :title "Navbar"
-                                     :item :navbar)
+                                     :id :navbar)
                                    (sb/defsidebar-item
                                      :title "Paginate"
                                      :id :paginate)
@@ -73,6 +74,7 @@
     :input [input-page]
     :media [media-page]
     :modal [modal-page]
+    :navbar [navbar-page]
     [placeholder-page]))
 
 (defn greeting []
@@ -91,7 +93,6 @@
        [sb/sidebar demo-sidebar]]
       [:div.column
        [current-page]]]]]])
-
 
 (defn mount-app []
   (when-let [el (get-element "app")]

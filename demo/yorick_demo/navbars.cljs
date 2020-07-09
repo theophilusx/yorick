@@ -15,8 +15,11 @@
     "A navbar component uses a local document model item to sore the definition "
     "of the navbar. The " [:code "defnavbar-item"] " function is provided as a "
     "helper function for defining menu item maps. The navbar also uses a global "
-    " document model atom called " [:code "global-state"] " which is defined in "
-    "the " [:strong "theophilus.yorick.store"] " namespace. This allows other "
+    " document model atom called " [:code "global-state"] ", which is defined in "
+    "the " [:strong "theophilus.yorick.store"] " namespace, to record menu item "
+    "selection. The selected item " [:code ":id"] " value is stored in the "
+    "global state under the key " [:code ":active-item"], " which is in turn a "
+    "key associated with " [:code ":sid"] " used by the navbar. This allows other"
     "components and ClojureScript code to use the current "
     [:code ":active-item"] " to determine what to render and what other actions "
     "to take when an item is selected."]
@@ -77,6 +80,34 @@
        "with the menu item to enable it to be selected. Defaults to true"]
       [:li [:strong ":is-hoverable"] " - used with dropdown menu item types. If "
        "true, the dropdown menu items will be expanded when the mouse hovers "
-       "over the parent menu"]]]
+       "over the parent menu"]]
+     [:p
+      "The " [:code ":type"] " value for menu items defines the type of menu "
+      "to be generated. A number of different types are supported:"]
+     [:ul
+       [:li [:strong ":a"] " - the most common menu type and default if no :type "
+        "is specified. The click handler associated with this menu type will "
+        "copy the associated " [:code ":id"] " value to the "
+        [:code ":active-item"] " key associated with the navbar " [:code ":sid"]
+        " in the global state atom "
+        [:code "theophilusx.yorick.store/global-state"]]
+       [:li [:strong ":div"] " - this menu type is a basic generic type where "
+        "any data you provide in the " [:code ":contents"] " key will be "
+        "wrapped inside a " [:code "[div]"] " element. When selected, the "
+        [:code ":id"] " associated with the menu will be set in the "
+        [:code ":active-item"] " key within the "
+        [:code "theophilusx.yorick.store/global-state"] " atom under the "
+        [:code ":sid"] " associted with the navbar"]
+       [:li [:strong ":raw"] " - this item type is the most generic and flexible. "
+        "Essentially, anything added to the " [:code ":contents"] " key in the "
+        "item definition is just added 'as-is'. No wrapping inside a div or other "
+        "element."]
+       [:li [:strong ":dropdown"] " - this menu type is used when defining a set "
+        "of dropdown menus. For this type, the " [:code ":title"] " key is used "
+        "for the text label of the parent menu and the " [:code ":contents"]
+        " key is expected to contain a vector of menu definitions which define "
+        "the menu items for the dropdown."]
+       [:li [:strong ":divider"] " - a simple horizontal divider used in dropdown "
+        "menus to separate items into groups"]]]
     :header {:title "defnavbar-item - a helper function for defining menu items"}]])
 

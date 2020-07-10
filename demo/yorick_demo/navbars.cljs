@@ -1,53 +1,12 @@
 (ns yorick-demo.navbars
   (:require [theophilusx.yorick.navbar :as nb]
-            [theophilusx.yorick.card :as c]))
+            [theophilusx.yorick.card :as c]
+            [theophilusx.yorick.basic :as b]))
 
-(defn navbar-page []
-  [:div.content
-   [:h2.title.is-2 "The Navbar Component"]
-   [:p
-    "The " [:strong "theophilusx.yorick.navbar"] " namespace provides support "
-    "for a navigation bar at the top of the page. The " [:strong "navbar"]
-    " component supports a brand item, menus, both standard and dropdown, "
-    "static content and a responsive burger item for a responsive navbar which "
-    "supports smaller screens."]
-   [:p
-    "A navbar component uses a local document model item to sore the definition "
-    "of the navbar. The " [:code "defnavbar-item"] " function is provided as a "
-    "helper function for defining menu item maps. The navbar also uses a global "
-    " document model atom called " [:code "global-state"] ", which is defined in "
-    "the " [:strong "theophilus.yorick.store"] " namespace, to record menu item "
-    "selection. The selected item " [:code ":id"] " value is stored in the "
-    "global state under the key " [:code ":active-item"], " which is in turn a "
-    "key associated with " [:code ":sid"] " used by the navbar. This allows other"
-    "components and ClojureScript code to use the current "
-    [:code ":active-item"] " to determine what to render and what other actions "
-    "to take when an item is selected."]
-   [:p
-    "The definition of a navbar is managed using a " [:code "map"] " consisting "
-    "of the following keys:"]
-   [:ul
-    [:li [:strong ":sid"] " - a storage identifier keyword. Used to track the "
-     "actively selected menu link in the global state store."]
-    [:li [:strong ":has-shadow"] " - if true, the navbar will have a light "
-     "sahdow effect"]
-    [:li [:strong ":is-dark"] " - if true, the navbar is rendered with a dark "
-     "background and light text"]
-    [:li [:strong ":has-burger"] " - if true, the navbar will have a 'burger' "
-     "menu on small screens which can be clicked to expand the menus"]
-    [:li [:strong ":class"] " - a string or vector of strings specifying CSS "
-     "class names"]
-    [:li [:strong ":default-link"] " - a default menu link to be set as the "
-     "default value when the navbar is first rendered"]
-    [:li [:strong ":brand"] " - a " [:code "map"] " which defines a brand item "
-     "to add to the navbar. See " [:code "defnavbar-item"] " for details"]
-    [:li [:strong ":menus"] " - a vector of " [:code "map"] " elements used to "
-     "to define the menu entries added from the left of the navbar (after the "
-     "brand). See " [:code "defnavbar-item"] " for details on map structure"]
-    [:li [:strong ":end-menu"] " - a vector of " [:code "map"] " elements used "
-     "to define menus to add from the right side of the navbar. See "
-     [:code "defnavbar-item"] " for details on structure of menu item maps"]]
-   [c/card
+(defn defnavbar-item-function []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
     [:div.content
      [:p
       "The " [:strong "defnavbar-item"] " is a convenience function to help in "
@@ -109,5 +68,82 @@
         "the menu items for the dropdown."]
        [:li [:strong ":divider"] " - a simple horizontal divider used in dropdown "
         "menus to separate items into groups"]]]
-    :header {:title "defnavbar-item - a helper function for defining menu items"}]])
+     :header {:title "defnavbar-item - a helper function for defining menu items"}]]
+   [:div.column
+    [:pre
+     [:code
+      "[:p \"Example menu item definitions\"]" [:br]
+      "(let [menus [(navbar/defnavbar-item :contents \"Menu 1\" :id :menu1)" [:br]
+      "             (navbar/defnavbar-item :contents \"Menu 2\" :id :menu2)" [:br]
+      "             (navbar/defnavbar-item :type :dropdown :title \"My Dropdown\"" [:br]
+      "               :contents [(navbar/defnavbar-item :contents \"Dropdown 1\" :id :dd1)" [:br]
+      "                          (navbar/defnavbar-item :contents \"Dropdown 2\" :id :dd2)" [:br]
+      "                          (navbar/defnavbar-item :type :divider)" [:br]
+      "                          (navbar/defnavbar-item :contents \"Dropdown 3\" :id :dd3)]]]" [:br]
+      "  [:p \"Result\"]" [:br]
+      "  [basic/render-vec menus]"]]
+    [:div.box
+     [:p "Example menu item definitions"]
+     (let [menus [(nb/defnavbar-item :contents "Menu 1" :id :menu1)
+                  (nb/defnavbar-item :contents "Menu 2" :id :menu2)
+                  (nb/defnavbar-item :type :dropdown :title "My Dropdown"
+                    :contents [(nb/defnavbar-item :contents "Dropdown 1" :id :dd1)
+                               (nb/defnavbar-item :contents "Dropdown 2" :id :dd2)
+                               (nb/defnavbar-item :type :divider)
+                               (nb/defnavbar-item :contents "Dropdown 3" :id :dd3)])]]
+       [:p "Result:"]
+       [b/render-vec menus])]]])
+
+(defn navbar-page []
+  [:div.content
+   [:h2.title.is-2 "The Navbar Component"]
+   [:p
+    "The " [:strong "theophilusx.yorick.navbar"] " namespace provides support "
+    "for a navigation bar at the top of the page. The " [:strong "navbar"]
+    " component supports a brand item, menus, both standard and dropdown, "
+    "static content and a responsive burger item for a responsive navbar which "
+    "supports smaller screens."]
+   [:p
+    "A navbar component uses a local document model item to sore the definition "
+    "of the navbar. The " [:code "defnavbar-item"] " function is provided as a "
+    "helper function for defining menu item maps. The navbar also uses a global "
+    " document model atom called " [:code "global-state"] ", which is defined in "
+    "the " [:strong "theophilus.yorick.store"] " namespace, to record menu item "
+    "selection. The selected item " [:code ":id"] " value is stored in the "
+    "global state under the key " [:code ":active-item"], " which is in turn a "
+    "key associated with " [:code ":sid"] " used by the navbar. This allows other"
+    "components and ClojureScript code to use the current "
+    [:code ":active-item"] " to determine what to render and what other actions "
+    "to take when an item is selected."]
+   [:p
+    "The definition of a navbar is managed using a " [:code "map"] " consisting "
+    "of the following keys:"]
+   [:ul
+    [:li [:strong ":sid"] " - a storage identifier keyword. Used to track the "
+     "actively selected menu link in the global state store."]
+    [:li [:strong ":has-shadow"] " - if true, the navbar will have a light "
+     "sahdow effect"]
+    [:li [:strong ":is-dark"] " - if true, the navbar is rendered with a dark "
+     "background and light text"]
+    [:li [:strong ":has-burger"] " - if true, the navbar will have a 'burger' "
+     "menu on small screens which can be clicked to expand the menus"]
+    [:li [:strong ":class"] " - a string or vector of strings specifying CSS "
+     "class names"]
+    [:li [:strong ":default-link"] " - a default menu link to be set as the "
+     "default value when the navbar is first rendered"]
+    [:li [:strong ":brand"] " - a " [:code "map"] " which defines a brand item "
+     "to add to the navbar. See " [:code "defnavbar-item"] " for details"]
+    [:li [:strong ":menus"] " - a vector of " [:code "map"] " elements used to "
+     "to define the menu entries added from the left of the navbar (after the "
+     "brand). See " [:code "defnavbar-item"] " for details on map structure"]
+    [:li [:strong ":end-menu"] " - a vector of " [:code "map"] " elements used "
+     "to define menus to add from the right side of the navbar. See "
+     [:code "defnavbar-item"] " for details on structure of menu item maps"]]
+   [:hr]
+   [:div.columns
+    [:div.column.is-half
+     [:h4.title.is-4 "Description"]]
+    [:div.column
+     [:h4.title.is-4 "Example"]]]
+   [defnavbar-item-function]])
 

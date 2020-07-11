@@ -105,9 +105,9 @@
        "The " [:strong "navbar"] " component is a basic navigation bar. "
        "It can contain a brand, menus, both "
        "standard and dropdown, static text or form elements, such as for a "
-       "search box. The navbar can have shadow to give a 3d like effect, be "
-       "light or dark and is responsive to different screen sizes. A burger "
-       "menu is supported for small screens"]
+       "search box. The navbar can have have different colours, hover and "
+       "active item effects and is responsive to different screen sizes. A burger "
+       "menu is supported for touch screens"]
       [:p
        "The component stores the navbar definition in a local document model "
        "store as a reagent atom. The component uses the global state atom in "
@@ -121,11 +121,13 @@
        [:li [:strong ":sid"] " - a storage identifier keyword used to determine "
         "where the selected menu id will be located within the "
         [:code "theophilusx.yoric.store/global-state"] " document model atom"]
-       [:li [:strong "has-shadow"] " - if true, the navbar will be rendered with "
-        "a shadow effect. Default is true"]
-       [:li [:strong ":is-dark"] " - if true, the navbar will be rendered with "
-        "a dark background and lighter text. Default is false"]
-       [:li [:strong ":has-burger"] " - if true, the navbar will include a "
+       [:li [:strong ":spaced"] " - adds additional spacing to the top, bottom "
+        "left and right of each menu item"]
+       [:li [:strong ":colour"] " - set the colour of the navbar. Supported "
+        "values are " [:code ":is-primary, :is-link, :is-info, :is-success"]
+        " " [:code ":is-warning, :is-danger, :is-black, :is-dark, :is-light"]
+        " and " [:code ":is-white"]]
+       [:li [:strong ":burger"] " - if true, the navbar will include a "
         "burger menu when rendered on small screens to allow expansion of the "
         "navbar."]
        [:li [:strong ":class"] " - a string or vector of strings which specify "
@@ -226,46 +228,23 @@
    [:h2.title.is-2 "The Navbar Component"]
    [:p
     "The " [:strong "theophilusx.yorick.navbar"] " namespace provides support "
-    "for a navigation bar at the top of the page. The " [:strong "navbar"]
+    "for a navigation bar. The " [:strong "navbar"]
     " component supports a brand item, menus, both standard and dropdown, "
     "static content and a responsive burger item for a responsive navbar which "
     "supports smaller screens."]
    [:p
-    "A navbar component uses a local document model item to sore the definition "
+    "A navbar component uses a local document model item to store the definition "
     "of the navbar. The " [:code "defnavbar-item"] " function is provided as a "
     "helper function for defining menu item maps. The navbar also uses a global "
     " document model atom called " [:code "global-state"] ", which is defined in "
     "the " [:strong "theophilus.yorick.store"] " namespace, to record menu item "
     "selection. The selected item " [:code ":id"] " value is stored in the "
-    "global state under the key " [:code ":active-item"], " which is in turn a "
-    "key associated with " [:code ":sid"] " used by the navbar. This allows other"
-    "components and ClojureScript code to use the current "
-    [:code ":active-item"] " to determine what to render and what other actions "
-    "to take when an item is selected."]
-   [:p
-    "The definition of a navbar is managed using a " [:code "map"] " consisting "
-    "of the following keys:"]
-   [:ul
-    [:li [:strong ":sid"] " - a storage identifier keyword. Used to track the "
-     "actively selected menu link in the global state store."]
-    [:li [:strong ":has-shadow"] " - if true, the navbar will have a light "
-     "sahdow effect"]
-    [:li [:strong ":is-dark"] " - if true, the navbar is rendered with a dark "
-     "background and light text"]
-    [:li [:strong ":has-burger"] " - if true, the navbar will have a 'burger' "
-     "menu on small screens which can be clicked to expand the menus"]
-    [:li [:strong ":class"] " - a string or vector of strings specifying CSS "
-     "class names"]
-    [:li [:strong ":default-link"] " - a default menu link to be set as the "
-     "default value when the navbar is first rendered"]
-    [:li [:strong ":brand"] " - a " [:code "map"] " which defines a brand item "
-     "to add to the navbar. See " [:code "defnavbar-item"] " for details"]
-    [:li [:strong ":menus"] " - a vector of " [:code "map"] " elements used to "
-     "to define the menu entries added from the left of the navbar (after the "
-     "brand). See " [:code "defnavbar-item"] " for details on map structure"]
-    [:li [:strong ":end-menu"] " - a vector of " [:code "map"] " elements used "
-     "to define menus to add from the right side of the navbar. See "
-     [:code "defnavbar-item"] " for details on structure of menu item maps"]]
+    "global state under the storage identifier keyword specified as "
+    [:code ":sid"], " in the map passed to the " [:code "navbar"] " component. "
+    "This allows other "
+    "components and ClojureScript code to use the current menu choice "
+     " to determine what to render and what other actions "
+    "to take when an item is selected."] 
    [:hr]
    [:div.columns
     [:div.column.is-half

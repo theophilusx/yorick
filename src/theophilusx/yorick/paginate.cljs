@@ -1,6 +1,7 @@
 (ns theophilusx.yorick.paginate
   (:require [reagent.core :as r]
-            [theophilusx.yorick.basic :as basic]))
+            [theophilusx.yorick.basic :as basic]
+            [theophilusx.yorick.utils :refer [cs]]))
 
 (defn get-page
   "Return the page associated with a page number."
@@ -11,24 +12,27 @@
   "Create a link item for specified page."
   [current page]
   [:li
-   [basic/a (str page) :class ["pagination-link"
-                               (when (= @current page)
-                                 "is-current")]
+   [basic/a (str page) :class (cs "pagination-link"
+                                  (when (= @current page)
+                                    "is-current"))
     :on-click #(reset! current page)]])
 
 (defn paginate
   "Generate a paginated page of records. The `records` argument is a
   sequence of records that will be partitioned into pages. Each record
-  in the sequence will be rendered using `page-render-fn`. The optional
-  key `:page-size` can be used to set how many records are shown per page
-  (defaults to 10). The `is-rounded` key can be set to true to have the
-  page navigation items rendered with rounded corners. The keys `:button-size`
-  sets the size of navigation buttons and can have the value `:small`,
-  `:medium` or `:large`"
+  in the sequence will be rendered using `page-render-fn`. The following
+  optional keyword arguments are also supported:
+
+  | Keyword        | Description                                           |
+  |----------------|-------------------------------------------------------|
+  | `:page-size`   | number of records to show per page. Default 10        |
+  | `:is-rounded`  | if true, page navigation items have a rounded look    |
+  | `:button-size` | sets the size of navigation buttons. Supported values |
+  |                | are `:small`, `:medium` and `:large`                  |"
   [records page-render-fn & {:keys [page-size is-rounded button-size]
-                             :or {page-size 10}}]
+                             :or   {page-size 10}}]
   (let [current (r/atom 1)
-        pages (r/atom (reduce merge
+        pages   (r/atom (reduce merge
                               (map-indexed
                                (fn [idx v]
                                  {(keyword (str "page-" (inc idx)))
@@ -41,16 +45,16 @@
                                {(keyword (str "page-" (inc idx)))
                                 (vec v)})
                              (partition-all page-size data))))
-     (when (> @current (count (keys @pages)))
-          (reset! current (count (keys @pages))))
+      (when (> @current (count (keys @pages)))
+        (reset! current (count (keys @pages))))
       [:<>
-       [:nav.pagination {:class [(case button-size
-                                   :small "is-small"
-                                   :medium "is-medium"
-                                   :large "is-large"
-                                   nil)
-                                 (when is-rounded "is-rounded")]
-                         :role "navigation"
+       [:nav.pagination {:class      (cs (case button-size
+                                           :small  "is-small"
+                                           :medium "is-medium"
+                                           :large  "is-large"
+                                           nil)
+                                    (when is-rounded "is-rounded"))
+                         :role       "navigation"
                          :aria-label "pagination"}
         (when-not (= @current 1)
           [basic/a "Previous" :class "pagination-previous"

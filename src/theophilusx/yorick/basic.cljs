@@ -15,8 +15,7 @@
   | `:class`    | a string or vector of strings representing CSS class names |
   | `:attrs`    | a map of HTML attribute values. Keys are HTML attribute    |
   |             | names as keywords e.g. `:role`                             |"
-  [title & {:keys [href on-click class attrs]
-                  :or {href "#"}}]
+  [title & {:keys [href on-click class attrs]}]
   [:a (merge attrs {:href href
                     :on-click on-click
                     :class (cs class)})

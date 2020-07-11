@@ -2,49 +2,50 @@
   (:require [theophilusx.yorick.navbar :as nb]
             [theophilusx.yorick.card :as c]
             [theophilusx.yorick.basic :as b]
-            [theophilusx.yorick.store :as store]))
+            [theophilusx.yorick.store :as store]
+            [theophilusx.yorick.utils :refer [spath]]))
 
 (defn defnavbar-item-function []
   [:div.columns
    [:div.column.is-half
     [c/card
-    [:div.content
-     [:p
-      "The " [:strong "defnavbar-item"] " is a convenience function to help in "
-      "the definition of navbar menu items. The function returns a "
-      [:code "map"] " which can be used as a component in the " [:code ":menus"]
-      " and " [:code ":end-menu"] " vectors as well as the " [:code ":brand"]
-      " map. The " [:strong "defnavbar-item"] " function supports the following "
-      "keyword arguments:"]
-     [:ul
-      [:li [:strong ":type"] " - the type of item. Supported types are "
-       [:code ":a, :div, :dropdown, :raw"] " and " [:code ":divider"] ". See "
-       "below for definition of each type"]
-      [:li [:strong ":title"] " - used for dropdown menus. Specifies the title "
-       "to be used in the parent menu"]
-      [:li [:strong ":contents"] " - for " [:code ":dropdown"] " type items, "
-       "this is a vector of item maps representing the dropdown menu entries. "
-       "For other types, it is what will be rendered in the menu item e.g. "
-       "menu title."]
-      [:li [:strong ":class"] " - a string or vector of strings specifying CSS "
-       "class names to be associated with the menu item"]
-      [:li [:strong ":href"] " - a hyptertext reference to be associaed with the "
-       "menu item. Defaults to " [:code "#"] " if not specified"]
-      [:li [:strong ":id"] " - value for the HTML id attribute to be associated "
-       "with the menu item. Defaults to " [:code "nav-<n>"] " if not specified "
-       "where n is a unique number"]
-      [:li [:strong ":icon-data"] " - an icon data map defining an icon to be "
-       "included with the menu item label. See "
-       [:strong "theophilusx.yorick.icon"] " for details"]
-      [:li [:strong ":selectable"] " - if true, a click handler is associated "
-       "with the menu item to enable it to be selected. Defaults to true"]
-      [:li [:strong ":is-hoverable"] " - used with dropdown menu item types. If "
-       "true, the dropdown menu items will be expanded when the mouse hovers "
-       "over the parent menu"]]
-     [:p
-      "The " [:code ":type"] " value for menu items defines the type of menu "
-      "to be generated. A number of different types are supported:"]
-     [:ul
+     [:div.content
+      [:p
+       "The " [:strong "defnavbar-item"] " is a convenience function to help in "
+       "the definition of navbar menu items. The function returns a "
+       [:code "map"] " which can be used as a component in the " [:code ":menus"]
+       " and " [:code ":end-menu"] " vectors as well as the " [:code ":brand"]
+       " map. The " [:strong "defnavbar-item"] " function supports the following "
+       "keyword arguments:"]
+      [:ul
+       [:li [:strong ":type"] " - the type of item. Supported types are "
+        [:code ":a, :div, :dropdown, :raw"] " and " [:code ":divider"] ". See "
+        "below for definition of each type"]
+       [:li [:strong ":title"] " - used for dropdown menus. Specifies the title "
+        "to be used in the parent menu"]
+       [:li [:strong ":contents"] " - for " [:code ":dropdown"] " type items, "
+        "this is a vector of item maps representing the dropdown menu entries. "
+        "For other types, it is what will be rendered in the menu item e.g. "
+        "menu title."]
+       [:li [:strong ":class"] " - a string or vector of strings specifying CSS "
+        "class names to be associated with the menu item"]
+       [:li [:strong ":href"] " - a hyptertext reference to be associaed with the "
+        "menu item. Defaults to " [:code "#"] " if not specified"]
+       [:li [:strong ":id"] " - value for the HTML id attribute to be associated "
+        "with the menu item. Defaults to " [:code "nav-<n>"] " if not specified "
+        "where n is a unique number"]
+       [:li [:strong ":icon-data"] " - an icon data map defining an icon to be "
+        "included with the menu item label. See "
+        [:strong "theophilusx.yorick.icon"] " for details"]
+       [:li [:strong ":selectable"] " - if true, a click handler is associated "
+        "with the menu item to enable it to be selected. Defaults to true"]
+       [:li [:strong ":is-hoverable"] " - used with dropdown menu item types. If "
+        "true, the dropdown menu items will be expanded when the mouse hovers "
+        "over the parent menu"]]
+      [:p
+       "The " [:code ":type"] " value for menu items defines the type of menu "
+       "to be generated. A number of different types are supported:"]
+      [:ul
        [:li [:strong ":a"] " - the most common menu type and default if no :type "
         "is specified. The click handler associated with this menu type will "
         "copy the associated " [:code ":id"] " value to the "
@@ -101,8 +102,8 @@
     [c/card
      [:div.content
       [:p
-       "The " [:strong "navbar"] " component is a basic navigation bar which "
-       "sits at the top of the page. It can contain a brand, menus, both "
+       "The " [:strong "navbar"] " component is a basic navigation bar. "
+       "It can contain a brand, menus, both "
        "standard and dropdown, static text or form elements, such as for a "
        "search box. The navbar can have shadow to give a 3d like effect, be "
        "light or dark and is responsive to different screen sizes. A burger "
@@ -111,15 +112,14 @@
        "The component stores the navbar definition in a local document model "
        "store as a reagent atom. The component uses the global state atom in "
        [:code "theophilusx.yorick.store/global-state"] " to track which menu "
-       "item has been selected using the key " [:code ":active-item"] ", which "
-       "is associated with the key specified by the " [:code ":sid"] " storage "
+       "item has been selected using the " [:code ":sid"] " storage "
        "identifier keyword specified in the navbar definition."]
       [:p
        "The argument passed to the component is a " [:code "map"] ". The "
        "following keys are supported:"]
       [:ul
        [:li [:strong ":sid"] " - a storage identifier keyword used to determine "
-        "where the " [:code ":active-item"] " key will be located within the "
+        "where the selected menu id will be located within the "
         [:code "theophilusx.yoric.store/global-state"] " document model atom"]
        [:li [:strong "has-shadow"] " - if true, the navbar will be rendered with "
         "a shadow effect. Default is true"]
@@ -155,11 +155,12 @@
       "                          (navbar/defnavbar-item :type :divider)" [:br]
       "                          (navbar/defnavbar-item :contents \"Dropdown 3\"" [:br]
       "                            :id :dropdown3)]]]" [:br]
-      "  [navbar {:sid :navbar" [:br]
-      "           :default-link :menu1" [:br]
-      "           :menus menus}]" [:br]
-      "  [:p (str \"Current Item: \" (store/get-in store/global-state" [:br]
-      "                                 [:navbar :active-item]))])"]]
+      "  [:<>" [:br]
+      "    [navbar {:sid :navbar" [:br]
+      "             :default-link :menu1" [:br]
+      "             :menus menus}]" [:br]
+      "    [:p (str \"Current Item: \" (store/get-in store/global-state" [:br]
+      "                                   (spath :navbar)))]])"]]
     [:div.box
      (let [menus [(nb/defnavbar-item :contents "Menu 1" :id :menu1)
                   (nb/defnavbar-item :contents "Menu 2" :id :menu2)
@@ -175,10 +176,50 @@
         [nb/navbar {:sid          :navbar
                     :default-link :menu1
                     :menus        menus}]
+        [:p (str "Current Item " (store/get-in store/global-state (spath :navbar)))]])]
+    [:pre
+     [:code
+      "(let [menus [(navbar/defnavbar-item :contents \"Menu 1\" :id :menu1)" [:br]
+      "             (navbar/defnavbar-item :contents \"Menu 2\" :id :menu2)" [:br]
+      "             (navbar/defnavbar-item :type :dropdown :title \"Dropdown\"" [:br]
+      "               :contents [(navbar/defnavbar-item :contents \"Dropdown 1\"" [:br]
+      "                            :id :dropdown1)" [:br]
+      "                          (navbar/defnavbar-item :contents \"Dropdown 2\"" [:br]
+      "                            :id :dropdown2)" [:br]
+      "                          (navbar/defnavbar-item :type :divider)" [:br]
+      "                          (navbar/defnavbar-item :contents \"Dropdown 3\"" [:br]
+      "                            :id :dropdown3)]]" [:br]
+      "      end-menus [(navbar/defnavbar-item :contents \"Register\" :id :register)" [:br]
+      "                 (navbar/defnavbar-item :contents \"Login\" :id :login)]]" [:br]
+      "  [:<>" [:br]
+      "    [navbar {:sid :navbar1" [:br]
+      "             :colour :is-dark"
+      "             :default-link :menu1" [:br]
+      "             :menus menus" [:br]
+      "             :end-menu end-menu}]"
+      "    [:p (str \"Current Item: \" (store/get-in store/global-state" [:br]
+      "                                   (spath :navbar)))]])"]]
+    [:div.box
+     (let [menus    [(nb/defnavbar-item :contents "Menu 1" :id :menu1)
+                     (nb/defnavbar-item :contents "Menu 2" :id :menu2)
+                     (nb/defnavbar-item :type :dropdown :title "Dropdown"
+                       :contents [(nb/defnavbar-item :contents "Dropdown 1"
+                                    :id :dropdown1)
+                                  (nb/defnavbar-item :contents "Dropdown 2"
+                                    :id :dropdown2)
+                                  (nb/defnavbar-item :type :divider)
+                                  (nb/defnavbar-item :contents "Dropdown 3"
+                                    :id :dropdown3)])]
+           end-menu [(nb/defnavbar-item :contents "Register" :id :register)
+                     (nb/defnavbar-item :contents "Login" :id :login)]]
+       [:<>
+        [nb/navbar {:sid          :navbar2
+                    :default-link :menu1
+                    :colour       :is-dark
+                    :menus        menus
+                    :end-menu     end-menu}]
         [:p (str "Current Item " (store/get-in store/global-state
-                                               [:navbar :active-item]))]
-        [:p "Global State"]
-        [b/render-map @store/global-state]])]]])
+                                               (spath :navbar2)))]])]]])
 
 (defn navbar-page []
   [:div.content

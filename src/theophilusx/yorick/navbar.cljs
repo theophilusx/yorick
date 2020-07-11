@@ -169,7 +169,7 @@
   [model]
   [:div.navbar-brand
    (make-item (:brand @model) model)
-   (when (:has-burger @model)
+   (when (:burger @model)
      (burger model))])
 
 (defn menu
@@ -249,9 +249,14 @@
   | Key             | Description                                             |
   |-----------------|---------------------------------------------------------|
   | `:sid`          | A storage identifier keyword e.g :topbar or :top.bar    |
-  | `:has-shadow`   | true if the navbar has a shadow effect. Default true    |
-  | `:is-dark`      | if true, navbar is a dark colour. Default is false      |
-  | `:has-burger`   | true if navabar should include a 'burger' menu.         |
+  | `:spaced`       | adds additional space above, below and to left and right|
+  | `:colour`       | set the colour for the navbar. Possible values are      |
+  |                 | `:is-primary`, `:is-link`, `:is-info`, `:is-success`,   |
+  |                 | `:is-warning`, `:is-danger`, `:is-black`, `:is-dark`    |
+  |                 | `:is-light` and `:is-white`                             |
+  | `:transparent`  | if true, remove hover and active background effects from|
+  |                 | the navbar                                              |
+  | `:burger`       | true if navabar should include a 'burger' menu.         |
   |                 | Defaault true                                           |
   | `:class`        | additional class attributes to be added to main nav tag |
   | `:default-link` | the default (active) link set when navbar first loaded  |
@@ -260,19 +265,18 @@
   | `:end-menus`    | vector of menus to be added after main menus i.e. to    |
   |                 | the right                                               |"
   [nb-def]
-  (let [model (r/atom (merge {:has-shadow true
-                              :has-burger true
-                              :is-dark false
+  (let [model (r/atom (merge {:burger true
                               :burger-active false
                               :active-item (:default-link nb-def)
                               :dropdown-active false}
                              nb-def))]
     (set-choice (:sid @model) (:default-link @model))
-    (fn [nb-def]
-      (swap! model assoc :menus (:menus nb-def)
-                         :end-menu (:end-menus nb-def))
+    (fn []
       [:nav.navbar {:class (cs  (:class @model)
-                                (when (:has-shadow @model) "has-shadow"))
+                                (when (:spaced @model) "is-spaced")
+                                (when (:colour @model)
+                                  (str (name (:colour @model))))
+                                (when (:transparent @model) "is-transparent"))
                     :role  "navigation"
                     :aria-label "main navigation"}
        (when (:brand @model)

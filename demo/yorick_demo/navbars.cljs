@@ -1,7 +1,8 @@
 (ns yorick-demo.navbars
   (:require [theophilusx.yorick.navbar :as nb]
             [theophilusx.yorick.card :as c]
-            [theophilusx.yorick.basic :as b]))
+            [theophilusx.yorick.basic :as b]
+            [theophilusx.yorick.store :as store]))
 
 (defn defnavbar-item-function []
   [:div.columns
@@ -94,6 +95,91 @@
        [:p "Result:"]
        [b/render-vec menus])]]])
 
+(defn navbar-component []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p
+       "The " [:strong "navbar"] " component is a basic navigation bar which "
+       "sits at the top of the page. It can contain a brand, menus, both "
+       "standard and dropdown, static text or form elements, such as for a "
+       "search box. The navbar can have shadow to give a 3d like effect, be "
+       "light or dark and is responsive to different screen sizes. A burger "
+       "menu is supported for small screens"]
+      [:p
+       "The component stores the navbar definition in a local document model "
+       "store as a reagent atom. The component uses the global state atom in "
+       [:code "theophilusx.yorick.store/global-state"] " to track which menu "
+       "item has been selected using the key " [:code ":active-item"] ", which "
+       "is associated with the key specified by the " [:code ":sid"] " storage "
+       "identifier keyword specified in the navbar definition."]
+      [:p
+       "The argument passed to the component is a " [:code "map"] ". The "
+       "following keys are supported:"]
+      [:ul
+       [:li [:strong ":sid"] " - a storage identifier keyword used to determine "
+        "where the " [:code ":active-item"] " key will be located within the "
+        [:code "theophilusx.yoric.store/global-state"] " document model atom"]
+       [:li [:strong "has-shadow"] " - if true, the navbar will be rendered with "
+        "a shadow effect. Default is true"]
+       [:li [:strong ":is-dark"] " - if true, the navbar will be rendered with "
+        "a dark background and lighter text. Default is false"]
+       [:li [:strong ":has-burger"] " - if true, the navbar will include a "
+        "burger menu when rendered on small screens to allow expansion of the "
+        "navbar."]
+       [:li [:strong ":class"] " - a string or vector of strings which specify "
+        "CSS class names to be added to the navbar element"]
+       [:li [:strong ":defualt-link"] " - the " [:code ":id"] " value of the "
+        "menu item to be considered the default e.g. item selected when the "
+        "navbar is first rendered"]
+       [:li [:strong ":brand"] " - a menu item map defining the brand item to "
+        "be added to the left of the navbar"]
+       [:li [:strong ":menus"] " - a vector of item definition maps. See "
+        [:code "defnavbar-item"] " for details. These menus are added from the "
+        "left, following any brand item if there is one."]
+       [:li [:strong ":end-menu"] " - a vector of item definition maps. See "
+        [:code "defnavbar-item"] " for details. These menus are added from the "
+        "right side"]]]
+     :header {:title "navbar - a navigation bar component"}]]
+   [:div.column
+    [:pre
+     [:code
+      "(let [menus [(navbar/defnavbar-item :contents \"Menu 1\" :id :menu1)" [:br]
+      "             (navbar/defnavbar-item :contents \"Menu 2\" :id :menu2)" [:br]
+      "             (navbar/defnavbar-item :type :dropdown :title \"Dropdown\"" [:br]
+      "               :contents [(navbar/defnavbar-item :contents \"Dropdown 1\"" [:br]
+      "                            :id :dropdown1)" [:br]
+      "                          (navbar/defnavbar-item :contents \"Dropdown 2\"" [:br]
+      "                            :id :dropdown2)" [:br]
+      "                          (navbar/defnavbar-item :type :divider)" [:br]
+      "                          (navbar/defnavbar-item :contents \"Dropdown 3\"" [:br]
+      "                            :id :dropdown3)]]]" [:br]
+      "  [navbar {:sid :navbar" [:br]
+      "           :default-link :menu1" [:br]
+      "           :menus menus}]" [:br]
+      "  [:p (str \"Current Item: \" (store/get-in store/global-state" [:br]
+      "                                 [:navbar :active-item]))])"]]
+    [:div.box
+     (let [menus [(nb/defnavbar-item :contents "Menu 1" :id :menu1)
+                  (nb/defnavbar-item :contents "Menu 2" :id :menu2)
+                  (nb/defnavbar-item :type :dropdown :title "Dropdown"
+                    :contents [(nb/defnavbar-item :contents "Dropdown 1"
+                                 :id :dropdown1)
+                               (nb/defnavbar-item :contents "Dropdown 2"
+                                 :id :dropdown2)
+                               (nb/defnavbar-item :type :divider)
+                               (nb/defnavbar-item :contents "Dropdown 3"
+                                 :id :dropdown3)])]]
+       [:<>
+        [nb/navbar {:sid          :navbar
+                    :default-link :menu1
+                    :menus        menus}]
+        [:p (str "Current Item " (store/get-in store/global-state
+                                               [:navbar :active-item]))]
+        [:p "Global State"]
+        [b/render-map @store/global-state]])]]])
+
 (defn navbar-page []
   [:div.content
    [:h2.title.is-2 "The Navbar Component"]
@@ -145,5 +231,6 @@
      [:h4.title.is-4 "Description"]]
     [:div.column
      [:h4.title.is-4 "Example"]]]
-   [defnavbar-item-function]])
+   [defnavbar-item-function]
+   [navbar-component]])
 

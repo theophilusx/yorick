@@ -229,7 +229,7 @@
   [& {:keys [type title classes href id contents selectable
              icon-data is-hoverable]
       :or {type :a
-           href "#"
+           ;;href "#"
            id (keyword (gensym "nav-"))
            selectable true}}]
   {:type type

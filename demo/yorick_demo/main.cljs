@@ -10,7 +10,8 @@
             [yorick-demo.inputs :refer [input-page]]
             [yorick-demo.media :refer [media-page]]
             [yorick-demo.modals :refer [modal-page]]
-            [yorick-demo.navbars :refer [navbar-page]]))
+            [yorick-demo.navbars :refer [navbar-page]]
+            [yorick-demo.pagination :refer [paginate-page]]))
 
 (println "Reloading code")
 
@@ -75,6 +76,7 @@
     :media [media-page]
     :modal [modal-page]
     :navbar [navbar-page]
+    :paginate [paginate-page]
     [placeholder-page]))
 
 (defn greeting []

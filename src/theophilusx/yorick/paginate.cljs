@@ -26,10 +26,10 @@
   | Keyword        | Description                                           |
   |----------------|-------------------------------------------------------|
   | `:page-size`   | number of records to show per page. Default 10        |
-  | `:is-rounded`  | if true, page navigation items have a rounded look    |
+  | `:rounded`  | if true, page navigation items have a rounded look    |
   | `:button-size` | sets the size of navigation buttons. Supported values |
   |                | are `:small`, `:medium` and `:large`                  |"
-  [records page-render-fn & {:keys [page-size is-rounded button-size]
+  [records page-render-fn & {:keys [page-size rounded button-size]
                              :or   {page-size 10}}]
   (let [current (r/atom 1)
         pages   (r/atom (reduce merge
@@ -53,7 +53,7 @@
                                            :medium "is-medium"
                                            :large  "is-large"
                                            nil)
-                                    (when is-rounded "is-rounded"))
+                                    (when rounded "is-rounded"))
                          :role       "navigation"
                          :aria-label "pagination"}
         (when-not (= @current 1)

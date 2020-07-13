@@ -3,14 +3,6 @@
             [theophilusx.yorick.store :as store]
             [theophilusx.yorick.utils :refer [cs]]))
 
-;; The structure for the top level `classes` hash
-;; {:header {:thead ""
-;;           :tr ""}
-;;  :footer {:tfoot ""
-;;           :tr ""}
-;;  :body {:tbody ""
-;;         :tr ""}}
-
 (defn defcell
   "Generates a map defining a table cell. The 'val' argument is the data to
   be placed in the cell. The following keys are supported:

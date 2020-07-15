@@ -1,12 +1,14 @@
 * Yorick
 
-/Yorick/ is a library of reagent components which use the [[https://bulma.io][Bulma]] framework for
-CSS styling. Bulma is a full featured pure CSS framework which does not include
-any Javascript. This library builds on this and adds necessary Javascript to
-create high level Reagent components to represent functionality commonly
-required when developing web based applications. 
+/Yorick/ is a library of reagent components which use the
+[[https://bulma.io][Bulma]] framework for CSS styling. Bulma is a full featured
+pure CSS framework which does not include any Javascript. This library builds on
+this and adds necessary ClojureScript to create high level Reagent components to
+represent functionality commonly required when developing web based
+applications.
 
-Yorick has been developed using the excellent [[https://github.com/thheller/shadow-cljs][shadow-cljs]] library, but can be
+Yorick has been developed using the excellent
+[[https://github.com/thheller/shadow-cljs][shadow-cljs]] library, but can be
 used with any ClojureScript build environment, such as /lein/, /CLI tools/ or
 /boot/.
 
@@ -23,7 +25,7 @@ used with any ClojureScript build environment, such as /lein/, /CLI tools/ or
 
    Until we add this library to clojars (in the near future), you will need to
    clone this repository into your project. All the necessary code is in the
-   ~src~ tree. There is also a simple /demo/ application in the ~demo~ tree
+   ~src~ tree. There is also a simple /demo/ application in the ~demo~ tree,
    which shows how to use some of the components and what they look like when
    rendered. To run the demo, do the following
 
@@ -37,6 +39,50 @@ npx shadow-cljs server build demo
 Then visit [[http://localhost:8080][demo page]] 
 
 ** Using the API
+*** Namespaces
+
+    The /Yorick/ library is broken up into several namespaces representing
+    different functionality. Rather than having a single /core/ namespace, you
+    load the namespace with the specific functionality you want. Currently, the
+    following namespaces are defined:
+
+    - *theophilusx.yorick.basic* :: A collection of basic utility components:
+      - a :: a simple anchor component
+      - img :: a simple image component
+      - render-vec :: a simple component for rendering vectors of data
+      - render-map :: a simple component for rendering maps of data
+      - breadcrumbs :: a simple breadcrumbs component to provide link breadcrumbs
+      - notification :: a simple notification component 
+    - *theophilusx.yorick.card* :: a basic card presentation component
+    - *theophilusx.yorick.icon :: components to manage display of icons
+    - *theophilusx.yorick.input :: a collection of user input components
+      - field :: a general purpose input field component
+      - horizontal-field :: a general purpose horizontal input field
+      - input :: a basic text input component
+      - input-field :: a text input component wrapped in an input field
+      - checkbox :: a basic checkbox component
+      - radio :: a basic radio button component 
+      - button :: a basic button component 
+      - editable-field :: an editable field component 
+      - textarea :: a basic text area component
+      - select :: a select box component 
+      - select-field :: a select box component wrapped in a field component
+      - file :: a file selection component
+      - search :: a basic search box component
+      - range-field :: a range input component wrapped in a field component
+      - number-input :: an input component for numbers 
+      - number-field :: a number-input component wrapped in a field component
+    - *theophilusx.yorick.media* :: a basic and flexible media presentation component
+    - *theophilusx.yorick.modal* :: a modal overlay window component
+    - *theophilusx.yorick.navbar* :: a basic navigation bar component
+    - *theophilusx.yorick.paginate* :: a basic pagination component
+    - *theophilusx.yorick.sidebar* :: a side menu (vertical) component
+    - *theophilusx.yorick.store* :: various functions to manipulate Reagent atoms for data storage
+    - *theophilusx.yorick.table* :: a component to render data in HTML tables
+    - *theophilusx.yorick.toolbars* :: a basic component for rendering a toolbar
+    - *theophilusx.yorick.utils* :: a collection of useful utility functions
+
+*** Optional Keyword Arguments      
 
    The library makes extensive use of keyword arguments. This has the advantage
    of making simple default function calls very clean and easy to do, but
@@ -46,12 +92,12 @@ Then visit [[http://localhost:8080][demo page]]
    complicated things a lot, it is probably a sign you need to create higher
    level abstractions to restrict the complexity to well defined points.
 
-   Many HTML entities have large numbers of attributes that can be used with
-   them. However, most of the time, only a few of these are necessary. This
-   library tries to add sensible defaults for many of these attributes and
-   allows you to add them when necessary via /keyword/ arguments. There are also
-   some /tricks/ you can use to get around some common issues that come up when
-   working with components.
+*** HTML Attribute Support   
+   
+   Many HTML entities support large numbers of attributes. To support this, many
+   components allow for an ~:attrs~ keyword, which consists of HTML attribute
+   names as keywords and an associated string value. This map will be merged
+   into the definition of the component.
 
 *** Layout   
 

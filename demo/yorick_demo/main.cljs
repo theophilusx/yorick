@@ -13,7 +13,8 @@
             [yorick-demo.navbars :refer [navbar-page]]
             [yorick-demo.pagination :refer [paginate-page]]
             [yorick-demo.sidebars :refer [sidebar-page]]
-            [yorick-demo.tables :refer [tables-page]]))
+            [yorick-demo.tables :refer [tables-page]]
+            [yorick-demo.toolbars :refer [toolbar-page]]))
 
 (println "Reloading code")
 
@@ -81,6 +82,7 @@
     :paginate [paginate-page]
     :sidebar [sidebar-page]
     :tables [tables-page]
+    :toolbar [toolbar-page]
     [placeholder-page]))
 
 (defn greeting []

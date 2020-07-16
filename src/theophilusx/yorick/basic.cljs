@@ -61,23 +61,24 @@
   Uses `render-vec` and `render-set` to render values which are ClojuresScript
   `vectors` or `maps`."
   [m]
-  [:table.table
-   (into
-    [:tbody]
-    (for [k (keys m)]
-      (cond
-        (map? (get m k)) [:tr
-                          [:td [:strong (str k)]]
-                          [:td (render-map (get m k))]]
-        (set? (get m k)) [:tr
-                          [:td [:strong (str k)]]
-                          [:td (render-set (get m k))]]
-        (vector? (get m k)) [:tr
-                             [:td [:strong (str k)]]
-                             [:td (render-vec (get m k))]]
-        :else [:tr
-                  [:td [:strong (str k)]]
-                  [:td (str (get m k))]])))])
+  [:div.table-container
+   [:table.table
+    (into
+     [:tbody]
+     (for [k (keys m)]
+       (cond
+         (map? (get m k))    [:tr
+                           [:td [:strong (str k)]]
+                           [:td (render-map (get m k))]]
+         (set? (get m k))    [:tr
+                           [:td [:strong (str k)]]
+                           [:td (render-set (get m k))]]
+         (vector? (get m k)) [:tr
+                              [:td [:strong (str k)]]
+                              [:td (render-vec (get m k))]]
+         :else               [:tr
+                [:td [:strong (str k)]]
+                [:td (str (get m k))]])))]])
 
 (defn breadcrumbs
   "Renders a breadcrumb link line.

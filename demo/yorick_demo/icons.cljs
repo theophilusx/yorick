@@ -50,18 +50,18 @@
      [:h6.title.is-6 "Result"]
      [:p [i/icon-component {:name "fa-warehouse"
                             :size :small}]
-      " Small"]
+      [:span "Small"]]
      [:p [i/icon-component {:name "fa-warehouse"}]
-      " Normal"]
+      [:span "Normal"]]
      [:p [i/icon-component {:name "fa-warehouse"
                             :size :medium}]
-      " Medium"]
+      [:span "Medium"]]
      [:p [i/icon-component {:name "fa-warehouse"
                             :size :large}]
-      " Large"]
+      [:span "Large"]]
      [:p [i/icon-component {:name "fa-warehouse"
                             :size :huge}]
-      " Huge"]]
+      [:span "Huge"]]]
     [:pre
      [:code
       "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]

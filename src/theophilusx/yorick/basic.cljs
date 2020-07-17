@@ -1,5 +1,6 @@
 (ns theophilusx.yorick.basic
   (:require [theophilusx.yorick.utils :refer [cs spath]]
+            [theophilusx.yorick.icon :as icon]
             [clojure.string :as string]
             [theophilusx.yorick.store :as store]))
 
@@ -7,19 +8,24 @@
   "Creates an anchor <a> component.
   The required argument is the text title to be used in the anchor.
   Optional keyword arguments include
-  | Key | Description |
-  |-------------|------------------------------------------------------------|
-  | `:href`     | a hypertext reference. Defaults to `#` if not provided     |
-  | `:on-click` | a function with no arguments to be executed when the       |
-  |             | link is clicked                                            |
-  | `:class`    | a string or vector of strings representing CSS class names |
-  | `:attrs`    | a map of HTML attribute values. Keys are HTML attribute    |
-  |             | names as keywords e.g. `:role`                             |"
-  [title & {:keys [href on-click class attrs]}]
+
+  | Key          | Description                                                |
+  |--------------|------------------------------------------------------------|
+  | `:href`      | a hypertext reference. Defaults to `#` if not provided     |
+  | `:on-click`  | a function with no arguments to be executed when the       |
+  |              | link is clicked                                            |
+  | `:class`     | a string or vector of strings representing CSS class names |
+  | `:attrs`     | a map of HTML attribute values. Keys are HTML attribute    |
+  |              | names as keywords e.g. `:role`                             |
+  | `:icon-data` | an icon definition map to add an icon to the link title.   |
+  |              | See `theophilusx.yorick.icon` for details on map structure |"
+  [title & {:keys [href on-click class attrs icon-data]}]
   [:a (merge attrs {:href href
                     :on-click on-click
                     :class (cs class)})
-   title])
+   (when icon-data
+     [icon/icon-component icon-data])
+   [:span title]])
 
 (defn img
   "A basic component to generate an HTML <img> element.

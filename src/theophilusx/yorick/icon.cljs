@@ -33,20 +33,18 @@
                             :right "is-right"
                             nil)
                           (case (:size icon-data)
-                            :small "is-small"
-                            :medium "is-medium"
-                            :large "is-large"
-                            :huge "is-large"
-                            nil))}
-   " "
+                            :small "is-small mx-2"
+                            :medium "is-medium mx-2"
+                            :large "is-large mx-2"
+                            :huge "is-large mx-3"
+                            "mx-1"))}
    [:i.fas {:class (cs (:name icon-data)
                        (:icon-class icon-data)
                        (case (:size icon-data)
                          :medium "fa-lg"
                          :large "fa-2x"
                          :huge "fa-3x"
-                         nil))}]
-   " "])
+                         nil))}]])
 
 (defn icons
   "Generates a `vector` of `icon` components from icon data. The `icon-data`

@@ -1,6 +1,7 @@
 (ns yorick-demo.basic
   (:require [theophilusx.yorick.basic :as b]
-            [theophilusx.yorick.card :as c]))
+            [theophilusx.yorick.card :as c]
+            [theophilusx.yorick.icon :as icon]))
 
 (defn a-component []
   [:div.columns
@@ -19,17 +20,26 @@
        [:li [:strong ":class"] " a string or vector of strings representing "
         "CSS class names to apply to the <a> element"]
        [:li [:strong ":attrs"] " - a map of HTML attribute values. The keys are "
-        "HTML attribute names as keywords e.g. " [:code ":id"]]]]
+        "HTML attribute names as keywords e.g. " [:code ":id"]]
+       [:li [:strong ":icon-data"] " - an icon definition map. Adds an icon to "
+        "the anchor text. See " [:code "theophilusx.yorick.icon"] " for details "
+        "on the icon definition map format"]]]
      :header {:title "a - An HTML anchor component"}]]
    [:div.column
     [:pre
      [:code
-      "[:p \"This is an example of an \" " [:br]
-      "    [basic/a \"anchor\" :on-click #(js/alert \"Hello\")]"]]
+      "[:<>" [:br]
+      "  [:p \"This is an example of an \" " [:br]
+      "      [basic/a \"anchor\" :on-click #(js/alert \"Hello\")]"
+      "  [:p \"A link with an icon \"" [:br]
+      "     [basic/a \"Home\" :icon-data (icon/deficon \"fa-house\")]]"]
+     ]
     [:div.box
      [:h6.title.is-6 "Result"]
      [:p "This is an example of an "
-      [b/a "anchor" :on-click #(js/alert "Hello")]]]]])
+      [b/a "anchor" :on-click #(js/alert "Hello")]]
+     [:p "A link wiht an icon "
+      [b/a "Home" :icon-data (icon/deficon "fa-home")]]]]])
 
 (defn img-component []
   [:div.columns

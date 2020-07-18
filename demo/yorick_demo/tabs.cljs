@@ -29,7 +29,7 @@
      [:div.content
       [:p
        "Description of tab component"]]
-     [:header {:title "tab - a horizontal tab navigation bar component"}]]]
+     :header {:title "tab - a horizontal tab navigation bar component"}]]
    [:div.column
     [:h4.title.is-4 "Example"]
     [:pre

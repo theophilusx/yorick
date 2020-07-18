@@ -14,7 +14,8 @@
             [yorick-demo.pagination :refer [paginate-page]]
             [yorick-demo.sidebars :refer [sidebar-page]]
             [yorick-demo.tables :refer [tables-page]]
-            [yorick-demo.toolbars :refer [toolbar-page]]))
+            [yorick-demo.toolbars :refer [toolbar-page]]
+            [yorick-demo.tabs :refer [tabs-page]]))
 
 (println "Reloading code")
 
@@ -61,7 +62,10 @@
                                      :id :tables)
                                    (sb/defsidebar-item
                                      :title "Toolbar"
-                                     :id :toolbar)])})
+                                     :id :toolbar)
+                                   (sb/defsidebar-item
+                                     :title "Tabs"
+                                     :id :tab)])})
 
 (defn placeholder-page []
   [:div.columns
@@ -83,6 +87,7 @@
     :sidebar [sidebar-page]
     :tables [tables-page]
     :toolbar [toolbar-page]
+    :tab [tabs-page]
     [placeholder-page]))
 
 (defn greeting []

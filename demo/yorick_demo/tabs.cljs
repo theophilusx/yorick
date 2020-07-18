@@ -54,15 +54,64 @@
     [c/card
      [:div.content
       [:p
-       "Description of tab component"]]
+       "The " [:strong "tab"] " component provides a basic horizontal bar of "
+       "links. The " [:code "sid"] " argument is a storage identifier keyword "
+       "used to determine where the selected menu id is stored within the global "
+       "document model store defined by "
+       [:code "theophilusx.yorick.store/global-state"] ". The " [:code "tabs"]
+       " argument is a vector of tab definition maps. See the " [:code "deftab"]
+       " function for a way to create the definition maps and a description of "
+       "the supported keys. The component supports a number of optional keyword "
+       "arguments for configuring the presentation of the tab bar:"]
+      [:ul
+       [:li [:strong ":position"] " - set the alignment of the tab bar. Allowed "
+        "values are " [:code ":center"] " for a centred tab bar and "
+        [:code ":right"] " for a right aligned tab bar. Default is left aligned."]
+       [:li [:strong ":class"] " - a string or vector of strings specifying CSS "
+        "class names to add to the tab bar."]
+       [:li [:strong ":size"] " - set the size of the tab bar. Possible values "
+        "are " [:code ":small, :medium"] " and " [:code ":large"]]
+       [:li [:strong ":boxed"] " - if true, use a traditional box based tab bar."]
+       [:li [:strong ":rounded"] " - if true, render the left and right most tabs "
+        "with rounded outer edge and corners."]]]
      :header {:title "tab - a horizontal tab navigation bar component"}]]
    [:div.column
     [:h4.title.is-4 "Example"]
     [:pre
      [:code
-      "Example code"]]
+      "(let [tabs [(t/deftab \"Tab 1\" :id :tab1)" [:br]
+      "            (t/deftab \"Tab 2\" :id :tab2)" [:br]
+      "            (t/deftab \"Tab 3\" :id :tab3)]]" [:br]
+      "  [:<>" [:br]
+      "    [:p \"Example 1\"]" [:br]
+      "    [t/tab :example.bar1 tabs]" [:br]
+      "    [:p (str \"Selected: \" (get-in global-state (spath :example.bar1)))]" [:br]
+      "    [:p \"Example 2\"]" [:br]
+      "    [t/tab :example.bar2 tabs :position :right]" [:br]
+      "    [:p (str \"Selected: \" (get-in global-state (spath :example.bar2)))]" [:br]
+      "    [:p \"Example 3\"]" [:br]
+      "    [t/tab :example.bar3 tabs :boxed true]" [:br]
+      "    [:p (str \"Selected: \" (get-in global-state (spath :example.bar3)))]" [:br]
+      "    [:p \"Example 4\"]" [:br]
+      "    [t/tab :example.bar4 tabs :boxed true :rounded true]" [:br]
+      "    [:p (str \"Selected: \" (get-in global-state (spath :example.bar4)))]])"]]
     [:div.box
-     "Example"]]])
+     (let [tabs [(t/deftab "Tab 1" :id :tab1)
+                 (t/deftab "Tab 2" :id :tab2)
+                 (t/deftab "Tab 3" :id :tab3)]]
+       [:<>
+        [:p "Example 1"]
+        [t/tab :example.bar1 tabs]
+        [:p (str "Selected: " (get-in global-state (spath :example.bar1)))]
+        [:p "Example 2"]
+        [t/tab :example.bar2 tabs :position :right]
+        [:p (str "Selected: " (get-in global-state (spath :example.bar2)))]
+        [:p "Example 3"]
+        [t/tab :example.bar3 tabs :boxed true]
+        [:p (str "Selected: " (get-in global-state (spath :example.bar3)))]
+        [:p "example 4"]
+        [t/tab :example.bar4 tabs :boxed true :rounded true :position :center]
+        [:p (str "Selected: " (get-in global-state (spath :example.bar4)))]])]]])
 
 (defn tabs-page []
   [:<>

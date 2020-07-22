@@ -8,7 +8,6 @@
 (defn deftab-function []
   [:div.columns
    [:div.column.is-half
-    [:h4.title.is-4 "Description"]
     [c/card
      [:div.content
       [:p
@@ -30,7 +29,6 @@
         "CSS class names to be added to the tab."]]]
      :header {:title "deftab - convenience function for defining tabs"}]]
    [:div.column
-    [:h4.title.is-4 "Example"]
     [:pre
      [:code
       "(let [tabs [(t/deftab \"Tab 1\" :id :tab1)" [:br]
@@ -50,7 +48,6 @@
 (defn tab-component []
   [:div.columns
    [:div.column.is-half
-    [:h4.title.is-4 "Description"]
     [c/card
      [:div.content
       [:p
@@ -72,11 +69,12 @@
        [:li [:strong ":size"] " - set the size of the tab bar. Possible values "
         "are " [:code ":small, :medium"] " and " [:code ":large"]]
        [:li [:strong ":boxed"] " - if true, use a traditional box based tab bar."]
+       [:li [:strong ":toggle"] " - if true, make the tab bar items exclusive "
+        "toggles (like a radio button)."]
        [:li [:strong ":rounded"] " - if true, render the left and right most tabs "
         "with rounded outer edge and corners."]]]
      :header {:title "tab - a horizontal tab navigation bar component"}]]
    [:div.column
-    [:h4.title.is-4 "Example"]
     [:pre
      [:code
       "(let [tabs [(t/deftab \"Tab 1\" :id :tab1)" [:br]
@@ -93,8 +91,11 @@
       "    [t/tab :example.bar3 tabs :boxed true]" [:br]
       "    [:p (str \"Selected: \" (get-in global-state (spath :example.bar3)))]" [:br]
       "    [:p \"Example 4\"]" [:br]
-      "    [t/tab :example.bar4 tabs :boxed true :rounded true]" [:br]
-      "    [:p (str \"Selected: \" (get-in global-state (spath :example.bar4)))]])"]]
+      "    [t/tab :example.bar4 tabs :boxed true :toggle true :position :right]" [:br]
+      "    [:p (str \"Selected: \" (get-in global-state (spath :example.bar4)))]" [:br]
+      "    [:p \"Example 5\"]" [:br]
+      "    [t/tab :example.bar5 tabs :boxed true :rounded true]" [:br]
+      "    [:p (str \"Selected: \" (get-in global-state (spath :example.bar5)))]])"]]
     [:div.box
      (let [tabs [(t/deftab "Tab 1" :id :tab1)
                  (t/deftab "Tab 2" :id :tab2)
@@ -110,8 +111,12 @@
         [t/tab :example.bar3 tabs :boxed true]
         [:p (str "Selected: " (get-in global-state (spath :example.bar3)))]
         [:p "example 4"]
-        [t/tab :example.bar4 tabs :boxed true :rounded true :position :center]
-        [:p (str "Selected: " (get-in global-state (spath :example.bar4)))]])]]])
+        [t/tab :example.bar4 tabs :boxed true :toggle true :position :right]
+        [:p (str "Selected: " (get-in global-state (spath :example.bar4)))]
+        [:p "example 5"]
+        [t/tab :example.bar5 tabs :boxed true :toggle true :rounded true
+         :position :center]
+        [:p (str "Selected: " (get-in global-state (spath :example.bar5)))]])]]])
 
 (defn tabs-page []
   [:<>
@@ -130,8 +135,9 @@
      "function " [:code "deftab"] " is provided to support the definition of "
      "tab bar navigation tabs."]]
    [:hr]
-   [t/tab :ui.tabs.tab-page [(t/deftab "deftab Function" :id :deftab)
-                             (t/deftab "tab Component" :id :tab)]]
+   [t/tab :ui.tabs.tab-page [(t/deftab "deftab" :id :deftab)
+                             (t/deftab "tab" :id :tab)]
+    :size :medium]
    (case (get-in global-state (spath :ui.tabs.tab-page))
      :deftab [deftab-function]
      :tab [tab-component]

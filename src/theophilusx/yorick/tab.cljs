@@ -42,6 +42,7 @@
   |             | `:medium` and `:large`                                      |
   | `:boxed`    | If true, put borders around tabs to give them a traditional |
   |             | boxed appearance.                                           |
+  | `:toggle`   | If true, make tab bar toggle e.g. like a radio button       |
   | `:rounded`  | If true and if `:boxed`, round the edge and corners of the  |
   |             | left most and right most tabs.                              |"
   [sid tabs & _]

@@ -1,147 +1,209 @@
 (ns yorick-demo.icons
   (:require [theophilusx.yorick.icon :as i]
             [theophilusx.yorick.card :as c]
-            [theophilusx.yorick.basic :as b]))
+            [theophilusx.yorick.basic :as b]
+            [theophilusx.yorick.tab :as t]
+            [theophilusx.yorick.store :refer [get-in global-state]]
+            [theophilusx.yorick.utils :refer [spath]]))
 
-(defn icon-example []
+(defn deficon-function []
   [:div.columns
-   [:div.column
+   [:div.column.is-half
     [c/card
      [:div.content
       [:p
-       "The " [:strong "theophilusx.yorick.icon/icon"] " function can "
-       "be used to add a single icon or a list of icons specified in a "
-       "vector of icon data maps."]
-      [:p
-       "The " [:strong "icon-componenet"] " component supports 5 icon "
-       "sizes " [:em ":small, :medium, :large, :huge"] " and a default "
-       "normal size used when no size is specified"]
-      [:p
-       "The " [:strong ":span-class"] " keyword argument of the "
-       [:strong "icon-component"] " function can be used to set the "
-       "colour of an icon. The " [:em "Bulma"] " text colour classes "
-       "can be used to set the icon colour"]
-      ]
-     :header {:title "icon-component Render an icon"}]]
+       "The " [:strong "deficon"] " function is a convenience function to "
+       "assist in defining the icon definition map. The " [:code "name"]
+       " argument is the name of a Font Awesome icon. The function returns "
+       "an icon definition " [:code "map"] ". A number of optional keyword "
+       "arguments are available for further customisation of the definition map"]
+      [:ul
+       [:li [:strong ":position"] " - set the position of the icon within the "
+        "enclosing element. Possible values are " [:code ":left"] " and "
+        [:code ":right"]]
+       [:li [:strong ":size"] " - set the size of the icon. Possible values "
+        "are " [:code ":small, :medium"] " and " [:code ":large"]]
+       [:li [:strong ":icon-class"] " - a string or vector of strings specifying "
+        "additional CSS class names to add to the element."]
+       [:li [:strong ":span-class"] " - a string or vector of strings specifying "
+        "additional CSS class names to add the enclosing " [:code "<span>"]
+        " element"]]]
+     :header {:title "deficon - a convenience function to make icon definition maps"}]]
    [:div.column
     [:pre
      [:code
-      "[icon/icon-component {:name \"fa-house\"}]"]]
+      "(let [icon-data (icon/deficon \"fa-image\")]" [:br]
+      "  [:p (str \"Definition: \" icon-data)])"]]
     [:div.box
-     [:h6.title.is-6 "Result"]
-     [i/icon-component {:name "fa-warehouse"}]]
+     (let [icon-data (i/deficon "fa-image")]
+       [:p (str "Definition: " icon-data)])]]])
+
+(defn icon-control-class-function []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p
+       "The " [:strong "icon-control-class"] " function is a convenience "
+       "function used to extract icon specific CSS class names from an icon "
+       "definition map or a vector of icon definition maps. This function is "
+       "useful when you need to add icon specific CSS class names to an enclosing "
+       "element containing icons. The " [:code "icon-data"] " argument is either "
+       "an icon definition map or a vector of icon definition maps. The function "
+       "returns a string which can be added to the " [:code ":class"] " attribute "
+       "of an enclosing element or component."]]
+     :header {:title "icon-control-class - a convenience function for icon CSS classes"}]]
+   [:div.column
     [:pre
      [:code
-      "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
-      "                          :size :small}]" [:br]
+      "(let [icon-data (icon/deficon \"fa-image\" :size :medium :position :right)]" [:br]
+      "  [:p (str \"CSS Classes: \" (icon-control-class icon-data))])"]]
+    [:div.box
+     (let [icon-data (i/deficon "fa-image" :size :medium :position :right)]
+       [:p (str "CSS Classes: " (i/icon-control-class icon-data))])]]])
+
+(defn icon-component-component []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p
+       "The " [:strong "icon-component"] " component generates an icon component "
+       "which can be added as content for another component or rendered on its own. "
+       "the " [:code "icon-data"] " argument is an icon definition map. See the "
+       [:code "deficon"] " function for a way to generate icon definition maps "
+       "and a description of the supported keys."]]
+     :header {:title "icon-component - render an icon"}]]
+   [:div.column
+    [:pre
+     [:code
+      "[:h6.title.is-6 \"Result\"]" [:br]
+      "[icon/icon-component (icon/deficon \"fa-warehouse\")]"]]
+    [:div.box
+     [:h6.title.is-6 "Result"]
+     [i/icon-component (i/deficon "fa-warehouse")]]
+    [:pre
+     [:code
+      "[:p [icon/icon-component (icon/deficon \"fa-warehouse\" :size :small)]" [:br]
       "  \" Small\"]" [:br]
-      "[:p [icon/icon-component {:name \"fa-warehouse\"}]" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fa-warehouse\")]" [:br]
       "  \" Normal]" [:br]
-      "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
-      "                          :size :medium}]" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fa-warehouse\" :size :medium)]" [:br]
       "  \" Medium\"]" [:br]
-      "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
-      "                          :size :large}]" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fa-warehouse :size :large)]" [:br]
       "  \" Large\"]" [:br]
-      "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
-      "                          :size :huge}]" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fa-warehouse\" :size :huge)]" [:br]
       "  \" Huge\"]"]]
     [:dir.box
      [:h6.title.is-6 "Result"]
-     [:p [i/icon-component {:name "fa-warehouse"
-                            :size :small}]
+     [:p [i/icon-component (i/deficon "fa-warehouse" :size :small)]
       [:span "Small"]]
-     [:p [i/icon-component {:name "fa-warehouse"}]
+     [:p [i/icon-component (i/deficon "fa-warehouse")]
       [:span "Normal"]]
-     [:p [i/icon-component {:name "fa-warehouse"
-                            :size :medium}]
+     [:p [i/icon-component (i/deficon "fa-warehouse" :size :medium)]
       [:span "Medium"]]
-     [:p [i/icon-component {:name "fa-warehouse"
-                            :size :large}]
+     [:p [i/icon-component (i/deficon "fa-warehouse" :size :large)]
       [:span "Large"]]
-     [:p [i/icon-component {:name "fa-warehouse"
-                            :size :huge}]
+     [:p [i/icon-component (i/deficon "fa-warehouse" :size :huge)]
       [:span "Huge"]]]
     [:pre
      [:code
-      "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
-      "                          :span-class \"has-text-info\"}]" [:br]
-      "  \" Info Colour\"]" [:br]
-      "[:p [icon/icon-component {:name \"fa-warehouse\"}]" [:br]
-      "  \" Normal Colour]" [:br]
-      "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
-      "                          :span-class \"has-text-success\"}]" [:br]
-      "  \" Success Colour\"]" [:br]
-      "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
-      "                          :span-class \"has-text-warning\"}]" [:br]
-      "  \" Warning Colour\"]" [:br]
-      "[:p [icon/icon-component {:name \"fa-warehouse\"" [:br]
-      "                          :span-class \"has-text-danger\"}]" [:br]
-      "  \" Danger Colour\"]"]]
+      "[:p [icon/icon-component (icon/deficon \"fa-home\"" [:br]
+      "                          :span-class \"has-text-info\")]" [:br]
+      "  \"Info Colour\"]" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fa-home\")]" [:br]
+      "  \"Normal Colour]" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fa-home\")" [:br]
+      "                          :span-class \"has-text-success\")]" [:br]
+      "  \"Success Colour\"]" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fa-home\"" [:br]
+      "                          :span-class \"has-text-warning\")]" [:br]
+      "  \"Warning Colour\"]" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fa-home\"" [:br]
+      "                          :span-class \"has-text-danger\")]" [:br]
+      "  \"Danger Colour\"]"]]
     [:dir.box
      [:h6.title.is-6 "Result"]
-     [:p [i/icon-component {:name "fa-warehouse"
-                            :span-class "has-text-info"}]
-      " Info Colour"]
-     [:p [i/icon-component {:name "fa-warehouse"}]
-      " Normal Colour"]
-     [:p [i/icon-component {:name "fa-warehouse"
-                            :span-class "has-text-success"}]
-      " Success Colour"]
-     [:p [i/icon-component {:name "fa-warehouse"
-                            :span-class "has-text-warning"}]
-      " Warning Colour"]
-     [:p [i/icon-component {:name "fa-warehouse"
-                            :span-class "has-text-danger"}]
-      " Danger Colour"]]
-    ]])
+     [:p [i/icon-component (i/deficon "fa-warehouse"
+                             :span-class "has-text-info")]
+      "Info Colour"]
+     [:p [i/icon-component (i/deficon "fa-warehouse")]
+      "Normal Colour"]
+     [:p [i/icon-component (i/deficon  "fa-warehouse"
+                             :span-class "has-text-success")]
+      "Success Colour"]
+     [:p [i/icon-component (i/deficon "fa-warehouse"
+                             :span-class "has-text-warning")]
+      "Warning Colour"]
+     [:p [i/icon-component (i/deficon "fa-warehouse"
+                             :span-class "has-text-danger")]
+      "Danger Colour"]]]])
+
+(defn icons-function []
+  [:div.columns
+   [:div.column.is-half
+    [c/card
+     [:div.content
+      [:p
+       "The " [:strong "icons"] " function provides a method for generating "
+       "multiple icons. The " [:code "icon-data"] " is a vector of icon definition "
+       "maps. See the function " [:code "deficon"] " for a way to generate icon "
+       "definition maps and a description of the supported keys. The function "
+       "returns a vector of icon components."]]
+     :header {:title "icons - multiple icon rendering component"}]]
+   [:div.column
+    [:pre
+     [:code
+      "(let [data [(icon/deficon \"fa-home\" :span-class \"has-text-info\")" [:br]
+      "            (icon/deficon \"fa-home\" :span-class \"has-text-link\")" [:br]
+      "            (icon/deficon \"fa-home\" :span-class \"has-text-success\")" [:br]
+      "            (icon/deficon \"fa-home\" :span-class \"has-text-warning\")" [:br]
+      "            (icon/deficon \"fa-home\" :span-class \"has-text-danger\")]]" [:br]
+      "  [:<>" [:br]
+      "    [:p \"The icons\"]" [:br]
+      "    (for [i (i/icons data)]" [:br]
+      "       i)])"]]
+    [:div.box
+     (let [data [(i/deficon "fa-home" :span-class "has-text-info")
+                 (i/deficon "fa-home" :span-class "has-text-link")
+                 (i/deficon "fa-home" :span-class "has-text-success")
+                 (i/deficon "fa-home" :span-class "has-text-warning")
+                 (i/deficon "fa-home" :span-class "has-text-danger")]]
+       [:<>
+        [:p "The icons " ]
+        (for [i (i/icons data)]
+          i)])]]])
 
 (defn icon-page []
-  [:div.content
-   [:h2.title.is-2 "The Icon Component"]
-   [:p
-    "The " [:strong "theophilusx.yorick.icon"] " namespace provides an icon "
-    "component and associated helper functions that can be used to add "
-    [b/a "Font Awesome" :href "https://fontawesome.com"] " icons to components. "]
-   [:p
-    "The basic data structure for working with icons is a " [:em "map"] ". "
-    "The icon map supports the following keys"]
-   [:ul.list
-    [:li [:strong ":name"] " The name of a Font Awesome icon"]
-    [:li [:strong ":position"] " Specifies the position of the icon within "
-     "the enclosing component. Possible values are " [:em ":left"] " or "
-     [:em ":right"]]
-    [:li [:strong ":size"] " Specify the size of the icon within the enclosing "
-     "component. Can be one of " [:em ":small, :medium"] " or " [:em ":large"]]
-    [:li [:strong ":icon-class"] " CSS class names to add to the " [:em "<i>"]
-     " element"]
-    [:li [:strong ":span-class"] " CSS class names to add to the "
-     [:em "<span>"] " element."]]
-   [:p
-    "The function " [:strong "theophilusx.yorick.icon/deficon"] " is provided "
-    "as a helper function to create icon data maps. It has one required "
-    "argument for " [:em "name"] " and optional keyword arguments for the other "
-    "keys of the icon map."]
-   [:p
-    "The " [:strong "theophilusx.yorick.icon/icon-component"] " function takes "
-    "an icon data map as its argument. This is the main component function for "
-    "adding an icon to the content. The function "
-    [:strong "theophilusx.yorick.icon/icons"] " function is a helper function "
-    "which can accept either an icon data map or a vector of icon data maps. "
-    "It is a convenience function used to simplify handling of icon components "
-    "by other components. The function returns a vector of icon components"]
-   [:p
-    "The " [:strong "theophilusx.yorick.icon/icon-control-class"] " function is "
-    "a convenience function used to generate a CSS class string from a vector "
-    "of icon data maps. In some situations, it is necessary to add icon position "
-    "classes to the enclosing component that will hold the icons. This function "
-    "provides a convenient means to generate that class list string. The "
-    "function accepts either an icon data map or a vector of icon data maps"]
+  [:<>
+   [:div.content
+    [:h2.title.is-2 "The Icon Component"]
+    [:p
+     "The " [:strong "theophilusx.yorick.icon"] " namespace provides an icon "
+     "component and associated helper functions that can be used to add "
+     [b/a "Font Awesome" :href "https://fontawesome.com"] " icons to components. "]
+    [:p
+     "The basic data structure for working with icons is a " [:code "map"] 
+     ". The icon map can be created using the " [:code "deficon"] " function."]
+    [:p
+     "When adding icons to some components, it is necessary to add specific "
+     "CSS classes to parent elements to enable appropriate spacing and alignment "
+     "of icons. The " [:code "icon-control-class"] " function is provided to "
+     "meet this requirement."]
+    [:p
+     "The " [:code "icon-component"] " component is provided for adding a single "
+     "icon to rendered output. The " [:code "icons"] " component is used for "
+     "adding multiple icons to a component."]]
    [:hr]
-   [:div.columns
-    [:div.column.is-half
-     [:h4.title.is-4 "Description"]]
-    [:div.column
-     [:h4.title.is-4 "Example"]]]
-   [icon-example]])
+   [t/tab :ui.tabs.icon-page [(t/deftab "deficon" :id :deficon)
+                              (t/deftab "icon-control-class" :id :icon-class)
+                              (t/deftab "icon-component" :id :icon-component)
+                              (t/deftab "icons" :id :icons)]
+    :size :large :position :center]
+   (case (get-in global-state (spath :ui.tabs.icon-page))
+     :deficon [deficon-function]
+     :icon-class [icon-control-class-function]
+     :icon-component [icon-component-component]
+     :icons [icons-function]
+     [deficon-function])])
 

@@ -641,7 +641,7 @@
                (str " " (store/get-in doc (spath sid)))]]
        :label label :classes classes])))
 
-(defn number-input
+(defn number
   "A basic number input component. The `sid` is a storage identifier keyword
   which sets the location for storing input data in the document model atom.
   The component also accepts a number of optional keyword arguments:
@@ -709,6 +709,6 @@
   |              | attribute names as keywords e.g `:id`                  |"
   [sid & {:keys [model change-fn value min max step attrs
                                   classes label]}]
-  [field [number-input sid :model model :change-fn change-fn :min min
+  [field [number sid :model model :change-fn change-fn :min min
           :max max :step step :classes classes :value value :attrs attrs]
    :label label :classes classes])

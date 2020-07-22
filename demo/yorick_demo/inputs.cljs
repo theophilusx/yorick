@@ -2,7 +2,10 @@
   (:require [theophilusx.yorick.card :as c]
             [theophilusx.yorick.input :as i]
             [reagent.core :as r]
-            [theophilusx.yorick.icon :as icons]))
+            [theophilusx.yorick.icon :as icons]
+            [theophilusx.yorick.tab :as t]
+            [theophilusx.yorick.store :refer [get-in global-state]]
+            [theophilusx.yorick.utils :refer [spath]]))
 
 (defn field-component []
   [:div.columns
@@ -839,13 +842,13 @@
                   [:p (str "Result: " @doc)]])]
        [frm])]]])
 
-(defn number-input-component []
+(defn number-component []
   [:div.columns
    [:div.column.is-half
     [c/card
      [:div.content
       [:p
-       "The " [:strong "number-input"] " component is a base number input "
+       "The " [:strong "number"] " component is a base number input "
        "component. It is typically used inside a field component e.g. "
        [:code "field"] " or " [:code "horizontal-field"] ". The " [:code "sid"]
        " argument is a storage identifier keyword which determines where the "
@@ -874,7 +877,7 @@
       "(let [doc (r/atom {})" [:br]
       "      frm (fn []" [:br]
       "            [:<>" [:br]
-      "              [input/field [input/number-input :num1.value :model doc]]" [:br]
+      "              [input/field [input/number :num1.value :model doc]]" [:br]
       "              [:p (str \"Result: \" @doc)]])]" [:br]
       "  [frm])"]]
     [:div.box
@@ -882,7 +885,7 @@
      (let [doc (r/atom {})
            frm (fn []
                  [:<>
-                  [i/field [i/number-input :num1.value :model doc]]
+                  [i/field [i/number :num1.value :model doc]]
                   [:p (str "Result: " @doc)]])]
        [frm])]]])
 
@@ -940,71 +943,85 @@
        [frm])]]])
 
 (defn input-page []
-  [:div.content
-   [:h2.title.is-2 "Input Components"]
-   [:p
-    "The " [:strong "theophilusx.yorick.input"] " namespace provides various "
-    "components useful for collecting input from the user. Components in this "
-    "group are typically used inside HTML forms, although some components are "
-    "also useful in menus, toolbars and other areas where user input is "
-    "required."]
-   [:p
-    "In " [:em "Bulma"] " input components are typically wrapped in a "
-    [:code "<div>"] " element which has the " [:code "field"] " CSS class, with "
-    "the actual input component in a " [:code "<div>"] " element with the "
-    [:code "control"] " CSS class. This is done to ensure correct spacing and "
-    "alignment of input fields. Often a " [:code "<label>"] " element is also "
-    "added to the field to provide input labels. The components provided by "
-    "this namespace ensure input fields meet these requirements and provide "
-    "some higher level convenience components for common or useful input types."]
+  [:<>
+   [:div.content
+    [:h2.title.is-2 "Input Components"]
+    [:p
+     "The " [:strong "theophilusx.yorick.input"] " namespace provides various "
+     "components useful for collecting input from the user. Components in this "
+     "group are typically used inside HTML forms, although some components are "
+     "also useful in menus, toolbars and other areas where user input is "
+     "required."]
+    [:p
+     "In " [:em "Bulma"] " input components are typically wrapped in a "
+     [:code "<div>"] " element which has the " [:code "field"] " CSS class, with "
+     "the actual input component in a " [:code "<div>"] " element with the "
+     [:code "control"] " CSS class. This is done to ensure correct spacing and "
+     "alignment of input fields. Often a " [:code "<label>"] " element is also "
+     "added to the field to provide input labels. The components provided by "
+     "this namespace ensure input fields meet these requirements and provide "
+     "some higher level convenience components for common or useful input types."]
+    [:h4.title.is-4 "Document Models and Storage identifiers"]
+    [:p
+     "Input data obtained from the user must be stored somewhere to be of use. "
+     "The components in " [:em "Yorick"] " use reagent atoms for this storage. "
+     "This library uses the term " [:em "document model"] " to refer to the "
+     "Reagent atoms used to store user input. A " [:em "document model"] " is an "
+     "atom witht the shape of a Clojurescript " [:em "map"] ". This means that "
+     "multiple values can be stored within one document model (for example, all "
+     "the inputs from a form can be stored in one document model). To control "
+     "where data is stored within a document model, the concept of "
+     [:em "storage identifiers"] " or " [:code "sid"] " is introduced. A "
+     [:code "sid"] " is a " [:code "keyword"] " which specifies the path into a "
+     "document model map atom where the data should be stored. To support key "
+     "hierarchies in the map, the " [:code "sid"] " uses a period (.) as a path "
+     "separator. For example, a sid with the value " [:code ":value"] " will "
+     "store the input in the document model map under the key " [:code ":value"]
+     " and a sid with the value " [:code ":my-form.value"] " will store the "
+     "input in the document model map under the key " [:code ":value"] " which is "
+     "under the key " [:code ":my-form"] "."]
+    [:p
+     "Most of the components in this namespace which accept user input have a "
+     "local document model reagent atom which will be used if none is specified "
+     "with the " [:code ":model"] " keyword argument. You can also specify a change function "
+     "of one argument for more complex storage requirements. The " [:code ":change-fn"] 
+     " optional argument allows you to specify the function that will be called "
+     "whenever the input data changes. The argument represents the new input "
+     "value."]]
    [:hr]
-   [:h4.title.is-4 "Document Models and Storage identifiers"]
-   [:p
-    "Input data obtained from the user must be stored somewhere to be of use. "
-    "The components in " [:em "Yorick"] " use reagent atoms for this storage. "
-    "This library uses the term " [:em "document model"] " to refer to the "
-    "Reagent atoms used to store user input. A " [:em "document model"] " is an "
-    "atom witht the shape of a Clojurescript " [:em "map"] ". This means that "
-    "multiple values can be stored within one document model (for example, all "
-    "the inputs from a form can be stored in one document model). To control "
-    "where data is stored within a document model, the concept of "
-    [:em "storage identifiers"] " or " [:em "sid"] " is introduced. A "
-    [:em "sid"] " is a " [:em "keyword"] " which specifies the path into a "
-    "document model map atom where the data should be stored. To support key "
-    "hierarchies in the map, the " [:em "sid"] " uses a period (.) as a path "
-    "separator. For example, a sid with the value " [:code ":value"] " will "
-    "store the input in the document model map under the key " [:em ":value"]
-    " and a sid with the value " [:code ":my-form.value"] " will store the "
-    "input in the document model map under the key " [:em ":value"] " which is "
-    "under the key " [:em ":my-form"] "."]
-   [:p
-    "Most of the components in this namespace which accept user input have a "
-    "local document model reagent atom which will be used if none is specified "
-    "with the `:model` keyword argument. You can also specify a change function "
-    "of one argument for more complex storage requirements. The `:change-fn` "
-    "optional argument allows you to specify the function that will be called "
-    "whenever the input data changes. The argument represents the new input "
-    "value."]
-   [:hr]
-   [:div.columns.is-half
-    [:div.column
-     [:h4.title.is-4 "Description"]]
-    [:div.column
-     [:h4.title.is-4 "Example"]]]
-   [field-component]
-   [horizontal-field-component]
-   [input-component]
-   [input-field-component]
-   [checkbox-component]
-   [radio-component]
-   [button-component]
-   [editable-field-component]
-   [textarea-component]
-   [select-component]
-   [select-field-component]
-   [file-component]
-   [search-component]
-   [range-component]
-   [number-input-component]
-   [number-field-component]])
+   [t/tab :ui.tabs.input-page [(t/deftab "field" :id :field)
+                               (t/deftab "input" :id :input)
+                               (t/deftab "checkbox" :id :checkbox)
+                               (t/deftab "radio" :id :radio)
+                               (t/deftab "button" :id :button)
+                               (t/deftab "editable-field" :id :efield)
+                               (t/deftab "textarea" :id :textarea)
+                               (t/deftab "select" :id :select)
+                               (t/deftab "file" :id :file)
+                               (t/deftab "search" :id :search)
+                               (t/deftab "range" :id :range)
+                               (t/deftab "number" :id :number)]
+    :size :medium :position :center]
+   (case (get-in global-state (spath :ui.tabs.input-page))
+     :field [:div
+             [field-component]
+             [horizontal-field-component]]
+     :input [:<>
+             [input-component]
+             [input-field-component]]
+     :checkbox [checkbox-component]
+     :radio [radio-component]
+     :button [button-component]
+     :efield [editable-field-component]
+     :textarea [textarea-component]
+     :select [:<>
+              [select-component]
+              [select-field-component]]
+     :file [file-component]
+     :search [search-component]
+     :range [range-component]
+     :number [:<>
+              [number-component]
+              [number-field-component]]
+     [field-component])])
 

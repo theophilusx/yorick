@@ -27,28 +27,28 @@
        "that could perform almost any action required."]
       [:p
        "A " [:strong "card"] " can also have a footer. The footer data is "
-       "added via the " [:em ":footer"] " keyword argument. The argument "
-       "value is a map which contains keys for " [:em "items"] " and "
-       [:em ":classes"] ". The :items key contains a vector of items to add to "
+       "added via the " [:code ":footer"] " keyword argument. The argument "
+       "value is a map which contains keys for " [:code "items"] " and "
+       [:code ":classes"] ". The :items key contains a vector of items to add to "
        "the footer. Items can be strings, hiccup markup or components. The "
-       ":classes argument is a map which can contains the keys " [:em ":footer"]
-       " and " [:em ":footer-item"] ". The :footer key value is either a string "
+       ":classes argument is a map which can contains the keys " [:code ":footer"]
+       " and " [:code ":footer-item"] ". The :footer key value is either a string "
        " or a vector of strings representing CSS class names to be added to the "
        "footer element. The :footer-item key is a string or vector of strings "
        "representing CSS class names to be added to " [:em "each"] " item in "
        "the footer."]
       [:p "A " [:strong "card"] " can also be styled by providing CSS class "
-       "names. To style the card or card content, use the " [:em ":classes"]
+       "names. To style the card or card content, use the " [:code ":classes"]
        " keyword argument. The value is a map with two possible keys "
-       [:em ":card"] " and " [:em ":card-content"] ". Classes specified in the "
-       [:em ":card"] " key of the map will be applied to the outer card element. "
-       "Classes specified in the " [:em ":class-content"] " will be applied to "
+       [:code ":card"] " and " [:code ":card-content"] ". Classes specified in the "
+       [:code ":card"] " key of the map will be applied to the outer card element. "
+       "Classes specified in the " [:code ":class-content"] " will be applied to "
        "the contents of the card. "
-       "To add CSS classes to the header, use the " [:em ":class"]
-       " key in the " [:em ":header"] " keyword map. To add CSS classes to the "
-       "footer, use the " [:em ":classes"] " key in the " [:em ":footer"] " keyword "
-       "map. The value of the " [:em ":classes"] " key in the " [:em ":footer"]
-       " map is a map with keys for " [:em ":footer"] " and " [:em "footer-item"]]
+       "To add CSS classes to the header, use the " [:code ":class"]
+       " key in the " [:code ":header"] " keyword map. To add CSS classes to the "
+       "footer, use the " [:code ":classes"] " key in the " [:code ":footer"] " keyword "
+       "map. The value of the " [:code ":classes"] " key in the " [:code ":footer"]
+       " map is a map with keys for " [:code ":footer"] " and " [:code "footer-item"]]
       [:p "The value for each of the class related keywords are either a string "
        "specifying a CSS class or a space separated list of CSS classes or a "
        "vector of strings where each element resolves to a string representing "
@@ -63,7 +63,8 @@
      [c/card "This is a very simple card"]]
     [:pre
      [:code
-      "[card/card [:p \"This is a card created from \"] [:strong \"hiccup\"] \" markup\"]"]]
+      "[card/card [:p \"This is a card created from \"] " [:br]
+      "              [:strong \"hiccup\"] \" markup\"]"]] 
     [:div.box
      [:h6.title.is-6 "result"]
      [c/card [:p "This is a card created from " [:strong "hiccup"] " markup"]]]

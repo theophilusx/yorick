@@ -1,7 +1,10 @@
 (ns yorick-demo.basic
   (:require [theophilusx.yorick.basic :as b]
             [theophilusx.yorick.card :as c]
-            [theophilusx.yorick.icon :as icon]))
+            [theophilusx.yorick.icon :as icon]
+            [theophilusx.yorick.tab :as t]
+            [theophilusx.yorick.store :refer [get-in global-state]]
+            [theophilusx.yorick.utils :refer [spath]]))
 
 (defn a-component []
   [:div.columns
@@ -211,30 +214,36 @@
       :delete true :class "is-danger"]]]])
 
 (defn basic-page []
-  [:div.content
-   [:h2.title.is-2 "Basic Components"]
-   [:p
-    "The " [:strong "theophilusx.yorick.basic"] " namespace contains basic "
-    "components that are very simple. They are mainly components related to "
-    "text formatting, simple HTML entities or basic rendering of ClojureScript "
-    "data structures. Essentially, if I found typing the raw hiccup version of "
-    "an HTML element was common enough or tedious enough, I created a simple "
-    "component to do the work."]
-   [:p "The data structure rendering components are mainly used during "
-    "development and debugging of an application. In particular, when first "
-    "developing an application, I find it useful to dump the global state at "
-    "the end of the page. This can be useful when you want to verify state "
-    "values are what you expect or for debugging problems in state values"]
+  [:<>
+   [:div.content
+    [:h2.title.is-2 "Basic Components"]
+    [:p
+     "The " [:strong "theophilusx.yorick.basic"] " namespace contains basic "
+     "components that are very simple. They are mainly components related to "
+     "text formatting, simple HTML entities or basic rendering of ClojureScript "
+     "data structures. Essentially, if I found typing the raw hiccup version of "
+     "an HTML element was common enough or tedious enough, I created a simple "
+     "component to do the work."]
+    [:p "The data structure rendering components are mainly used during "
+     "development and debugging of an application. In particular, when first "
+     "developing an application, I find it useful to dump the global state at "
+     "the end of the page. This can be useful when you want to verify state "
+     "values are what you expect or for debugging problems in state values"]]
    [:hr]
-   [:div.columns
-    [:div.column
-     [:h4.title.is-4 "Description"]]
-    [:div.column
-     [:h4.title.is-4 "Example"]]]
-   [a-component]
-   [img-component]
-   [breadcrumb-component]
-   [notification-component]
-   [render-vec-component]
-   [render-set-component]
-   [render-map-component]])
+   [t/tab :ui.tabs.basic-page [(t/deftab "a" :id :a)
+                               (t/deftab "img" :id :img)
+                               (t/deftab "breadcrumb" :id :breadcrumb)
+                               (t/deftab "notification" :id :notification)
+                               (t/deftab "render-set" :id :set)
+                               (t/deftab "render-vec" :id :vec)
+                               (t/deftab "render-map" :id :map)]
+    :size :large :position :center]
+   (case (get-in global-state (spath :ui.tabs.basic-page))
+     :a [a-component]
+     :img [img-component]
+     :breadcrumb [breadcrumb-component]
+     :notification [notification-component]
+     :set [render-set-component]
+     :vec [render-vec-component]
+     :map [render-map-component]
+     [a-component])])

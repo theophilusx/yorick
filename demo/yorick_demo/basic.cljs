@@ -33,7 +33,7 @@
      [:code
       "[:<>" [:br]
       "  [:p \"This is an example of an \" " [:br]
-      "      [basic/a \"anchor\" :on-click #(js/alert \"Hello\")]"
+      "      [basic/a \"anchor\" :on-click #(js/alert \"Hello\")]" [:br]
       "  [:p \"A link with an icon \"" [:br]
       "     [basic/a \"Home\" :icon-data (icon/deficon \"fa-house\")]]"]
      ]

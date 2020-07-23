@@ -2,9 +2,10 @@
   (:require [theophilusx.yorick.modal :as m]
             [theophilusx.yorick.card :as c]
             [theophilusx.yorick.utils :refer [spath]]
-            [theophilusx.yorick.store :as store]
+            [theophilusx.yorick.store :refer [get-in assoc-in! global-state]]
             [theophilusx.yorick.input :as i]
-            [reagent.core :as r]))
+            [reagent.core :as r]
+            [theophilusx.yorick.tab :as t]))
 
 (defn modal-component []
   [:div.columns
@@ -35,15 +36,16 @@
      [:code
       "(let [doc (r/atom {})]" [:br]
       "  [:<>" [:br]
-      "    [modal/modal [:div.box \"This is a simple modal overlay\"] :modal1.value doc]" [:br]
+      "    [modal/modal [:div.box \"This is a simple modal overlay\"] " [:br]
+      "       :modal1.value doc]" [:br]
       "    [input/button \"Open Modal Example\" " [:br]
-      "      #(store/assoc-in! doc (spath sid) true)])"]]
+      "      #(assoc-in! doc (spath sid) true)])"]]
     [:div.box
      (let [doc (r/atom {})]
        [:<>
         [m/modal [:div.box "This is a simple modal overlay"] :modal1.value doc]
         [i/button "Open Nodal Example"
-         #(store/assoc-in! doc (spath :modal1.value) true)]])]]])
+         #(assoc-in! doc (spath :modal1.value) true)]])]]])
 
 (defn modal-card-component []
   [:div.columns
@@ -84,7 +86,7 @@
       "      :modal2.value doc :header \"This is the header\"" [:br]
       "      :footer \"This is the footer\"]]" [:br]
       "    [input/button \"Open Example Modal\"" [:br]
-      "      #(store/assoc-in! doc [:modal2 :value] true)]])"]]
+      "      #(assoc-in! doc [:modal2 :value] true)]])"]]
     [:div.box
      (let [doc (r/atom {})]
        [:<>
@@ -97,27 +99,28 @@
          :modal2.value doc :header "This is the header"
          :footer "This is the footer"]
         [i/button "Open Example Modal"
-         #(store/assoc-in! doc (spath :modal2.value) true)]])]]])
+         #(assoc-in! doc (spath :modal2.value) true)]])]]])
 
 (defn modal-page []
-  [:div.content
-   [:h2.title.is-2 "The Modal Overlay Component"]
-   [:p
-    "The " [:strong "theophilusx.yorick.modal"] " namespace provides support "
-    "for a modal overlay component. Two types of modal overlays components are "
-    "provided, a general purpose modal overlay and a modal overlay based on the "
-    "card component."]
-   [:p
-    "Unlike many other components, the modal components require the "
-    "specification of a document model store, a reagent atom used to track the "
-    "state of the modal overlay. There is also a limit of 640px for the modal "
-    "width. You may also want to add the class " [:code "is-clipped"] " to the "
-    "container element which holds the modal to prevent scroll overflow"]
+  [:<>
+   [:div.content
+    [:h2.title.is-2 "The Modal Overlay Component"]
+    [:p
+     "The " [:strong "theophilusx.yorick.modal"] " namespace provides support "
+     "for a modal overlay component. Two types of modal overlays components are "
+     "provided, a general purpose modal overlay and a modal overlay based on the "
+     "card component."]
+    [:p
+     "Unlike many other components, the modal components require the "
+     "specification of a document model store, a reagent atom used to track the "
+     "state of the modal overlay. There is also a limit of 640px for the modal "
+     "width. You may also want to add the class " [:code "is-clipped"] " to the "
+     "container element which holds the modal to prevent scroll overflow"]]
    [:hr]
-   [:div.columns
-    [:div.column.is-half
-     [:h4.title.is-4 "Description"]]
-    [:div.column
-     [:h4.title.is-4 "Example"]]]
-   [modal-component]
-   [modal-card-component]])
+   [t/tab :ui.tabs.modal-page [(t/deftab "modal" :id :modal)
+                               (t/deftab "modal-card" :id :mcard)]
+    :position :center :size :medium]
+   (case (get-in global-state (spath :ui.tabs.modal-page))
+     :modal [modal-component]
+     :mcard [modal-card-component]
+     [modal-component])])

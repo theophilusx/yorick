@@ -1,6 +1,9 @@
 (ns yorick-demo.media
   (:require [theophilusx.yorick.media :as m]
-            [theophilusx.yorick.card :as c]))
+            [theophilusx.yorick.card :as c]
+            [theophilusx.yorick.tab :as t]
+            [theophilusx.yorick.utils :refer [spath]]
+            [theophilusx.yorick.store :refer [get-in global-state]]))
 
 (defn media-component []
   [:div.columns
@@ -83,21 +86,21 @@
       :classes {:content "has-text-success"}]]]])
 
 (defn media-page []
-  [:div.content
-   [:h2.title.is-2 "The Media Component"]
-   [:p
-    "The " [:strong "theophilusx.yorick.media"] " namespace provides the "
-    [:strong "media"] " component. This component is a general purpose and "
-    "flexible component which can be used as a container for almost any type "
-    "of content."]
-   [:p
-    "The " [:strong "media"] " component has a main " [:strong "body"]
-    " and optional " [:strong "left"] " and " [:strong "right"]
-    " side content. "]
+  [:<>
+   [:div.content
+    [:h2.title.is-2 "The Media Component"]
+    [:p
+     "The " [:strong "theophilusx.yorick.media"] " namespace provides the "
+     [:strong "media"] " component. This component is a general purpose and "
+     "flexible component which can be used as a container for almost any type "
+     "of content."]
+    [:p
+     "The " [:strong "media"] " component has a main " [:strong "body"]
+     " and optional " [:strong "left"] " and " [:strong "right"]
+     " side content. "]]
    [:hr]
-   [:div.columns
-    [:div.column.is-half
-     [:h4.title.is-4 "Description"]]
-    [:div.column
-     [:h4.title.is-4 "Example"]]]
-   [media-component]])
+   [t/tab :ui.tabs.media-page [(t/deftab "media" :id :media)]
+    :position :center :size :medium]
+   (case (get-in global-state (spath :ui.tabs.media-page))
+     :media [media-component]
+     [media-component])])

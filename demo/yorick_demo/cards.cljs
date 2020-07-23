@@ -176,7 +176,7 @@
      [:li [:strong ":class"] " A string or vector of strings representing "
       "CSS class names to add to the header"]]]
    [:hr]
-   [t/tab :ui.tabs.card-page [(t/deftab "card" :id :card)] :size :large
+   [t/tab :ui.tabs.card-page [(t/deftab "card" :id :card)] :size :medium
     :position :center]
    (case (get-in global-state (spath :ui.tabs.card-page))
      :card [simple-card]

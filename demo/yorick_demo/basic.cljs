@@ -237,7 +237,7 @@
                                (t/deftab "render-set" :id :set)
                                (t/deftab "render-vec" :id :vec)
                                (t/deftab "render-map" :id :map)]
-    :size :large :position :center]
+    :size :medium :position :center]
    (case (get-in global-state (spath :ui.tabs.basic-page))
      :a [a-component]
      :img [img-component]

@@ -56,7 +56,8 @@
    [:div.column
     [:pre
      [:code
-      "(let [icon-data (icon/deficon \"fa-image\" :size :medium :position :right)]" [:br]
+      "(let [icon-data (icon/deficon \"fa-image\" :size :medium " [:br]
+      "                  :position :right)]" [:br]
       "  [:p (str \"CSS Classes: \" (icon-control-class icon-data))])"]]
     [:div.box
      (let [icon-data (i/deficon "fa-image" :size :medium :position :right)]
@@ -84,15 +85,19 @@
      [i/icon-component (i/deficon "fa-warehouse")]]
     [:pre
      [:code
-      "[:p [icon/icon-component (icon/deficon \"fa-warehouse\" :size :small)]" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fa-warehouse\" " [:br]
+      "                            :size :small)]" [:br]
       "  \" Small\"]" [:br]
       "[:p [icon/icon-component (icon/deficon \"fa-warehouse\")]" [:br]
       "  \" Normal]" [:br]
-      "[:p [icon/icon-component (icon/deficon \"fa-warehouse\" :size :medium)]" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fa-warehouse\" " [:br]
+      "                            :size :medium)]" [:br]
       "  \" Medium\"]" [:br]
-      "[:p [icon/icon-component (icon/deficon \"fa-warehouse :size :large)]" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fa-warehouse " [:br]
+      "                            :size :large)]" [:br]
       "  \" Large\"]" [:br]
-      "[:p [icon/icon-component (icon/deficon \"fa-warehouse\" :size :huge)]" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fa-warehouse\" " [:br]
+      "                            :size :huge)]" [:br]
       "  \" Huge\"]"]]
     [:dir.box
      [:h6.title.is-6 "Result"]
@@ -154,11 +159,16 @@
    [:div.column
     [:pre
      [:code
-      "(let [data [(icon/deficon \"fa-home\" :span-class \"has-text-info\")" [:br]
-      "            (icon/deficon \"fa-home\" :span-class \"has-text-link\")" [:br]
-      "            (icon/deficon \"fa-home\" :span-class \"has-text-success\")" [:br]
-      "            (icon/deficon \"fa-home\" :span-class \"has-text-warning\")" [:br]
-      "            (icon/deficon \"fa-home\" :span-class \"has-text-danger\")]]" [:br]
+      "(let [data [(icon/deficon \"fa-home\" " [:br]
+      "               :span-class \"has-text-info\")" [:br]
+      "            (icon/deficon \"fa-home\" " [:br]
+      "               :span-class \"has-text-link\")" [:br]
+      "            (icon/deficon \"fa-home\" " [:br]
+      "               :span-class \"has-text-success\")" [:br]
+      "            (icon/deficon \"fa-home\" " [:br]
+      "               :span-class \"has-text-warning\")" [:br]
+      "            (icon/deficon \"fa-home\" " [:br]
+      "               :span-class \"has-text-danger\")]]" [:br]
       "  [:<>" [:br]
       "    [:p \"The icons\"]" [:br]
       "    (for [i (i/icons data)]" [:br]
@@ -199,7 +209,7 @@
                               (t/deftab "icon-control-class" :id :icon-class)
                               (t/deftab "icon-component" :id :icon-component)
                               (t/deftab "icons" :id :icons)]
-    :size :large :position :center]
+    :size :medium :position :center]
    (case (get-in global-state (spath :ui.tabs.icon-page))
      :deficon [deficon-function]
      :icon-class [icon-control-class-function]

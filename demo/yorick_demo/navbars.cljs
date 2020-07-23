@@ -2,8 +2,9 @@
   (:require [theophilusx.yorick.navbar :as nb]
             [theophilusx.yorick.card :as c]
             [theophilusx.yorick.basic :as b]
-            [theophilusx.yorick.store :as store]
-            [theophilusx.yorick.utils :refer [spath]]))
+            [theophilusx.yorick.store :refer [get-in global-state]]
+            [theophilusx.yorick.utils :refer [spath]]
+            [theophilusx.yorick.tab :as t]))
 
 (defn defnavbar-item-function []
   [:div.columns
@@ -75,13 +76,20 @@
     [:pre
      [:code
       "[:p \"Example menu item definitions\"]" [:br]
-      "(let [menus [(navbar/defnavbar-item :contents \"Menu 1\" :id :menu1)" [:br]
-      "             (navbar/defnavbar-item :contents \"Menu 2\" :id :menu2)" [:br]
-      "             (navbar/defnavbar-item :type :dropdown :title \"My Dropdown\"" [:br]
-      "               :contents [(navbar/defnavbar-item :contents \"Dropdown 1\" :id :dd1)" [:br]
-      "                          (navbar/defnavbar-item :contents \"Dropdown 2\" :id :dd2)" [:br]
-      "                          (navbar/defnavbar-item :type :divider)" [:br]
-      "                          (navbar/defnavbar-item :contents \"Dropdown 3\" :id :dd3)]]]" [:br]
+      "(let [menus [(navbar/defnavbar-item :contents \"Menu 1\" " [:br]
+      "                :id :menu1)" [:br]
+      "             (navbar/defnavbar-item :contents \"Menu 2\" " [:br]
+      "                :id :menu2)" [:br]
+      "             (navbar/defnavbar-item :type :dropdown " [:br]
+      "                :title \"My Dropdown\"" [:br]
+      "                :contents " [:br]
+      "                   [(navbar/defnavbar-item :contents \"Dropdown 1\" " [:br]
+      "                       :id :dd1)" [:br]
+      "                    (navbar/defnavbar-item :contents \"Dropdown 2\" " [:br]
+      "                       :id :dd2)" [:br]
+      "                    (navbar/defnavbar-item :type :divider)" [:br]
+      "                    (navbar/defnavbar-item :contents \"Dropdown 3\" " [:br]
+      "                       :id :dd3)]]]" [:br]
       "  [:p \"Result\"]" [:br]
       "  [basic/render-vec menus]"]]
     [:div.box
@@ -147,21 +155,25 @@
    [:div.column
     [:pre
      [:code
-      "(let [menus [(navbar/defnavbar-item :contents \"Menu 1\" :id :menu1)" [:br]
-      "             (navbar/defnavbar-item :contents \"Menu 2\" :id :menu2)" [:br]
-      "             (navbar/defnavbar-item :type :dropdown :title \"Dropdown\"" [:br]
-      "               :contents [(navbar/defnavbar-item :contents \"Dropdown 1\"" [:br]
-      "                            :id :dropdown1)" [:br]
-      "                          (navbar/defnavbar-item :contents \"Dropdown 2\"" [:br]
-      "                            :id :dropdown2)" [:br]
-      "                          (navbar/defnavbar-item :type :divider)" [:br]
-      "                          (navbar/defnavbar-item :contents \"Dropdown 3\"" [:br]
-      "                            :id :dropdown3)]]]" [:br]
+      "(let [menus [(navbar/defnavbar-item :contents \"Menu 1\" " [:br]
+      "                :id :menu1)" [:br]
+      "             (navbar/defnavbar-item :contents \"Menu 2\" " [:br]
+      "                :id :menu2)" [:br]
+      "             (navbar/defnavbar-item :type :dropdown " [:br]
+      "               :title \"Dropdown\"" [:br]
+      "               :contents " [:br]
+      "                  [(navbar/defnavbar-item :contents \"Dropdown 1\"" [:br]
+      "                      :id :dropdown1)" [:br]
+      "                   (navbar/defnavbar-item :contents \"Dropdown 2\"" [:br]
+      "                      :id :dropdown2)" [:br]
+      "                   (navbar/defnavbar-item :type :divider)" [:br]
+      "                   (navbar/defnavbar-item :contents \"Dropdown 3\"" [:br]
+      "                      :id :dropdown3)]]]" [:br]
       "  [:<>" [:br]
       "    [navbar {:sid :navbar" [:br]
       "             :default-link :menu1" [:br]
       "             :menus menus}]" [:br]
-      "    [:p (str \"Current Item: \" (store/get-in store/global-state" [:br]
+      "    [:p (str \"Current Item: \" (get-in global-state" [:br]
       "                                   (spath :navbar)))]])"]]
     [:div.box
      (let [menus [(nb/defnavbar-item :contents "Menu 1" :id :menu1)
@@ -178,28 +190,34 @@
         [nb/navbar {:sid          :navbar
                     :default-link :menu1
                     :menus        menus}]
-        [:p (str "Current Item " (store/get-in store/global-state (spath :navbar)))]])]
+        [:p (str "Current Item " (get-in global-state (spath :navbar)))]])]
     [:pre
      [:code
-      "(let [menus [(navbar/defnavbar-item :contents \"Menu 1\" :id :menu1)" [:br]
-      "             (navbar/defnavbar-item :contents \"Menu 2\" :id :menu2)" [:br]
-      "             (navbar/defnavbar-item :type :dropdown :title \"Dropdown\"" [:br]
-      "               :contents [(navbar/defnavbar-item :contents \"Dropdown 1\"" [:br]
-      "                            :id :dropdown1)" [:br]
-      "                          (navbar/defnavbar-item :contents \"Dropdown 2\"" [:br]
-      "                            :id :dropdown2)" [:br]
-      "                          (navbar/defnavbar-item :type :divider)" [:br]
-      "                          (navbar/defnavbar-item :contents \"Dropdown 3\"" [:br]
-      "                            :id :dropdown3)]]" [:br]
-      "      end-menus [(navbar/defnavbar-item :contents \"Register\" :id :register)" [:br]
-      "                 (navbar/defnavbar-item :contents \"Login\" :id :login)]]" [:br]
+      "(let [menus [(navbar/defnavbar-item :contents \"Menu 1\" " [:br]
+      "                :id :menu1)" [:br]
+      "             (navbar/defnavbar-item :contents \"Menu 2\" " [:br]
+      "                :id :menu2)" [:br]
+      "             (navbar/defnavbar-item :type :dropdown " [:br]
+      "                :title \"Dropdown\"" [:br]
+      "                :contents " [:br]
+      "                  [(navbar/defnavbar-item :contents \"Dropdown 1\"" [:br]
+      "                      :id :dropdown1)" [:br]
+      "                   (navbar/defnavbar-item :contents \"Dropdown 2\"" [:br]
+      "                      :id :dropdown2)" [:br]
+      "                   (navbar/defnavbar-item :type :divider)" [:br]
+      "                   (navbar/defnavbar-item :contents \"Dropdown 3\"" [:br]
+      "                      :id :dropdown3)]]" [:br]
+      "      end-menus [(navbar/defnavbar-item :contents \"Register\" " [:br]
+      "                    :id :register)" [:br]
+      "                 (navbar/defnavbar-item :contents \"Login\" " [:br]
+      "                    :id :login)]]" [:br]
       "  [:<>" [:br]
       "    [navbar {:sid :navbar1" [:br]
-      "             :colour :is-dark"
+      "             :colour :is-dark" [:br]
       "             :default-link :menu1" [:br]
       "             :menus menus" [:br]
-      "             :end-menu end-menu}]"
-      "    [:p (str \"Current Item: \" (store/get-in store/global-state" [:br]
+      "             :end-menu end-menu}]" [:br]
+      "    [:p (str \"Current Item: \" (get-in global-state" [:br]
       "                                   (spath :navbar)))]])"]]
     [:div.box
      (let [menus    [(nb/defnavbar-item :contents "Menu 1" :id :menu1)
@@ -220,37 +238,37 @@
                     :colour       :is-dark
                     :menus        menus
                     :end-menu     end-menu}]
-        [:p (str "Current Item " (store/get-in store/global-state
-                                               (spath :navbar2)))]])]]])
+        [:p (str "Current Item " (get-in global-state (spath :navbar2)))]])]]])
 
 (defn navbar-page []
-  [:div.content
-   [:h2.title.is-2 "The Navbar Component"]
-   [:p
-    "The " [:strong "theophilusx.yorick.navbar"] " namespace provides support "
-    "for a navigation bar. The " [:strong "navbar"]
-    " component supports a brand item, menus, both standard and dropdown, "
-    "static content and a responsive burger item for a responsive navbar which "
-    "supports smaller screens."]
-   [:p
-    "A navbar component uses a local document model item to store the definition "
-    "of the navbar. The " [:code "defnavbar-item"] " function is provided as a "
-    "helper function for defining menu item maps. The navbar also uses a global "
-    " document model atom called " [:code "global-state"] ", which is defined in "
-    "the " [:strong "theophilus.yorick.store"] " namespace, to record menu item "
-    "selection. The selected item " [:code ":id"] " value is stored in the "
-    "global state under the storage identifier keyword specified as "
-    [:code ":sid"], " in the map passed to the " [:code "navbar"] " component. "
-    "This allows other "
-    "components and ClojureScript code to use the current menu choice "
+  [:<>
+   [:div.content
+    [:h2.title.is-2 "The Navbar Component"]
+    [:p
+     "The " [:strong "theophilusx.yorick.navbar"] " namespace provides support "
+     "for a navigation bar. The " [:strong "navbar"]
+     " component supports a brand item, menus, both standard and dropdown, "
+     "static content and a responsive burger item for a responsive navbar which "
+     "supports smaller screens."]
+    [:p
+     "A navbar component uses a local document model item to store the definition "
+     "of the navbar. The " [:code "defnavbar-item"] " function is provided as a "
+     "helper function for defining menu item maps. The navbar also uses a global "
+     " document model atom called " [:code "global-state"] ", which is defined in "
+     "the " [:strong "theophilus.yorick.store"] " namespace, to record menu item "
+     "selection. The selected item " [:code ":id"] " value is stored in the "
+     "global state under the storage identifier keyword specified as "
+     [:code ":sid"], " in the map passed to the " [:code "navbar"] " component. "
+     "This allows other "
+     "components and ClojureScript code to use the current menu choice "
      " to determine what to render and what other actions "
-    "to take when an item is selected."] 
+     "to take when an item is selected."]] 
    [:hr]
-   [:div.columns
-    [:div.column.is-half
-     [:h4.title.is-4 "Description"]]
-    [:div.column
-     [:h4.title.is-4 "Example"]]]
-   [defnavbar-item-function]
-   [navbar-component]])
+   [t/tab :ui.tabs.navbar-page [(t/deftab "defnavbar-item" :id :defnavbar)
+                                (t/deftab "navbar" :id :navbar)]
+    :position :center :size :medium]
+   (case (get-in global-state (spath :ui.tabs.navbar-page))
+     :defnavbar [defnavbar-item-function]
+     :navbar [navbar-component]
+     [defnavbar-item-function])])
 

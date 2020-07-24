@@ -1,7 +1,10 @@
 (ns yorick-demo.tables
   (:require [theophilusx.yorick.table :as t]
             [theophilusx.yorick.card :as c]
-            [theophilusx.yorick.basic :as b]))
+            [theophilusx.yorick.basic :as b]
+            [theophilusx.yorick.utils :refer [spath]]
+            [theophilusx.yorick.store :refer [get-in global-state]]
+            [theophilusx.yorick.tab :as tabs]))
 
 (defn defcell-function []
   [:div.columns
@@ -196,11 +199,11 @@
      "content. Tables are essentially defined as vectors of vectors containing "
      "maps defining each cell for a row of data within the table."]]
    [:hr]
-   [:div.columns
-    [:div.column.is-half
-     [:h4.title.is-4 "Description"]]
-    [:div.column
-     [:h4.title.is-4 "Example"]]]
-   [defcell-function]
-   [table-component]])
+   [tabs/tab :ui.tabs.table-page [(tabs/deftab "defcell" :id :defcell)
+                               (tabs/deftab "table" :id :table)]
+    :position :center :size :medium]
+   (case (get-in global-state (spath :ui.tabs.table-page))
+     :defcell [defcell-function]
+     :table [table-component]
+     [defcell-function])])
 

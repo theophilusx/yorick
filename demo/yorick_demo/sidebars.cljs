@@ -2,8 +2,9 @@
   (:require [theophilusx.yorick.sidebar :as s]
             [theophilusx.yorick.card :as c]
             [theophilusx.yorick.basic :as b]
-            [theophilusx.yorick.store :as store]
-            [theophilusx.yorick.utils :refer [spath]]))
+            [theophilusx.yorick.store :refer [get-in global-state]]
+            [theophilusx.yorick.utils :refer [spath]]
+            [theophilusx.yorick.tab :as t]))
 
 (defn defsidebar-item-function []
   [:div.columns
@@ -44,10 +45,14 @@
      [:code
       "(let [sb-def {:sid :sb-example" [:br]
       "              :default-link :menu1" [:br]
-      "              :data (defsidebar-item :type :menu :title \"Example Menu\"" [:br]
-      "                       :items [(defsidebar-item :title \"Menu 1\" :id :menu1)" [:br]
-      "                               (defsidebar-item :title \"Menu 2\" :id :menu2)" [:br]
-      "                               (defsidebar-item :title \"Menu 3\" :id :menu3)" [:br]
+      "              :data (defsidebar-item :type :menu " [:br]
+      "                       :title \"Example Menu\"" [:br]
+      "                       :items [(defsidebar-item :title \"Menu 1\"" [:br]
+      "                                  :id :menu1)" [:br]
+      "                               (defsidebar-item :title \"Menu 2\"" [:br]
+      "                                  :id :menu2)" [:br]
+      "                               (defsidebar-item :title \"Menu 3\"" [:br]
+      "                                  :id :menu3)" [:br]
       "                               (defsidebar-item :type :menu " [:br]
       "                                  :title \"Sub-Menu Example\"" [:br]
       "                                  :items [(defsidebar-item " [:br]
@@ -104,10 +109,14 @@
      [:code
       "(let [sb-def {:sid :sb-example" [:br]
       "              :default-link :menu1" [:br]
-      "              :data (defsidebar-item :type :menu :title \"Example Menu\"" [:br]
-      "                       :items [(defsidebar-item :title \"Menu 1\" :id :menu1)" [:br]
-      "                               (defsidebar-item :title \"Menu 2\" :id :menu2)" [:br]
-      "                               (defsidebar-item :title \"Menu 3\" :id :menu3)" [:br]
+      "              :data (defsidebar-item :type :menu" [:br]
+      "                       :title \"Example Menu\"" [:br]
+      "                       :items [(defsidebar-item :title \"Menu 1\"" [:br]
+      "                                  :id :menu1)" [:br]
+      "                               (defsidebar-item :title \"Menu 2\"" [:br]
+      "                                  :id :menu2)" [:br]
+      "                               (defsidebar-item :title \"Menu 3\"" [:br]
+      "                                  :id :menu3)" [:br]
       "                               (defsidebar-item :type :menu " [:br]
       "                                  :title \"Sub-Menu Example\"" [:br]
       "                                  :items [(defsidebar-item " [:br]
@@ -139,7 +148,7 @@
          [s/sidebar sb-def]]
         [:div.column
          [:p (str "The selected menu is "
-                  (store/get-in store/global-state (spath :sb-example)))]]])]]])
+                  (get-in global-state (spath :sb-example)))]]])]]])
 
 (defn sidebar-page []
   [:<>
@@ -160,10 +169,10 @@
      "function " [:code "defsidebar-item"] " is provided as a convenience "
      "function to help in defining sidebar menus and menu items."]
     [:hr]]
-   [:div.columns
-    [:div.column.is-half
-     [:h4.title.is-4 "Description"]]
-    [:div.column
-     [:h4.title.is-4 "Example"]]]
-   [defsidebar-item-function]
-   [sidebar-component]])
+   [t/tab :ui.tabs.sidebar-page [(t/deftab "defsidebar-item" :id :defsidebar)
+                                 (t/deftab "sidebar" :id :sidebar)]
+    :position :center :size :medium]
+   (case (get-in global-state (spath :ui.tabs.sidebar-page))
+     :defsidebar [defsidebar-item-function]
+     :sidebar [sidebar-component]
+     [sidebar-component])])

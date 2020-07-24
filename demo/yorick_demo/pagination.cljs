@@ -1,6 +1,9 @@
 (ns yorick-demo.pagination
   (:require [theophilusx.yorick.paginate :as p]
-            [theophilusx.yorick.card :as c]))
+            [theophilusx.yorick.card :as c]
+            [theophilusx.yorick.tab :as t]
+            [theophilusx.yorick.utils :refer [spath]]
+            [theophilusx.yorick.store :refer [get-in global-state]]))
 
 (defn paginate-component []
   [:div.columns
@@ -39,7 +42,9 @@
       "                  (into" [:br]
       "                    [:div.box]" [:br]
       "                    (for [r rs]" [:br]
-      "                      [:div.box.has-background-info.has-text-white" [:br]
+      "                      [:div.box {:class " [:br]
+      "                                 (cs \"has-background-info\"" [:br]
+      "                                     \"has-text-white\")}" [:br]
       "                        [:p (str \"Name: \" (:name r))]])))]" [:br]
       "  [paginate/paginate records display-fn :page-size 2])"]]
     [:div.box
@@ -62,18 +67,18 @@
        [p/paginate records display-fn :page-size 2])]]])
 
 (defn paginate-page []
-  [:div.contents
-   [:h2.title.is-2 "The Paginate Component"]
-   [:p
-    "The " [:strong "theophilusx.yorick.paginate"] " namespace provides a "
-    "component to support pagination of a list of records. Records are broken "
-    "up into pages and a navigation menu is provided for moving between the "
-    "pages."]
+  [:<>
+   [:div.content
+    [:h2.title.is-2 "The Paginate Component"]
+    [:p
+     "The " [:strong "theophilusx.yorick.paginate"] " namespace provides a "
+     "component to support pagination of a list of records. Records are broken "
+     "up into pages and a navigation menu is provided for moving between the "
+     "pages."]]
    [:hr]
-   [:div.columns
-    [:div.column.is-half
-     [:h4.title.is-4 "Description"]]
-    [:div.column
-     [:h4.title.is-4 "Example"]]]
-   [paginate-component]])
+   [t/tab :ui.tabs.paginate-page [(t/deftab "paginate" :id :paginate)]
+    :position :center :size :medium]
+   (case (get-in global-state (spath :ui.tabs.paginate-page))
+     :paginate [paginate-component]
+     [paginate-component])])
 

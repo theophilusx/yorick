@@ -3,7 +3,10 @@
             [theophilusx.yorick.card :as c]
             [theophilusx.yorick.input :as i]
             [theophilusx.yorick.icon :as icons]
-            [theophilusx.yorick.basic :as b]))
+            [theophilusx.yorick.basic :as b]
+            [theophilusx.yorick.utils :refer [spath]]
+            [theophilusx.yorick.tab :as tabs]
+            [theophilusx.yorick.store :refer [get-in global-state]]))
 
 (defn deftoolbar-item-function []
   [:div.columns
@@ -34,11 +37,12 @@
       "                         #(js/alert \"Do something cool\")" [:br]
       "                         :classses {:button \"is-success\"}])" [:br]
       "            (deftoolbar-item " [:br]
-      "              :content [search #(js/alert (str \"Searching for \" %))" [:br]
-      "                         :button-text \"\"" [:br]
-      "                         :icon-data (icons/deficon \"fa-search\")" [:br]
-      "                         :classes" [:br]
-      "                         {:button [\"has-background-link\"" [:br]
+      "              :content " [:br]
+      "                [search #(js/alert (str \"Searching for \" %))" [:br]
+      "                   :button-text \"\"" [:br]
+      "                   :icon-data (icons/deficon \"fa-search\")" [:br]
+      "                   :classes" [:br]
+      "                   {:button [\"has-background-link\"" [:br]
       "                                   \"has-text-white\"]}])]" [:br]
       "    right [(t/deftoolbar-item :content [:strong \"Bold\"])" [:br]
       "           (t/deftoolbar-item :content [:p \"Normal\"])]]" [:br]
@@ -99,12 +103,14 @@
       "                           #(js/alert \"Do something cool\")" [:br]
       "                           :classes {:button \"is-success\"}])" [:br]
       "            (t/deftoolbar-item " [:br]
-      "               :content [i/search #(js/alert (str \"Searching for \" %))" [:br]
-      "                           :button-text \"\"" [:br]
-      "                           :icon-data (icons/deficon \"fa-search\")" [:br]
-      "                           :classes" [:br]
-      "                              {:button [\"has-background-link\"" [:br]
-      "                                        \"has-text-white\"]}])]" [:br]
+      "               :content " [:br]
+      "                  [i/search " [:br]
+      "                     #(js/alert (str \"Searching for \" %))" [:br]
+      "                     :button-text \"\"" [:br]
+      "                     :icon-data (icons/deficon \"fa-search\")" [:br]
+      "                     :classes" [:br]
+      "                     {:button [\"has-background-link\"" [:br]
+      "                               \"has-text-white\"]}])]" [:br]
       "    right [(t/deftoolbar-item :content [:strong \"Bold\"])" [:br]
       "           (t/deftoolbar-item :content [:p \"Normal\"])]]" [:br]
       "  [:<>" [:br]
@@ -139,11 +145,11 @@
      "various actions. A toolbar can contain any Hiccup markup or another "
      "Reagent component."]]
    [:hr]
-   [:div.columns
-    [:div.column.is-half
-     [:h4.title.is-4 "Description"]]
-    [:div.column
-     [:h4.title.is-4 "Example"]]]
-   [deftoolbar-item-function]
-   [toolbar-component]])
+   [tabs/tab :ui.tabs.toolbar-page [(tabs/deftab "deftoolbar-item" :id :deftoolbar)
+                                    (tabs/deftab "toolbar" :id :toolbar)]
+    :position :center :size :medium]
+   (case (get-in global-state (spath :ui.tabs.toolbar-page))
+     :deftoolbar [deftoolbar-item-function]
+     :toolbar [toolbar-component]
+     [deftoolbar-item-function])])
 

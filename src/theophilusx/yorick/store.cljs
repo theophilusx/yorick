@@ -27,7 +27,9 @@
   (let [temp-a @(cursor state [k])]
     (if-not (nil? temp-a) temp-a default)))
 
-(defn put! [state k v]
+(defn put!
+  "Set the key `k` in the atom `state` to value `v`."
+  [state k v]
   (clojure.core/swap! state assoc k v))
 
 (defn get-in
@@ -48,7 +50,9 @@
   [state]
   (clojure.core/reset! state {}))
 
-(defn reset! [state m]
+(defn reset!
+  "Reset the state of the atom `state` to the value `m`."
+  [state m]
   (clojure.core/reset! state m))
 
 (defn remove!

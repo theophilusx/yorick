@@ -88,6 +88,7 @@
   map `d`:
 
   | Keyword     | Description                                                 |
+  |-------------|-------------------------------------------------------------|
   | `:class`    | a string or vector of strings specifying CSS class names    |
   |             | to be added to the outer `div`                              |
   | `:contents` | A vector of navbar item maps. See below for definition of   |

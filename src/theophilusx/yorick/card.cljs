@@ -7,6 +7,7 @@
   "Generate a card header from a map of values.
   This is an internal function used by the card component to generate a header
   for the card based on a map of values. The map supports the following keys
+
   | Key            | Description                                                |
   |----------------|------------------------------------------------------------|
   | `:title`       | The text to use for the header title                       |
@@ -26,7 +27,9 @@
   "Generates a card footer from a map of values.
   Internal function used to generate the card footer from a map. The map
   supports the following keys
-  | Key | Description |
+
+  | Key        | Description                                                  |
+  |------------|--------------------------------------------------------------|
   | `:items`   | A vector of footer items. An item can be a string, hiccup or |
   |            | a component                                                  |
   | `:classes` | A map with keys `:footer` or `:footer-item` that have values |

@@ -31,6 +31,7 @@
   "A basic component to generate an HTML <img> element.
   The expected argument is a path or link to the image file.
   Additional optional keyword arguments are
+
   | Key      | Description                                                 |
   |----------|-------------------------------------------------------------|
   | `:class` | a string or vector of strings specifying CSS class names    |
@@ -93,6 +94,7 @@
   `:ui.breadcrumb.current` represents the path keys `[:ui :breadcrumb :current]`.
   The `crumbs` argument is a vector of maps representing each link in the trail.
   Each map consists of the following keys
+
   | Key       | Description                                                   |
   |-----------|---------------------------------------------------------------|
   | `:name`   | Text to use in the link                                       |
@@ -105,6 +107,7 @@
   This component also accepts optional keyword arguments
 
   | Key           | Description                                                |
+  |---------------|------------------------------------------------------------|
   | `:class`      | A string or vector of strings representing CSS class names |
   | `:position`   | Position of the breadcrumbs, either `:center` or `:right`  |
   | `:separator`  | Type of link separator to use. Possible values are         |
@@ -162,6 +165,7 @@
   "Simple notification component with optional close button.
   This component displays whatever is passed in as the `body` argument as
   a notification. Supports the following optional keyword arguments
+
   | Key       | Description                                                 |
   |-----------|-------------------------------------------------------------|
   | `:class`  | A string or vector of strings specifying CSS class names    |

@@ -6,6 +6,7 @@
   "Create an icon data map which defines the data used to generate an icon
   component. The `name` argument is the name of a font awesome icon. Supported
   optional keyword arguments are
+
   | Key           | Description                                             |
   |---------------|---------------------------------------------------------|
   | `:position`   | Position of the icon. Can be either `:left` or `:right` |

@@ -1,15 +1,17 @@
 - [Yorick](#sec-1)
   - [Key Objectives](#sec-1-1)
   - [Installation](#sec-1-2)
-  - [Using the API](#sec-1-3)
-    - [Namespaces](#sec-1-3-1)
-    - [Optional Keyword Arguments](#sec-1-3-2)
-    - [HTML Attribute Support](#sec-1-3-3)
-    - [Layout](#sec-1-3-4)
-    - [Working with Classes](#sec-1-3-5)
-    - [Component Contents](#sec-1-3-6)
-    - [Managing State](#sec-1-3-7)
-  - [License](#sec-1-4)
+  - [Running the Demo](#sec-1-3)
+  - [Using the API](#sec-1-4)
+    - [Source Code Documentation](#sec-1-4-1)
+    - [Namespaces](#sec-1-4-2)
+    - [Optional Keyword Arguments](#sec-1-4-3)
+    - [HTML Attribute Support](#sec-1-4-4)
+    - [Layout](#sec-1-4-5)
+    - [Working with Classes](#sec-1-4-6)
+    - [Component Contents](#sec-1-4-7)
+    - [Managing State](#sec-1-4-8)
+  - [License](#sec-1-5)
 
 # Yorick<a id="sec-1"></a>
 
@@ -27,18 +29,30 @@ Yorick has been developed using the excellent [shadow-cljs](https://github.com/t
 
 ## Installation<a id="sec-1-2"></a>
 
-Until we add this library to clojars (in the near future), you will need to clone this repository into your project. All the necessary code is in the `src` tree. There is also a simple *demo* application in the `demo` tree, which shows how to use some of the components and what they look like when rendered. To run the demo, do the following
+*Yorick* is available in [Clojars](https://clojars.org). To add *Yorick* to your project, add the following dependency to your `project.clj`, `deps.edn` etc.
 
-    git clone https://github.com/theophilusx/yorick .
-    cd yorick
-    npm install
-    npx shadow-cljs server build demo
+    [theophilusx/yorick "1.0.0"]
+
+## Running the Demo<a id="sec-1-3"></a>
+
+The repository includes a simple demonstration site which shows the use of *Yorick* and provides some documentation on the various components provided by the library. To run the demo, do the following:
+
+```shell
+git clone https://github.com/theophilusx/yorick .
+cd yorick
+npm install
+npx shadow-cljs server build demo
+```
 
 Then visit [demo page](http://localhost:8080)
 
-## Using the API<a id="sec-1-3"></a>
+## Using the API<a id="sec-1-4"></a>
 
-### Namespaces<a id="sec-1-3-1"></a>
+### Source Code Documentation<a id="sec-1-4-1"></a>
+
+Codox documentation generated from the *Yorick* source code is available at <https://theophilusx.github.io/yorick>
+
+### Namespaces<a id="sec-1-4-2"></a>
 
 The *Yorick* library is broken up into several namespaces representing different functionality. Rather than having a single *core* namespace, you load the namespace with the specific functionality you want. Currently, the following namespaces are defined:
 
@@ -78,21 +92,21 @@ The *Yorick* library is broken up into several namespaces representing different
 -   ****theophilusx.yorick.toolbars**:** a basic component for rendering a toolbar
 -   ****theophilusx.yorick.utils**:** a collection of useful utility functions
 
-### Optional Keyword Arguments<a id="sec-1-3-2"></a>
+### Optional Keyword Arguments<a id="sec-1-4-3"></a>
 
 The library makes extensive use of keyword arguments. This has the advantage of making simple default function calls very clean and easy to do, but provides an *escape hatch* when you need to do more complicated things. The disadvantage is that ifyou need to do lots of complicated things, the function calls can become very long. However, if you do need to do such complicated things a lot, it is probably a sign you need to create higher level abstractions to restrict the complexity to well defined points.
 
-### HTML Attribute Support<a id="sec-1-3-3"></a>
+### HTML Attribute Support<a id="sec-1-4-4"></a>
 
 Many HTML entities support large numbers of attributes. To support this, many components allow for an `:attrs` keyword, which consists of HTML attribute names as keywords and an associated string value. This map will be merged into the definition of the component.
 
-### Layout<a id="sec-1-3-4"></a>
+### Layout<a id="sec-1-4-5"></a>
 
 The *Bulma* CSS framework is based on **flexbox**, providing a simple, fast and flexible grid system to layout your web content. Bulma uses classes to support containers, responsive columns, levels and other layout components. Unlike other *Reagent* component libraries, *Yorick* does not attempt to provide any additional layout functionality. All the standard *Bulma* classes used to manage layout are compatible with the components provided by *Yorick*.
 
 To get the most out of *Yorick* you will need to have a basic familiarity with *Bulma*. The good news is that *Bulma* is clear, simple and easy to learn. Use *Bulma* classes like `columns`, `level` and `tiles` to manage your layout and *bulma* helper classes to style the *Yorick* components. s
 
-### Working with Classes<a id="sec-1-3-5"></a>
+### Working with Classes<a id="sec-1-4-6"></a>
 
 The standard way to modify the appearance of a component is by adding CSS classes. As *bulma* is a pure CSS framework, all Bulma features are controlled by adding Bulma specific class names to elements. See the Bulma documentation for details on what class names are supported for each element.
 
@@ -143,7 +157,7 @@ The `utils` namespace contains a function call `cs`, which accepts a variable li
     
     The `input-field` component is an example of a component which is made up of multiple HTML elements. There is an outer `:div` element for the field, a `:label` element for the field label, a `:control` field to contain the final `:input` element. Therefore, the `input-field` element supports the `:classes` keyword argument, which should have a `map` as the value. This map should have keys for one or more of the inner elements i.e. `:field`, `:label`, `:control` or `:input`. You only need to add keys for the elements you want to add classes to. The value of each key can be either a string of class names or a vector with components that will resolve to a class name string or nil.
 
-### Component Contents<a id="sec-1-3-6"></a>
+### Component Contents<a id="sec-1-4-7"></a>
 
 In most cases, a component is really just a wrapper around other components or Hiccup markup. An element can be as simple as just a string or as complex as a nested HTML table. In most cases, the components provided by *Yorick* only accept a single value for the *body* argument of the component. However, sometimes you might want to provide multiple values. To enable passing multiple values into a component, it is necessary to wrap it in either an explicit `:div` element or you can use the handy `:<>` shortcut. This is also a requirement of `React` - the value passed into a `React` component must be either a vector or a function which returns a vector. You cannot just pass in a nested vector, so something like
 
@@ -166,7 +180,7 @@ won't work. It will generate an error about invalid hiccup. However the followin
 
 The first will wrap the two button components in a `<div>`, which is usually fine. The second will enable `React` to handle the two button components and may avoid the addition of an explicit `<div>` element.
 
-### Managing State<a id="sec-1-3-7"></a>
+### Managing State<a id="sec-1-4-8"></a>
 
 The `theophilusx.yorick.store` namespace contains functions to assist in managing Reagent `atoms`. In Reagent, state is typically managed inside special `atoms`. Reagent components know which atoms they reference. When a value inside a referenced atom is updated, Reagent knows that the associated component may need to be re-rendered to reflect the new value.
 
@@ -196,7 +210,7 @@ The `utils` namespace includes the function `spath`, which takes a storage ident
 
 3.  Tracking state globally. The `store` namespace defines an atom called `global-state`, which can be used to store global state information. This atom can be used by both components and any ClojureScript code in your application. It is up to the programmer to manage how data is stored in this atom. For components, like havbars, tab bars or sidebars, which use the global state, you set the storage identifier used by the component when you call it. That storage identifier will determine where the component stores its state within the global state atom map.
 
-## License<a id="sec-1-4"></a>
+## License<a id="sec-1-5"></a>
 
 Copyright &copy; 2020 Tim Cross
 

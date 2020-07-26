@@ -9,7 +9,6 @@
     - [Working with Classes](#sec-1-3-5)
     - [Component Contents](#sec-1-3-6)
     - [Managing State](#sec-1-3-7)
-    - [API Namespaces](#sec-1-3-8)
   - [License](#sec-1-4)
 
 # Yorick<a id="sec-1"></a>
@@ -99,9 +98,11 @@ The standard way to modify the appearance of a component is by adding CSS classe
 
 Many components are actually made up of multiple HTML elements and applying specific classes to each of these elements can become untidy and difficult to maintain. To handle this level of complexity, this library uses the following conventions
 
-1.  When these is just a single element in the component, allow a keyword argument of `:class`. This argument can have either a string value where the string lists the CSS classes to be added to the element or a vector, which contains values that will resolve to a string (or nil).
+1.  When these is just a single element in the component, allow a keyword argument of `:class`. This argument can have either a string value where the string lists the CSS classes to be added to the element or a vector, which contains strings or values that will resolve to a string (or nil).
 
 2.  When the component is a composition of HTML elements, a `:classes` argument is supported. The value of this argument should be a `map` where the keys are keywords representing HTML elements and the value associated with the key is either a string containing CSS class names or a vector which contains values that will resolve to CSS class name strings or nil.
+
+The `utils` namespace contains a function call `cs`, which accepts a variable list of arguments that are combined to generate a string of CSS class names. Arguments can be strings, vectors with values that resolve to strings or keywords. When the value is a keyword, it will be converted to a string with the `name` function. Components within the library use the `cs` function to process `:class` and `:classes` arguments.
 
 1.  Examples
 
@@ -144,7 +145,7 @@ Many components are actually made up of multiple HTML elements and applying spec
 
 ### Component Contents<a id="sec-1-3-6"></a>
 
-In most cases, a component is really just a wrapper around other components or HTML elements. An element can be as simple as just a string or as complex as a nested HTML table. In most cases, the components provided by *Yorick* only accept a single value for the *body* argument of the component. However, sometimes you might want to provide multiple values. To enable passing multiple values into a component, it is necessary to wrap it in either an explicit `:div` element or you can use the handy `:<>` shortcut. This is also a requirement of `React` - the value passed into a `React` component must be either a vector or a function which returns a vector. You cannot just pass in a nested vector, so something like
+In most cases, a component is really just a wrapper around other components or Hiccup markup. An element can be as simple as just a string or as complex as a nested HTML table. In most cases, the components provided by *Yorick* only accept a single value for the *body* argument of the component. However, sometimes you might want to provide multiple values. To enable passing multiple values into a component, it is necessary to wrap it in either an explicit `:div` element or you can use the handy `:<>` shortcut. This is also a requirement of `React` - the value passed into a `React` component must be either a vector or a function which returns a vector. You cannot just pass in a nested vector, so something like
 
 ```clojurescript
 [field [[button "Save"]
@@ -169,33 +170,31 @@ The first will wrap the two button components in a `<div>`, which is usually fin
 
 The `theophilusx.yorick.store` namespace contains functions to assist in managing Reagent `atoms`. In Reagent, state is typically managed inside special `atoms`. Reagent components know which atoms they reference. When a value inside a referenced atom is updated, Reagent knows that the associated component may need to be re-rendered to reflect the new value.
 
-Some components within *Yorick* use local atoms to store local state relevant to that component. The `theophilusx.yorick.store` namespace also includes a global state atom called `global-state`. This atom can be used to store state information which needs to be shared between components.
+The components within *Yorick* use Reagent `atoms` containing `maps` when they need to track state information. The `store` namespace provides a number of functions for manipulating these atom maps. The namespace also defines a global atom called `global-state` to store state information which needs to be accessed by code and other components external to the main component that manages the state e.g. menus, navigation bars tabs etc.
 
-The `theophilusx.yorick.store` namespace contains functions to insert, update, retrieve and delete values in a Reagent atom. The global state atom is called `theophilusx.yorick.global-state` and is created when the namespace is first loaded. It uses the `defonce` macro to define the atom, so subsequent re-loads of the namespace do not result in redefinition of the atom. The atom is initialised as an empty `map`.
+The library uses the term *model* to refer to the atom used to track state. The atom is the data model for a component, page or document. Values in the model map stored in the atom are accessed using a *storage identifier* or `sid`. The `sid` is a keyword with a particular format. Any period within the keyword is interpreted as a path separator. The path components are interpreted as keyword keys which define a path into the model map stored in the atom. For example, the keywords `:person.name.first`, `:person.name.last` and `:person.age` will map to the paths `[:person :name :first]`, `[:person :name :last]` and `[:person :age]`. These vectors all represent paths into a nested map and would correspond to
 
-In general, *Yorick* uses ClojureScript `map` structures for state atoms. Values are stored in the atom by providing a *path* into the atom i.e. a list of keys. To make it easier to work with these paths, Yorick uses the convention of defining paths as `keywords` where a period `(.)` in the keyword is interpreted as a path separator. For example, the keyword `:ui.page.state` represents the path `[:ui :page :state]`. The `theophilusx.yorick.utils` namespace contains a function called `spath`, which accepts a single keyword argument. It will parse the keyword and return a vector of the keys the keyword represents i.e.
+```clojurescript
+{:person {:name {:first "John"
+                 :last "Doe"}
+          :age 47}}
 
-    (spath :ui.page.state) => [:ui :page :state
+```
 
-### API Namespaces<a id="sec-1-3-8"></a>
+The `utils` namespace includes the function `spath`, which takes a storage identifier keyword and returns the corresponding storage path vector.
 
-The API uses separate namespaces for most components. The `core` namespace is a wrapper around most of the component namespaces. If your going to use most of the components provided by *Yorick*, your best off just loading the core namespace. However, If you only want to use specific components, you can just load the associated namespace for that component. The following namespaces are used -
+```clojurescript
+(spath :person.name.first)
+  => [:person :name :first]
+```
 
-| Namespace                   | Purpose                                    |
-|--------------------------- |------------------------------------------ |
-| theophilusx.yorick.basic    | Very simple and basic components           |
-| theophilusx.yorick.card     | A `card` component                         |
-| theophilusx.yorick.icon     | A simple icon component                    |
-| theophilusx.yorick.input    | A collection of input related components   |
-| theophilusx.yorick.media    | A flexible media component                 |
-| theophilusx.yorick.modal    | A modal window component                   |
-| theophilusx.yorick.navbar   | A navigation bar component                 |
-| theophilusx.yorick.paginate | A pagination component                     |
-| theophilusx.yorick.sidebar  | A sidebar menu component                   |
-| theophilusx.yorick.table    | An HTML table component                    |
-| theophilusx.yorick.toolbar  | A simple toolbar component                 |
-| theophilusx.yorick.utils    | A collection of useful utility functions   |
-| theophilusx.yorick.store    | A collection of state management functions |
+*Yorick* uses reagent atoms in three ways:
+
+1.  Tracking local state. Some components need internal state information to manage rendering. For example, which menu is active or whether a modal window is being displayed. In this case, the atom is defined as a local atom and the component *closes* over that atom, making it only accessible to code in the component.
+
+2.  Tracking shared state. Sometimes, you may need to share state information between multiple components, but don't want to pollute the global state atom with this information. Many components support a `:model` optional keyword argument. If supplied, this argument should be a Reagent atom containing a `map`. This is most often used when defining forms or collecting input from the user. A single atom can be used to hold the input values from multiple input components, making it easy to pass the full list of input data to other functions or components for further processing.
+
+3.  Tracking state globally. The `store` namespace defines an atom called `global-state`, which can be used to store global state information. This atom can be used by both components and any ClojureScript code in your application. It is up to the programmer to manage how data is stored in this atom. For components, like havbars, tab bars or sidebars, which use the global state, you set the storage identifier used by the component when you call it. That storage identifier will determine where the component stores its state within the global state atom map.
 
 ## License<a id="sec-1-4"></a>
 

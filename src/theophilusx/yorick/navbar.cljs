@@ -1,4 +1,5 @@
 (ns theophilusx.yorick.navbar
+  "Provides components and supporting functions for a navigation bar."
   (:require [reagent.core :as r]
             [theophilusx.yorick.utils :refer [cs spath]]
             [theophilusx.yorick.store :as store]

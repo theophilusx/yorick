@@ -1,4 +1,6 @@
 (ns theophilusx.yorick.input
+  "A collection of convenience functions and components to support obtaining
+  input from the user."
   (:require [theophilusx.yorick.utils :refer [cs spath value-of value->keyword]]
             [theophilusx.yorick.icon :as icons]
             [theophilusx.yorick.store :as store]

@@ -1,4 +1,6 @@
 (ns theophilusx.yorick.basic
+  "A collection of simple components which are too basic to require their own
+  namespace."
   (:require [theophilusx.yorick.utils :refer [cs spath]]
             [theophilusx.yorick.icon :as icon]
             [clojure.string :as string]

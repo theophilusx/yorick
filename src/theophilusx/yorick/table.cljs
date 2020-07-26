@@ -1,4 +1,5 @@
 (ns theophilusx.yorick.table
+  "Provides a component to render an HTML table of data."
   (:require [reagent.core :as r]
             [theophilusx.yorick.store :as store]
             [theophilusx.yorick.utils :refer [cs]]))

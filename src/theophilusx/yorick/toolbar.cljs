@@ -1,4 +1,5 @@
 (ns theophilusx.yorick.toolbar
+  "Provides a component for rendering a simple toolbar."
   (:require [theophilusx.yorick.utils :refer [cs]]))
 
 (defn deftoolbar-item

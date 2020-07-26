@@ -1,4 +1,5 @@
 (ns theophilusx.yorick.tab
+  "Provide basic page tabs for navigating between pages of information."
   (:require [theophilusx.yorick.basic :refer [a]]
             [theophilusx.yorick.utils :refer [cs spath value->keyword]]
             [theophilusx.yorick.store :refer [get-in assoc-in! global-state]]))

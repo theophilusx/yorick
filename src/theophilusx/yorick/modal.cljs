@@ -1,4 +1,5 @@
 (ns theophilusx.yorick.modal
+  "Provides a modal overlay window which can contain almost any content."
   (:require [theophilusx.yorick.utils :refer [cs spath]]
             [theophilusx.yorick.store :as store]))
 

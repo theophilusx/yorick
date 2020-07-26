@@ -1,4 +1,5 @@
 (ns theophilusx.yorick.card
+  "Provides a basic `card` presentation component."
   (:require [theophilusx.yorick.icon :as icons]
             [theophilusx.yorick.basic :as basic]
             [theophilusx.yorick.utils :refer [cs]]))

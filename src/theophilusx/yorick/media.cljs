@@ -1,4 +1,5 @@
 (ns theophilusx.yorick.media
+  "Provides a general purpose media presentation component."
   (:require [theophilusx.yorick.utils :refer [cs]]))
 
 (defn media-left

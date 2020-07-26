@@ -1,4 +1,5 @@
 (ns theophilusx.yorick.utils
+  "A collection of useful utility functions to assist in working with components."
   (:require [clojure.string :as string]
             [goog.string :as gstring]
             [goog.string.format]

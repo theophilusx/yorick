@@ -1,4 +1,5 @@
 (ns theophilusx.yorick.sidebar
+  "Provides a vertical menu sidebar."
   (:require [theophilusx.yorick.utils :refer [cs spath]]
             [theophilusx.yorick.icon :as icons]
             [theophilusx.yorick.store :as store]

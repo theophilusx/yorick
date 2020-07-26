@@ -1,4 +1,5 @@
 (ns theophilusx.yorick.paginate
+  "Provides a data pagination component to present data in pages of information."
   (:require [reagent.core :as r]
             [theophilusx.yorick.basic :as basic]
             [theophilusx.yorick.utils :refer [cs]]))

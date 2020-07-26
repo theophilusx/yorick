@@ -1,4 +1,5 @@
 (ns theophilusx.yorick.store
+  "Provides convenience functions for manipulating maps stored as Reagent atoms."
   (:refer-clojure :exclude [get get-in reset! swap!])
   (:require [reagent.core :as reagent]))
 

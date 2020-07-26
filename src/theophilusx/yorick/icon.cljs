@@ -1,4 +1,5 @@
 (ns theophilusx.yorick.icon
+  "Provides functions and components useful when adding font awesome icons."
   (:require [clojure.string :as string]
             [theophilusx.yorick.utils :refer [cs]]))
 

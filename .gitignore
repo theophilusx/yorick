@@ -18,3 +18,4 @@ pom.xml.asc
 .hg/
 .eastwood
 .cpcache
+deploy.sh

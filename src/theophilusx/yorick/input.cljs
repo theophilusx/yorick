@@ -136,7 +136,7 @@
   |              | attribute as a keyword e.g. `:required`                    |"
   [label type sid & {:keys [classes icon-data model change-fn attrs]}]
   [field [input type sid :classes (:input classes) :icon-data icon-data
-          :moodel model :change-fn change-fn :attrs attrs]
+          :model model :change-fn change-fn :attrs attrs]
    :label label :classes classes])
 
 (defn checkbox

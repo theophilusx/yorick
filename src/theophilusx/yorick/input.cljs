@@ -103,16 +103,16 @@
                  change-fn
                  (fn [e]
                    (store/assoc-in! doc (spath sid) (value-of e))))]
-    (fn [type sid & {:keys [classes icon-data attr]}]
+    (fn [type sid & {:keys [classes icon-data attrs]}]
       (if icon-data
         (into
          [:div.control {:class (cs (:control classes)
                                    (icons/icon-control-class icon-data))}
-          (input-helper type sid doc chg-fn :class (:input classes) :attr attr)]
+          (input-helper type sid doc chg-fn :class (:input classes) :attrs attrs)]
          (for [i (icons/icons icon-data)]
            i))
         [:div.control {:class (cs (:control classes))}
-         (input-helper type sid doc chg-fn :class (:input classes) :attr attr)]))))
+         (input-helper type sid doc chg-fn :class (:input classes) :attrs attrs)]))))
 
 (defn input-field
   "Convenience component which combines `field` and `input` components to

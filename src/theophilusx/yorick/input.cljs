@@ -552,7 +552,7 @@
                                           :on-change chg-fn})]
          [:span.file-cta {:class (cs (:file-cta classes))}
           [:span.file-icon
-           [:i.fa.fa-upload]]
+           [:i.fas.fa-upload]]
           [:span.file-label
            (or label
                "Choose a file")]

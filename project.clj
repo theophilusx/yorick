@@ -1,4 +1,4 @@
-(defproject theophilusx/yorick "1.0.0"
+(defproject theophilusx/yorick "1.0.1"
   :description "A library of Reagent components styled using Bulma"
   :url "https://github.com/theophilusx/yorick"
   :dependencies [[org.clojure/clojure "1.10.1"]
@@ -10,8 +10,5 @@
           :metadata {:doc/format :markdown}
           :output-path "docs"
           :namespaces :all
-          :language :clojurescript}
-  ;; :profiles {:codox {:dependencies [[viebel/codox-klipse-theme "0.0.5"]]
-  ;;                    :plugins      [[lein-codox "0.10.2"]]}}
-  )
+          :language :clojurescript})
 

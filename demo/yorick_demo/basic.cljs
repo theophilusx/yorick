@@ -35,14 +35,14 @@
       "  [:p \"This is an example of an \" " [:br]
       "      [basic/a \"anchor\" :on-click #(js/alert \"Hello\")]" [:br]
       "  [:p \"A link with an icon \"" [:br]
-      "     [basic/a \"Home\" :icon-data (icon/deficon \"fa-house\")]]"]
+      "     [basic/a \"Home\" :icon-data (icon/deficon \"far fa-house\")]]"]
      ]
     [:div.box
      [:h6.title.is-6 "Result"]
      [:p "This is an example of an "
       [b/a "anchor" :on-click #(js/alert "Hello")]]
      [:p "A link wiht an icon "
-      [b/a "Home" :icon-data (icon/deficon "fa-home")]]]]])
+      [b/a "Home" :icon-data (icon/deficon "fa fa-home")]]]]])
 
 (defn img-component []
   [:div.columns

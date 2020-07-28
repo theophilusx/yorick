@@ -32,10 +32,10 @@
    [:div.column
     [:pre
      [:code
-      "(let [icon-data (icon/deficon \"fa-image\")]" [:br]
+      "(let [icon-data (icon/deficon \"fas fa-image\")]" [:br]
       "  [:p (str \"Definition: \" icon-data)])"]]
     [:div.box
-     (let [icon-data (i/deficon "fa-image")]
+     (let [icon-data (i/deficon "fas fa-image")]
        [:p (str "Definition: " icon-data)])]]])
 
 (defn icon-control-class-function []
@@ -56,11 +56,11 @@
    [:div.column
     [:pre
      [:code
-      "(let [icon-data (icon/deficon \"fa-image\" :size :medium " [:br]
+      "(let [icon-data (icon/deficon \"fas fa-image\" :size :medium " [:br]
       "                  :position :right)]" [:br]
       "  [:p (str \"CSS Classes: \" (icon-control-class icon-data))])"]]
     [:div.box
-     (let [icon-data (i/deficon "fa-image" :size :medium :position :right)]
+     (let [icon-data (i/deficon "fas fa-image" :size :medium :position :right)]
        [:p (str "CSS Classes: " (i/icon-control-class icon-data))])]]])
 
 (defn icon-component-component []
@@ -79,68 +79,68 @@
     [:pre
      [:code
       "[:h6.title.is-6 \"Result\"]" [:br]
-      "[icon/icon-component (icon/deficon \"fa-warehouse\")]"]]
+      "[icon/icon-component (icon/deficon \"fas fa-warehouse\")]"]]
     [:div.box
      [:h6.title.is-6 "Result"]
-     [i/icon-component (i/deficon "fa-warehouse")]]
+     [i/icon-component (i/deficon "fas fa-warehouse")]]
     [:pre
      [:code
-      "[:p [icon/icon-component (icon/deficon \"fa-warehouse\" " [:br]
+      "[:p [icon/icon-component (icon/deficon \"fas fa-warehouse\" " [:br]
       "                            :size :small)]" [:br]
       "  \" Small\"]" [:br]
-      "[:p [icon/icon-component (icon/deficon \"fa-warehouse\")]" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fas fa-warehouse\")]" [:br]
       "  \" Normal]" [:br]
-      "[:p [icon/icon-component (icon/deficon \"fa-warehouse\" " [:br]
+      "[:p [icon/icon-component (icon/deficon \"fas fa-warehouse\" " [:br]
       "                            :size :medium)]" [:br]
       "  \" Medium\"]" [:br]
-      "[:p [icon/icon-component (icon/deficon \"fa-warehouse " [:br]
+      "[:p [icon/icon-component (icon/deficon \"fas fa-warehouse " [:br]
       "                            :size :large)]" [:br]
       "  \" Large\"]" [:br]
-      "[:p [icon/icon-component (icon/deficon \"fa-warehouse\" " [:br]
+      "[:p [icon/icon-component (icon/deficon \"fas fa-warehouse\" " [:br]
       "                            :size :huge)]" [:br]
       "  \" Huge\"]"]]
     [:dir.box
      [:h6.title.is-6 "Result"]
-     [:p [i/icon-component (i/deficon "fa-warehouse" :size :small)]
+     [:p [i/icon-component (i/deficon "fas fa-warehouse" :size :small)]
       [:span "Small"]]
-     [:p [i/icon-component (i/deficon "fa-warehouse")]
+     [:p [i/icon-component (i/deficon "fas fa-warehouse")]
       [:span "Normal"]]
-     [:p [i/icon-component (i/deficon "fa-warehouse" :size :medium)]
+     [:p [i/icon-component (i/deficon "fas fa-warehouse" :size :medium)]
       [:span "Medium"]]
-     [:p [i/icon-component (i/deficon "fa-warehouse" :size :large)]
+     [:p [i/icon-component (i/deficon "fas fa-warehouse" :size :large)]
       [:span "Large"]]
-     [:p [i/icon-component (i/deficon "fa-warehouse" :size :huge)]
+     [:p [i/icon-component (i/deficon "fas fa-warehouse" :size :huge)]
       [:span "Huge"]]]
     [:pre
      [:code
-      "[:p [icon/icon-component (icon/deficon \"fa-home\"" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fas fa-home\"" [:br]
       "                          :span-class \"has-text-info\")]" [:br]
       "  \"Info Colour\"]" [:br]
-      "[:p [icon/icon-component (icon/deficon \"fa-home\")]" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fas fa-home\")]" [:br]
       "  \"Normal Colour]" [:br]
-      "[:p [icon/icon-component (icon/deficon \"fa-home\")" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fas fa-home\")" [:br]
       "                          :span-class \"has-text-success\")]" [:br]
       "  \"Success Colour\"]" [:br]
-      "[:p [icon/icon-component (icon/deficon \"fa-home\"" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fas fa-home\"" [:br]
       "                          :span-class \"has-text-warning\")]" [:br]
       "  \"Warning Colour\"]" [:br]
-      "[:p [icon/icon-component (icon/deficon \"fa-home\"" [:br]
+      "[:p [icon/icon-component (icon/deficon \"fas fa-home\"" [:br]
       "                          :span-class \"has-text-danger\")]" [:br]
       "  \"Danger Colour\"]"]]
     [:dir.box
      [:h6.title.is-6 "Result"]
-     [:p [i/icon-component (i/deficon "fa-warehouse"
+     [:p [i/icon-component (i/deficon "fas fa-warehouse"
                              :span-class "has-text-info")]
       "Info Colour"]
-     [:p [i/icon-component (i/deficon "fa-warehouse")]
+     [:p [i/icon-component (i/deficon "fas fa-warehouse")]
       "Normal Colour"]
-     [:p [i/icon-component (i/deficon  "fa-warehouse"
+     [:p [i/icon-component (i/deficon  "fas fa-warehouse"
                              :span-class "has-text-success")]
       "Success Colour"]
-     [:p [i/icon-component (i/deficon "fa-warehouse"
+     [:p [i/icon-component (i/deficon "fas fa-warehouse"
                              :span-class "has-text-warning")]
       "Warning Colour"]
-     [:p [i/icon-component (i/deficon "fa-warehouse"
+     [:p [i/icon-component (i/deficon "fas fa-warehouse"
                              :span-class "has-text-danger")]
       "Danger Colour"]]]])
 
@@ -159,26 +159,26 @@
    [:div.column
     [:pre
      [:code
-      "(let [data [(icon/deficon \"fa-home\" " [:br]
+      "(let [data [(icon/deficon \"fas fa-home\" " [:br]
       "               :span-class \"has-text-info\")" [:br]
-      "            (icon/deficon \"fa-home\" " [:br]
+      "            (icon/deficon \"fas fa-home\" " [:br]
       "               :span-class \"has-text-link\")" [:br]
-      "            (icon/deficon \"fa-home\" " [:br]
+      "            (icon/deficon \"fas fa-home\" " [:br]
       "               :span-class \"has-text-success\")" [:br]
-      "            (icon/deficon \"fa-home\" " [:br]
+      "            (icon/deficon \"fas fa-home\" " [:br]
       "               :span-class \"has-text-warning\")" [:br]
-      "            (icon/deficon \"fa-home\" " [:br]
+      "            (icon/deficon \"fas fa-home\" " [:br]
       "               :span-class \"has-text-danger\")]]" [:br]
       "  [:<>" [:br]
       "    [:p \"The icons\"]" [:br]
       "    (for [i (i/icons data)]" [:br]
       "       i)])"]]
     [:div.box
-     (let [data [(i/deficon "fa-home" :span-class "has-text-info")
-                 (i/deficon "fa-home" :span-class "has-text-link")
-                 (i/deficon "fa-home" :span-class "has-text-success")
-                 (i/deficon "fa-home" :span-class "has-text-warning")
-                 (i/deficon "fa-home" :span-class "has-text-danger")]]
+     (let [data [(i/deficon "fas fa-home" :span-class "has-text-info")
+                 (i/deficon "fas fa-home" :span-class "has-text-link")
+                 (i/deficon "fas fa-home" :span-class "has-text-success")
+                 (i/deficon "fas fa-home" :span-class "has-text-warning")
+                 (i/deficon "fas fa-home" :span-class "has-text-danger")]]
        [:<>
         [:p "The icons " ]
         (for [i (i/icons data)]

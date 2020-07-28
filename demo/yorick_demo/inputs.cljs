@@ -779,13 +779,13 @@
       "[:p \"Search box with placeholder, icon and colour\"]" [:br]
       "[input/search #(js/alert (str \"You are searching for \" %))" [:br]
       "  :placeholder \"enter search terms\" :button-text \"\"" [:br]
-      "  :icon-data (icons/deficon \"fa-search\")" [:br]
+      "  :icon-data (icons/deficon \"fas fa-search\")" [:br]
       "  :classes {:button \"has-background-link has-text-white\"}]"]]
     [:div.box
      [:p "Search box with placeholder, icon and colour"]
      [i/search #(js/alert (str "You are searching for " %))
       :placeholder "enter search terms" :button-text ""
-      :icon-data (icons/deficon "fa-search")
+      :icon-data (icons/deficon "fas fa-search")
       :classes {:button "has-background-link has-text-white"}]]]])
 
 (defn range-component []

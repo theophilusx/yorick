@@ -49,7 +49,7 @@
   | `type`    | The input field type. One of the HTML input types            |
   | `sid`     | A storage id keyword value used as an `spath` when storing   |
   |           | input into the doc atom                                      |
-  | `doc`     | A reagent `atom` object used to store user input             |
+  | `store`     | A reagent `atom` object used to store user input             |
   | `chg-fun` | A function of 1 argument which is called whenever input data |
   |           | changes. The argument is the new value of the input data.    |
   |-----------|--------------------------------------------------------------|
@@ -62,12 +62,12 @@
   |          | input element                                                 |
   | `:attrs` | A map of HTML attributes. Each key is the HTML attribute name |
   |          | as a keyword e.g. `:required`                                 |"
-  [type sid doc chg-fn & {:keys [class attrs]}]
+  [type sid store chg-fn & {:keys [class attrs]}]
   [:input.input (merge attrs {:type (name type)
                               :class (cs class)
                               :id (name sid)
                               :name (name sid)
-                              :value (str (store/get-in doc (spath sid)))
+                              :value (str (store/get-in (spath sid)) :store store)
                               :on-change chg-fn})])
 
 (defn input
@@ -84,7 +84,7 @@
 
   | Keyword      | Description                                                |
   |--------------|------------------------------------------------------------|
-  | `:model`     | A reagent atom to be used for storing user input           |
+  | `:store`     | A reagent atom to be used for storing user input           |
   | `:change-fn` | A function of 1 argument called when user enters data in   |
   |              | the field.                                                 |
   | `:classes`   | A map of CSS classes to add to elements in the component.  |
@@ -96,13 +96,13 @@
   |              | Add sability to add icons to an input component            |
   | `:attrs`     | A map of HTML attributes. The map keys are the HTML        |
   |              | attribute as a keyword e.g. `:required`                    |"
-  [_ sid & {:keys [model change-fn]}]
-  (let [doc (or model
+  [_ sid & {:keys [store change-fn]}]
+  (let [doc (or store
                 (r/atom {}))
         chg-fn (if (fn? change-fn)
                  change-fn
                  (fn [e]
-                   (store/assoc-in! doc (spath sid) (value-of e))))]
+                   (store/assoc-in! (spath sid) (value-of e) :store doc)))]
     (fn [type sid & {:keys [classes icon-data attrs]}]
       (if icon-data
         (into
@@ -129,14 +129,14 @@
   |              | strings. Supported keys are `:field`, `:label` and `:input`|
   | `:icon-data` | an icon data map or vector of icon data maps. See the      |
   |              | `theophilusx.yorick.icon` namespace for details            |
-  | `:model`     | A reagent atom to be used as the document model            |
+  | `:store`     | A reagent atom to be used as the document model            |
   | `:change-fn` | a function of one argument called to update the value      |
   |              | in the document model atom when input changes              |
   | `:attrs`     | A map of HTML attributes. Keys in the map are the HTML     |
   |              | attribute as a keyword e.g. `:required`                    |"
-  [label type sid & {:keys [classes icon-data model change-fn attrs]}]
+  [label type sid & {:keys [classes icon-data store change-fn attrs]}]
   [field [input type sid :classes (:input classes) :icon-data icon-data
-          :model model :change-fn change-fn :attrs attrs]
+          :store store :change-fn change-fn :attrs attrs]
    :label label :classes classes])
 
 (defn checkbox
@@ -147,7 +147,7 @@
 
   | Keyword      | Description                                               |
   |--------------|-----------------------------------------------------------|
-  | `:model`     | a reagent atom to use as the document model for this      |
+  | `:store`     | a reagent atom to use as the document model for this      |
   |              | checkbox                                                  |
   | `:change-fn` | a function of 1 argument called when the input changes to |
   |              | update the data in the document model                     |
@@ -157,12 +157,12 @@
   | `:checked`   | boolean used to set the HTML attribute checked            |
   | `:attrs`     | a map of HTML attributes. The keys are the HTML attribute |
   |              | name as a keyword e.g. `:required`                        |"
-  [_ sid & {:keys [model change-fn]}]
-  (let [doc (or model
+  [_ sid & {:keys [store change-fn]}]
+  (let [doc (or store
                 (r/atom {}))
         chg-fn (if (fn? change-fn)
                  change-fn
-                 #(store/update-in! doc (spath sid) not))]
+                 #(store/update-in! (spath sid) not :store doc))]
     (fn [label sid & {:keys [classes checked attrs]}]
       [:div.field {:class (cs (:field classes))}
        [:div.control {:class (cs (:control classes))}
@@ -193,7 +193,7 @@
 
   | Keyword      | Description                                              |
   |--------------|----------------------------------------------------------|
-  | `:model`     | a reagent atom used as the document model for this       |
+  | `:store`     | a reagent atom used as the document model for this       |
   |              | component                                                |
   | `:change-fn` | a function of one argument called when the input changes |
   |              | to update the document model atom                        |
@@ -202,8 +202,8 @@
   |              | `:label`                                                 |
   | `:attrs`     | a map of HTML attributes. Keys are the HTML attribute    |
   |              | name as a keyword e.g. `:required`                       |"
-  [sid labels & {:keys [model click-fn]}]
-  (let [doc (or model
+  [sid labels & {:keys [store click-fn]}]
+  (let [doc (or store
                 (r/atom {}))
         btns (mapv (fn [b]
                      (let [v (or (:value b)
@@ -213,9 +213,8 @@
                        {:title (:title b)
                         :value v})) labels)
         change-fn (if (fn? click-fn)
-                 click-fn
-                 #(store/assoc-in! doc (spath sid)
-                                   (value->keyword (value-of %))))]
+                    click-fn
+                 #(store/assoc-in! (spath sid) (value->keyword (value-of %)) :store doc))]
     (fn [sid _ & {:keys [classes attrs]}]
       (into
        [:div.control {:class (cs (:control classes))}]
@@ -226,7 +225,7 @@
                                       :name (name sid)
                                       :value (:value b)
                                       :defaultChecked
-                                      (when (= (store/get-in doc (spath sid))
+                                      (when (= (store/get-in (spath sid) :store doc)
                                                (:value b))
                                         true)
                                       :on-click change-fn})]
@@ -252,16 +251,25 @@
 (defn editable-field
   "Provides a utility component which will display a value with a 'pencil'
   icon, which when clicked, will change the displayed value to be a text
-  input area where the value can be edited. Adds a 'save' and 'cancel' button
-  to save or cancel the edit. The `type` argument is a keyword representing one
-  of the HTML input types e.g. :text, :email. The `src` argument is a reagent
-  atom representing the document model atom holding the data to be edited. The
-  `sid` argument is a storage identifier keyword which specifies the path into
-  the document model atom where the value to edit is stored. This component also
-  supports two optional keyword arguments, `:label` and `:classes`. The `:label`
-  keyword argument is a string which specifies a text label to associate with
-  the field. The `:classes` keyword argument is a map of strings or vectors of
-  strings representing CSS class names. The map supports the following keys
+  input field where the value can be edited. Adds a 'save' and 'cancel' button
+  to save or cancel the edit.
+
+  | Argument | Description                                                        |
+  |----------|--------------------------------------------------------------------|
+  | `type`   | Keyword specifying the type of input field. Keyword versions of    |
+  |          | HTML5 input types i.e. :text, :email, :password etc                |
+  | `store`  | The reagent atom where the source value is stored                  |
+  | `sid`    | The storage identifier specifying location of data in the `store`  |
+  
+  
+  This component also supports two optional keyword arguments,
+
+  | Keyword    | Description                                                        |
+  |------------|--------------------------------------------------------------------|
+  | `:label`   | A string which specifies a text label to associate with the field  |
+  | `:classes` | A map of strings or vectors of strings specifying CSS class names  |
+
+  The map supports the following keys
 
   | Key                   | Description                                         |
   |-----------------------|-----------------------------------------------------
@@ -289,19 +297,22 @@
   |                       | displaying values                                   |
   | `:field-display-body` | CSS classes to associate with the field body when   |
   |                       | displaying values                                   |"
-  [_ src sid & _]
-  (let [doc (r/atom {:value (store/get-in src (spath sid))
+  [_ store sid & _]
+  (let [doc (r/atom {:value (store/get-in (spath sid) :store store)
                      :editing false})
+        src-val (store/cursor (spath sid) :store store)
+        edit-val (store/cursor :value :store doc)
+        edit-state (store/cursor :editing :store doc)
         save-fn (fn []
-                  (store/assoc-in! src (spath sid) (:value @doc))
-                  (store/update! doc :editing not))
+                  (reset! src-val @edit-val)
+                  (swap! edit-state not))
         cancel-fn (fn []
-                    (store/put! doc :value (store/get-in src (spath sid)))
-                    (store/update! doc :editing not))]
+                    (reset! edit-val @src-val)
+                    (reset! edit-state false))]
     (fn [type _ _ & {:keys [label classes]}]
       (if (:editing @doc)
         [horizontal-field label [:<>
-                                 [input type :value :model doc
+                                 [input type :value :store doc
                                   :class (:edit-input classes)]
                                  [button "Save" save-fn
                                   :classes {:field (:save-btn-field classes)
@@ -318,24 +329,27 @@
                                  [:div {:class (:display-input classes)}
                                   (if (= type :password)
                                     "******** "
-                                    (str (:value @doc) " "))
+                                    (str @edit-val " "))
                                   [:span.icon
-                                   {:on-click #(store/update! doc :editing not)}
+                                   {:on-click #(reset! edit-state true)}
                                    [:i.fas.fa-edit]]]]
          :classes {:field (:field-display classes)
                    :label (:label classes)
                    :body (:field-display-body classes)}]))))
 
 (defn textarea
-  "A basic text area component. The `label` argument is a string containing
-  the text to be used as a label for the text area. The `sid` argument is a
-  storage identifier keyword used to determine where the data entered is
-  stored within the document model atom. The component supports the following
-  optional keyword arguments
+  "A basic text area component.
+
+  | Argument | Description                                                        |
+  |----------|--------------------------------------------------------------------|
+  | `label`  | A text label to be associated with the text area field             |
+  | `sid`    | A storage identifier which specifies the storage path for text     |
+
+  The component supports the following optional keyword arguments
 
   | Keyword     | Description                                               |
   |-------------|-----------------------------------------------------------|
-  | `:model`    | A reagent `atom` representing the document model used to  |
+  | `:store`    | A reagent `atom` representing the document model used to  |
   |             | store input                                               |
   | `:change-fn`| A function of one argument called when the data changes.  |
   |             | The argument is the new data.                             |
@@ -344,12 +358,12 @@
   |             | `:field`, `:label` and ':textarea`                        |
   | `:attrs`    | a map of HTML attribute values. The keys are the HTML     |
   |             | attribute name as a keyword e.g. `:placeholder`           |"
-  [_ sid & {:keys [model change-fn]}]
-  (let [doc (or model
+  [_ sid & {:keys [store change-fn]}]
+  (let [doc (or store
                 (r/atom {}))
         chg-fn (if (fn? change-fn)
                  change-fn
-                 #(store/assoc-in! doc (spath sid) (value-of %)))]
+                 #(store/assoc-in! (spath sid) (value-of %) :store doc))]
     (fn [label sid & {:keys [classes attrs]}]
       [:div.field {:class (cs (:field classes))}
        (when label
@@ -380,22 +394,27 @@
             :selected selected}
    title])
 
-(defn default-option [options]
+(defn- default-option [options]
   (let [selected (first (filter #(:selected (second %)) options))]
     (if selected
       (second selected)
       (second (first options)))))
 
 (defn select
-  "A basic select list component. The `sid` argument is a storage identifier 
-  keyword. The `options` argument is a vector of option component representing 
-  each option for the select list. Each option can be defined using the 
-  `defoption` function. The component also supports a number of optional keyword
-  arguments
+  "A basic select list component.
+
+  | Argument  | Description                                                        |
+  |-----------|--------------------------------------------------------------------|
+  | `sid`     | A storage identifier specifying location to store selection choice !
+  | `options` | Vector of option components representing each option for the       |
+  |           | selection list. The `defoption` function can be used to define an  |
+  |           | option component.                                                  |
+
+  The component also supports a number of optional keyword arguments
 
   | Keyword         | Description                                             |
   |-----------------|---------------------------------------------------------|
-  | `:model`        | A reagent atom to be used as the document model where   |
+  | `:store`        | A reagent atom to be used as the document model where   |
   |                 | the selected value will be stored                       |
   | `:change-fn`    | A function of one argument that is called when a value  |
   |                 | is selected. The argument is the new data value selected|
@@ -410,13 +429,13 @@
   | `:size`         | Number of options to display in select box              |
   | `:attrs`        | a map of HTML attribute values. The keys are the HTML   |
   |                 | attribute as a keyword e.g. `:disabled`                 |"
-  [sid options & {:keys [model change-fn]}]
-  (let [doc (or model
+  [sid options & {:keys [store change-fn]}]
+  (let [doc (or store
                 (r/atom {}))
         chg-fn (if (fn? change-fn)
                  change-fn
-                 #(store/assoc-in! doc (spath sid) (value-of %)))]
-    (store/assoc-in! doc (spath sid) (:value (default-option options)))
+                 #(store/assoc-in! (spath sid) (value-of %) :store doc))]
+    (store/assoc-in! (spath sid) (:value (default-option options)) :store doc)
     (fn [sid options & {:keys [select-class multiple rounded select-size
                               icon-data size attrs]}]
       [:div.control {:class (cs (when icon-data
@@ -452,10 +471,15 @@
 
 (defn select-field
   "This component is a convenience component which wraps a select component 
-  inside a field div to ensure appropriate spacing and layout. The `sid` 
-  argument is a storage identifier keyword. The `options` argument is a vector 
-  of option elements (see `defoption` for details). The following optional 
-  keyword arguments are also supported
+  inside a field div to ensure appropriate spacing and layout.
+
+  | Argument  | Description                                                        |
+  |-----------|--------------------------------------------------------------------|
+  | `sid`     | A storage identifier which specifies where the selection choice    |
+  |           | be stored.                                                         |
+  | `options` | Vector of option components. Use `defoption` to define each entry  |
+
+  The following optional keyword arguments are also supported
 
   | Keyword        | Description                                               |
   |----------------|-----------------------------------------------------------|
@@ -472,19 +496,19 @@
   |                | `:small`, `:medium` and `:large`.                         |
   | `:icon-data`   | An icon definition map. See `theophilusx/yorick/icon` for |
   |                | details.                                                  |
-  | `:model`       | A reagent atom used as the document model store           |
+  | `:store`       | A reagent atom used as the document model store           |
   | `:change-fn`   | A function of one argument called when the input data     |
   |                | changes. The argument is the new data value               |
   | `:attrs`       | a map of HTML attribute values. Keys are HTML attribute   |
   |                | names as keywords e.g. `:disabled`                        |"
   [sid options & {:keys [title classes multiple rounded select-size icon-data
-                         model change-fn attrs]}]
+                         store change-fn attrs]}]
   [:div.field {:class (:field classes)}
    (when title
      [:div.label {:class (cs (:title classes))} title])
    [select sid options :select-class (:select classes) :multiple multiple
     :rounded rounded :select-size select-size :icon-data icon-data
-    :model model :change-fn change-fn :attrs attrs]])
+    :store store :change-fn change-fn :attrs attrs]])
 
 (defn file
   "Provides a basic file selection component. The required `sid` argument is a
@@ -494,7 +518,7 @@
 
   | Keyword      | Description                                                 |
   |--------------|-------------------------------------------------------------|
-  | `:model`     | A reagent atom to be used as the document model store       |
+  | `:store`     | A reagent atom to be used as the document model store       |
   | `:change-fn` | A function of one argument which is called when the input   |
   |              | data changes. The argument is the change event object. This |
   |              | function is responsible for storing the selected filename(s)|
@@ -516,8 +540,8 @@
   |              | `:small`, `:medium` and `:large`.                           |
   | `:position`  | Set the position of the select box within enclosing         |
   |              | container. Possible values are `:center` and `:right`       |"
-  [sid & {:keys [action model change-fn]}]
-  (let [doc (or model
+  [sid & {:keys [action store change-fn]}]
+  (let [doc (or store 
                 (r/atom {}))
         chg-fn (if (fn? change-fn)
                  change-fn
@@ -525,7 +549,7 @@
                    (let [file-list (-> e .-target .-files)]
                      (when (.-length file-list)
                        (let [file (first (array-seq file-list))]
-                         (store/assoc-in! doc (spath sid) (.-name file))
+                         (store/assoc-in! (spath sid) (.-name file) :store doc)
                          (when (fn? action)
                            (action file)))))))]
     (fn [id & {:keys [classes label right fullwidth boxed size position attrs]}]
@@ -557,8 +581,8 @@
            (or label
                "Choose a file")]
           [:span.file-name
-           (if (store/get-in doc (spath id))
-             (str (store/get-in doc (spath id)))
+           (if (store/get-in (spath id) :store doc)
+             (str (store/get-in (spath id) :store doc))
              "No file chosen")]]]]])))
 
 (defn search
@@ -587,7 +611,7 @@
         [:input.input (merge attrs {:class (cs (:input classes))
                                     :type "text"
                                     :value (str (store/get doc :search))
-                                    :on-change #(store/put! doc :search (value-of %))})]]
+                                    :on-change #(store/assoc! :search (value-of %) :store doc)})]]
        [:div.control {:class (cs (when icon-data
                                    (icons/icon-control-class icon-data)))}
         [:button.button {:class (cs (:button classes))
@@ -598,13 +622,19 @@
          (or button-text "Search")]]])))
 
 (defn range-field
-  "A simple range input component. The `sid` argument is a storage identifier
-  keyword. The `min` and `max` arguments set the minimum and maximum values for
-  the range. A number of optional keyword arguments are supported:
+  "A simple range input component.
+
+  | Argument | Description                                                        |
+  |----------|--------------------------------------------------------------------|
+  | `sid`    | A storage identifier defining location to store selected range     |
+  | `min`    | Sets the minimum value for the range                               |
+  | `max`    | Sets the maximum value for the range                               |
+
+  A number of optional keyword arguments are supported:
 
   | Keyword      | Description                                              |
   |--------------|----------------------------------------------------------|
-  | `:model`     | a reagent atom to use as the document model store        |
+  | `:store`     | a reagent atom to use as the document model store        |
   | `:change-fn` | a function of 1 argument which is called to update the   |
   |              | document model store when input changes. The argument is |
   |              | the new input data                                       |
@@ -614,14 +644,14 @@
   |              | class names. Supported keys are `:input`, `:field` and   |
   |              | `:label`                                                 |
   | `:step`      | Set the step size for the range. Defaults to 1           |"
-  [sid _ _ & {:keys [model change-fn value]}]
-  (let [doc (or model
+  [sid _ _ & {:keys [store change-fn value]}]
+  (let [doc (or store 
                 (r/atom {}))
         chg-fn (if (fn? change-fn)
                  change-fn
                  (fn [e]
-                   (store/assoc-in! doc (spath sid) (js/parseInt (value-of e)))))]
-    (store/assoc-in! doc (spath sid) (or value 0))
+                   (store/assoc-in! (spath sid) (js/parseInt (value-of e) :store doc))))]
+    (store/assoc-in! (spath sid) (or value 0) :store doc)
     (fn [sid min max & {:keys [label classes step attrs]}]
       [field [:div.field.has-addons
               [:span {:style {:paddingRight "5px"}}(str min " ")]
@@ -634,13 +664,13 @@
                                             "1")
                                     :id (name sid)
                                     :name (name sid)
-                                    :value (str (store/get-in doc (spath sid)))
+                                    :value (str (store/get-in (spath sid) :store doc))
                                     :on-change chg-fn})]
               [:span {:style {:paddingRight "5px"
                               :paddingLeft "5px"}}
                (str " " max " ")]
               [:span {:style {:paddingLeft "5px"}}
-               (str " " (store/get-in doc (spath sid)))]]
+               (str " " (store/get-in (spath sid) :store doc))]]
        :label label :classes classes])))
 
 (defn number
@@ -650,7 +680,7 @@
 
   | Keyword      | Description                                           |
   |--------------|-------------------------------------------------------|
-  | `:model`     | a reagent atom to be used as the document model store |
+  | `:store`     | a reagent atom to be used as the document model store |
   | `:change-fn` | a function of one argument called when the input data |
   |              | changes. The argument is the new input data.          |
   | `:value`     | the default value used to initialise the component    |
@@ -662,15 +692,15 @@
   |              | `:input`                                              |
   | `:attrs`     | a map of HTML attribute values. Keys are the HTML     |
   |              | attribute names as keywords e.g. `:id`                |"
-  [sid & {:keys [model change-fn value]}]
-  (let [doc (or model
+  [sid & {:keys [store change-fn value]}]
+  (let [doc (or store
                 (r/atom {}))
         chg-fn (if (fn? change-fn)
                  change-fn
                  (fn [e]
-                   (store/assoc-in! doc (spath sid) (js/parseInt (value-of e)))))]
+                   (store/assoc-in! (spath sid) (js/parseInt (value-of e)) :store doc)))]
     (when value
-      (store/assoc-in! doc (spath sid) value))
+      (store/assoc-in! (spath sid) value :store doc))
     (fn [sid & {:keys [min max step classes attrs]}]
       [:div.control {:class (cs (:control classes))}
        [:input (merge attrs {:type "number"
@@ -682,8 +712,8 @@
                                      (str step)
                                      "1")
                              :on-change chg-fn
-                             :value (when (store/get-in doc (spath sid))
-                                      (str (store/get-in doc (spath sid))))
+                             :value (when (store/get-in (spath sid) :store doc)
+                                      (str (store/get-in (spath sid) :store doc)))
                              :class (cs (:input classes))})]])))
 
 (defn number-field
@@ -695,7 +725,7 @@
 
   | Keyword      | Description                                            |
   |--------------|--------------------------------------------------------|
-  | `:model`     | a reagent atom to use as the document model store      |
+  | `:store`     | a reagent atom to use as the document model store      |
   | `:change-fn` | a function of 1 argument called when the input data    |
   |              | changes. The argument is the new input data. Used to   |
   |              | update the document model store                        |
@@ -709,8 +739,8 @@
   | `:label`     | a string to use as the label for the input field       |
   | `:attrs`     | a map of HTML attribute values. The keys are HTML      |
   |              | attribute names as keywords e.g `:id`                  |"
-  [sid & {:keys [model change-fn value min max step attrs
+  [sid & {:keys [store change-fn value min max step attrs
                                   classes label]}]
-  [field [number sid :model model :change-fn change-fn :min min
+  [field [number sid :store store :change-fn change-fn :min min
           :max max :step step :classes classes :value value :attrs attrs]
    :label label :classes classes])

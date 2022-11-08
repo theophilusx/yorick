@@ -6,43 +6,42 @@
             [theophilusx.yorick.icon :as icons]
             [theophilusx.yorick.basic :as basic]))
 
-(defn active?
+(defn- active?
   "Returns true if `id` is the value of the key `:active-state` in the atom
   specified by `model`."
-  [model id]
-  (if (= (:active-item @model) id)
+  [store id]
+  (if (= (:active-item @store) id)
     true
     false))
 
-(defn set-active
-  "Set the value of `:active-state` in the atom `state` to `id` or nil if `id`
+(defn- set-active
+  "Set the value of `:active-state` in the atom `store` to `id` or nil if `id`
   is not supplied."
-  [model & id]
-  (swap! model assoc :active-item (first id)))
+  [store & id]
+  (swap! store assoc :active-item (first id)))
 
-(defn dropdown-active?
-  "Returns true if value of `:active-dropdown` in atom `model` is equal to `id`."
-  [model id]
-  (if (= (:active-dropdown @model) id)
+(defn- dropdown-active?
+  "Returns true if value of `:active-dropdown` in atom `store` is equal to `id`."
+  [store id]
+  (if (= (:active-dropdown @store) id)
     true
     false))
 
-(defn toggle-dropdown
-  "If `id` is nil, set `:active-dropdown` in atom `model` to nil, otherwise set
+(defn- toggle-dropdown
+  "If `id` is nil, set `:active-dropdown` in atom `store` to nil, otherwise set
   `:active-dropdown` to nil if `id` equals current value or to value of `id`
-  otherwise.\"`"
-  [model & id]
-  (if (nil? id)
-    (swap! model assoc :active-dropdown nil)
-    (if (= (:active-dropdown @model) (first id))
-      (swap! model assoc :active-dropdown nil)
-      (swap! model assoc :active-dropdown (first id)))))
+  otherwise."
+  [store & id]
+  (if (or (nil? id)
+          (= (:active-dropdown @store) (first id)))
+    (swap! store assoc :active-dropdown nil)
+    (swap! store assoc :active-dropdown (first id))))
 
-(defn set-choice
-  "Set the value of the key specified by storage identifier keyword `sid` to
+(defn- set-choice
+  "Set the value of the key specified by `sid` to
   the value of `id` in the global state atom."
   [sid & id]
-  (store/assoc-in! store/global-state (spath sid) (first id)))
+  (store/assoc-in! (spath sid) (first id)))
 
 (defn item-a
   "Create a navbar anchor component from the map `a`. The `model` is the atom

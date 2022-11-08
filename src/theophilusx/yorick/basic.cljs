@@ -1,6 +1,6 @@
 (ns theophilusx.yorick.basic
   "A collection of simple components which are too basic to require their own
-  namespace."
+  name space."
   (:require [theophilusx.yorick.utils :refer [cs spath]]
             [theophilusx.yorick.icon :as icon]
             [clojure.string :as string]
@@ -20,10 +20,12 @@
   | `:attrs`     | a map of HTML attribute values. Keys are HTML attribute    |
   |              | names as keywords e.g. `:role`                             |
   | `:icon-data` | an icon definition map to add an icon to the link title.   |
-  |              | See `theophilusx.yorick.icon` for details on map structure |"
-  [title & {:keys [href on-click class attrs icon-data]}]
+  |              | See `theophilusx.yorick.icon` for details on map structure |
+  | `:id`        | An HTML id value to associate with this element            |"
+  [title & {:keys [href on-click class attrs icon-data id]}]
   [:a (merge attrs {:href href
                     :on-click on-click
+                    :id (or id (gensym "a-"))
                     :class (cs class)})
    (when icon-data
      [icon/icon-component icon-data])
@@ -37,10 +39,12 @@
   | Key      | Description                                                 |
   |----------|-------------------------------------------------------------|
   | `:class` | a string or vector of strings specifying CSS class names    |
+  | `:id`    | an HTML id value for this element                           |
   | `:attrs` | a map of HTML attribute values. Keys are the HTML attribute |
   |          | names as keywords e.g. `:id`                                |"
-  [src & {:keys [class attrs]}]
+  [src & {:keys [class attrs id]}]
   [:img (merge attrs {:src src
+                      :id (or id (gensym "img-"))
                       :class (cs class)})])
 
 (declare render-map)
@@ -145,8 +149,7 @@
         [:li {:class (when (:active c)
                        "is-active")}
          [:a {:href "#"
-              :on-click #(store/assoc-in! store/global-state (spath sid)
-                                          (:value c))}
+              :on-click #(store/assoc-in! (spath sid) (:value c))}
           [:span.icon {:class (when (contains? (:icon c) :size)
                                 (case (:size (:icon c))
                                   :small "is-small"
@@ -159,8 +162,7 @@
         [:li {:class (when (:active c)
                        "is-active")}
          [:a {:href "#"
-              :on-click #(store/assoc-in! store/global-state (spath sid)
-                                          (:value c))}
+              :on-click #(store/assoc-in! (spath sid) (:value c))}
           (:name c)]])))])
 
 (defn notification

@@ -7,10 +7,10 @@
   "A basic modal overlay component. The `body` argument is the content to put
   into the overlay. It can be HTML, a string or another component. The `sid`
   argument is a storage identifier keyword used to determine where to store
-  the modal state (either active or inactive). The `model` argument is a
-  reagent atom used as the document model store. This component also supports
-  an optional keyword argument `:classes`, which is a map of strings or vectors
-  of strings representing CSS class names. The supported keys are:
+  the modal state (either active or inactive). Setting the value of this location
+  to `true` will enable the modal and `false` we close it. This component also supports
+  an optional keyword argument `:classes`, a map of strings or vectors
+  of strings specifying CSS class names. The supported keys are:
 
   | Keyword       | Description                                               |
   |---------------|-----------------------------------------------------------|
@@ -19,27 +19,27 @@
   |               | transparency                                              |
   | `:content`    | CSS class names to associate with the content div         |
   | `:close`      | CSS class names to associate with the close div           |"
-  [body sid model & {:keys [classes]}]
+  [body sid & {:keys [classes]}]
   [:div.modal {:class (cs (:modal classes)
-                          (when (store/get-in model (spath sid))
+                          (when (store/get-in (spath sid))
                             "is-active"))}
    [:div.modal-background
     {:class (cs (:background classes))
-     :on-click #(store/assoc-in! model (spath sid) false)}]
+     :on-click #(store/assoc-in! (spath sid) false)}]
    [:div.modal-content {:class (cs (:content classes))}
     body]
    [:button.modal-close.is-large
     {:class (cs (:close classes))
      :aria-label "close"
-     :on-click #(store/assoc-in! model (spath sid) false)}]])
+     :on-click #(store/assoc-in! (spath sid) false)}]])
 
 (defn modal-card
   "A specialised modal overlay based around the `card` component. The `body`
   argument is the content for the body of the card. It can be a string, HTML
   or another component. The `sid` argument is a storage identifier keyword used
-  to determine where state is managed for the modal. The `model` argument is a
-  reagent atom used as the store for the modal state. The component also
-  supports some optional keyword arguments:
+  to determine where state is managed for the modal. Enable the modal by setting the
+  state to true and false to remove it. The component also supports some optional
+  keyword arguments:
 
   | Keyword    | Description                                                   |
   |------------|---------------------------------------------------------------|
@@ -48,9 +48,9 @@
   | `:classes` | A map of strings or vectors of strings representing CSS class |
   |            | names. Supported keys are `:modal`, `:background`, `:card`    |
   |            | `:header`, `:body`, `:footer` and `:close`                    |"
-  [body sid model & {:keys [header footer classes]}]
+  [body sid & {:keys [header footer classes]}]
   [:div.modal {:class (cs (:modal classes)
-                          (when (store/get-in model (spath sid))
+                          (when (store/get-in (spath sid))
                             "is-active"))}
    [:div.modal-background
     {:class (cs (:background classes))}]
@@ -59,7 +59,7 @@
       [:header.modal-card-head {:class (cs (:header classes))}
        [:div.modal-card-title header]
        [:button.delete {:aria-label "close"
-                        :on-click #(store/assoc-in! model (spath sid) false)}]])
+                        :on-click #(store/assoc-in! (spath sid) false)}]])
     [:section.modal-card-body {:class (cs (:body classes))}
      body]
     (when footer

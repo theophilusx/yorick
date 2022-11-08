@@ -16,8 +16,8 @@
                                    (string? %) %
                                    (keyword? %) (name %)
                                    (vector? %) (string/join " " %)
-                                   :default nil) names))]
-    (if (seq v)
+                                   :else nil) names))]
+    (when (seq v)
       (string/join " " v)))) 
 
 (defn value-of
@@ -51,6 +51,11 @@
     (reduce (fn [acc v]
               (conj acc (keyword v)))
             init (string/split (name kw) #"\."))))
+
+(defn path->sid
+  "Convert a vector of keywords representing a path into a storage map into a sid"
+  [kw]
+  (str ":" (string/join "." (map name kw))))
 
 (defn value->keyword
   "Generates a keyword from the value `v`. Any spaces, commas, colons or

@@ -1,13 +1,19 @@
 {
   "name": "yorick",
-  "version": "0.0.1",
+  "version": "1.0.2",
   "private": true,
-  "devDependencies": {},
+  "scripts": {
+    "watch": "shadow-cljs watch testbed;",
+    "release": "shadow-cljs release testbed;",
+    "server": "shadow-cljs server;",
+    "clean": "rm -rf target; rm -rf public/js"
+  },
   "dependencies": {
-    "bulma": "^0.9.0",
-    "create-react-class": "^15.6.3",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "shadow-cljs": "^2.10.17"
+    "bulma": "^0.9.4",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "shadow-cljs": "^2.20.7"
   }
 }

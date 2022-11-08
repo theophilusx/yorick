@@ -1,15 +1,28 @@
 ;; shadow-cljs configuration
-{:source-paths ["src"
-                "demo"]
+;; {:source-paths ["src"
+;;                 "demo"]
 
- :dependencies [[reagent "0.10.0"]
-                [binaryage/devtools "1.0.2"]
-                [refactor-nrepl "2.5.0"]]
+;;  :dependencies [[reagent "1.1.1"]
+;;                 [binaryage/devtools "1.0.6"]
+;;                 [refactor-nrepl "3.6.0"]]
 
+;;  :dev-http {8080 "public"}
+
+;;  :builds {:demo {:target :browser
+;;                  :output-dir "public/js"
+;;                  :asset-path "/js"
+;;                  :modules {:main {:init-fn yorick-demo.main/init}}}}
+;;  :nrepl {:middleware [refactor-nrepl.middleware/wrap-refactor]}}
+
+
+{:source-paths ["src" "test" "demo" "experiment"]
+ :dependencies [[reagent "1.1.1"]]
  :dev-http {8080 "public"}
-
  :builds {:demo {:target :browser
                  :output-dir "public/js"
                  :asset-path "/js"
-                 :modules {:main {:init-fn yorick-demo.main/init}}}}
- :nrepl {:middleware [refactor-nrepl.middleware/wrap-refactor]}}
+                 :modules {:main {:init-fn yorick-demo.main/init}}}
+          :testbed {:target :browser
+                    :output-dir "public/js"
+                    :asset-path "/js"
+                    :modules {:main {:init-fn testbed.main/init}}}}}

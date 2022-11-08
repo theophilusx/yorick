@@ -1,107 +1,90 @@
 (ns theophilusx.yorick.store
-  "Provides convenience functions for manipulating maps stored as Reagent atoms."
-  (:refer-clojure :exclude [get get-in reset! swap!])
+  (:refer-clojure :exclude [get get-in reset! assoc!])
   (:require [reagent.core :as reagent]))
 
-;; This package is blatantly stolen from the reagent-project/utils library
-;; see https://github.com/reagent-project/reagent-utils
-;; The main difference is to allow specification of the storage atom rather
-;; than defaulting to a 'state' atom. While a single state atom is good for
-;; much of what needs to be stored during a session, there is other data which
-;; requires an atom, but using just a single atom results in a larger and more
-;; complex atom than necessary. This module allows the developer to use multiple
-;; atoms. The downside of this approach is that if not careful, you can end up
-;; with problems managing too many separate atoms. It is important that all
-;; atoms are reagent.core/atoms.
+(def default-store (reagent/atom {}))
 
-(defonce global-state (reagent/atom {}))
+(defn contains-in? [m ks]
+  (if (not (contains? m (first ks)))
+    false
+    (if (empty? (rest ks))
+      true
+      (recur (clojure.core/get m (first ks)) (rest ks)))))
 
 (defn cursor
-  "Returns a cursor from the state atom. `state` is the reagent atom while
-  `ks` are the keys (path) into the atom."
-  [state ks]
-  (reagent/cursor state ks))
-
-(defn get
-  "Get the key's value from the session, returns nil if it doesn't exist."
-  [state k & [default]]
-  (let [temp-a @(cursor state [k])]
-    (if-not (nil? temp-a) temp-a default)))
-
-(defn put!
-  "Set the key `k` in the atom `state` to value `v`."
-  [state k v]
-  (clojure.core/swap! state assoc k v))
+  "Returns a cursor into the store atom. The `ks` argument is a vector
+  specifying the path into the store.The optional :store keyword argument
+  can be used to set the store atom to use. Defaults to `default-store`."
+  [ks & {:keys [store] :or {store default-store}}]
+  (reagent/cursor store ks))
 
 (defn get-in
- "Gets the value at the path specified by the vector ks from the session,
-  returns nil if it doesn't exist."
-  [state ks & [default]]
-  (let [result @(cursor state ks)]
-    (if-not (nil? result) result default)))
+  "Get value from store associated with the path `ks`, a vector of keys. The
+  optional keyword argument `:default` can be used to specify a default value
+  to be used if value is nil. Keyword :store can be used to specify an
+  alternative atom store. Default store is `default-store`."
+  [ks & {:keys [default store] :or {store default-store}}]
+  (let [val @(cursor ks :store store)]
+    (if-not (nil? val) val default)))
 
-(defn swap!
-  "Replace the current session's value with the result of executing f with
-  the current value and args."
-  [state f & args]
-  (apply clojure.core/swap! state f args))
-
-(defn clear!
-  "Remove all data from the session and start over cleanly."
-  [state]
-  (clojure.core/reset! state {}))
-
-(defn reset!
-  "Reset the state of the atom `state` to the value `m`."
-  [state m]
-  (clojure.core/reset! state m))
+(defn get
+  "Get value from atom store associated with `k` key argument.
+  Keyword argument `:default` can be used to set a default value
+  returned when `k` is nil. The `:store` keyword specifies an
+  alternative atom store from default."
+  [k & {:keys [default store] :or {store default-store}}]
+  (get-in [k] :default default :store store))
 
 (defn remove!
-  "Remove a key from the session"
-  [state k]
-  (clojure.core/swap! state dissoc k))
+  "Remove a key from the store map atom. The `k` argument is
+  the key to be removed. The optional `:store` keyword argument allows
+  setting a new store atom rather than the default `default-store` atom."
+  [k & {:keys [store] :or {store default-store}}]
+  (swap! store dissoc k))
+
+(defn remove-in!
+  "Removes a key from a nested store map. The 'ks' argument is the path
+  to the key to be removed. This operation may result in keys in the map
+  whose value is an empty map. The `:store` keyword argument can be used to
+  specify an alternative store atom."
+  [ks & {:keys [store] :or {store default-store}}]
+  (when (contains-in? @store ks)
+    (if (<= (count ks) 1)
+      (remove! (first ks) :store store)
+      (let [target (last ks)
+            path   (pop ks)]
+        (swap! store update-in path dissoc target))))
+  @store)
+
+(defn reset!
+  "Reset the value of store to the value `m`. The `:store` keyword
+  argument can be used to set the target store. Default store is the
+  `default-store` atom."
+  [m & {:keys [store] :or {store default-store}}]
+  (clojure.core/reset! store m))
 
 (defn assoc-in!
-  "Associates a value in the session, where ks is a
-   sequence of keys and v is the new value and returns
-   a new nested structure. If any levels do not exist,
-   hash-maps will be created."
-  [state ks v]
-  (clojure.core/swap! state assoc-in  ks v))
+  "Set the value `v` in the store at location given by the path
+  specified in the keys `ks`. The optional keyword argument `:store`
+  can be used to set the target store atom."
+  [ks v & {:keys [store] :or {store default-store}}]
+  (swap! store assoc-in ks v))
 
-(defn get!
-  "Destructive get from the session. This returns the current value of the key
-  and then removes it from the session."
-  [state k & [default]]
-  (let [cur (get state k default)]
-    (remove! state k)
-    cur))
-
-(defn get-in!
-  "Destructive get from the session. This returns the current value of the path
-  specified by the vector ks and then removes it from the session."
-  [state ks & [default]]
-    (let [cur (get-in state ks default)]
-      (assoc-in! state ks nil)
-      cur))
-
-(defn update!
-  "Updates a value in session where k is a key and f
-   is the function that takes the old value along with any
-   supplied args and return the new value. If key is not
-   present it will be added."
-  [state k f & args]
-  (clojure.core/swap!
-    state
-    #(apply (partial update % k f) args)))
+(defn assoc!
+  "Set the value at key `k` to `v` in the store atom. The optional
+  keyword argument `:store` can be used to set an alternative atom store.
+  Default store is `default-store`."
+  [k v & {:keys [store] :or {store default-store}}]
+  (assoc-in! [k] v :store store))
 
 (defn update-in!
-  "Updates a value in the session, where ks is a
-   sequence of keys and f is a function that will
-   take the old value along with any supplied args and return
-   the new value. If any levels do not exist, hash-maps
-   will be created."
-  [state ks f & args]
-  (clojure.core/swap!
-    state
-    #(apply (partial update-in % ks f) args)))
+  "Applies the function `f` to the value at `ks` within the map in the store atom and
+  stores the result as the new value for `ks`. Optional keyword argument `:args`
+  can be used to supply a vector of additional arguments to be passed into the function
+  `f`. The keyword :store` can be used to specify an alternative store to act on.
+  Default store is `default-store`.`"
+  [ks f & {:keys [args store] :or {store default-store}}]
+  (if (nil? args)
+    (swap! store update-in ks f)
+    (swap! store update-in ks #(apply f % args))))
+

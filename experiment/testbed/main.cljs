@@ -4,7 +4,9 @@
             [theophilusx.yorick.utils :as utils]
             [theophilusx.yorick.store :as store]
             [theophilusx.yorick.basic :as basic]
-            [testbed.navbar :as nav]))
+            [testbed.navbar :as nav]
+            [testbed.paginate :as paginate]
+            [testbed.sidebar :as sidebar]))
 
 ;; navbar
 
@@ -30,6 +32,50 @@
    [:p "The value in the global store is"]
    [basic/render-map @store/default-store]])
 
+;; pagination
+
+(def pages (mapv (fn [i]
+                   {:title (str "This is heading " i)
+                    :body (str "This is the body of record " i)}) (range 200)))
+
+(defn test-render [p]
+  (let [rows (partition-all 2 p)]
+    (into [:div.container]
+          (for [r rows]
+            (into [:div.columns]
+                  (for [i r]
+                    [:div.column
+                     [:h1 (:title i)]
+                     [:p (:body i)]]))))))
+
+(defn paginate-page []
+  [:<>
+   [paginate/paginate pages test-render]])
+
+;; sidebar
+
+
+(def test-menu [(sidebar/defmenu [(sidebar/defentry "Menu 1" :value :menu1)
+                                  (sidebar/defentry "Menu 2")
+                                  (sidebar/defmenu [(sidebar/defentry "Submenu 1")
+                                                    (sidebar/defentry "Submenu 2")
+                                                    (sidebar/defentry "Submenu 3")]
+                                    :title "More Options")
+                                  (sidebar/defentry "Menu 4")]
+                  :title "Main")
+                (sidebar/defmenu [(sidebar/defentry "Admin 1")
+                                  (sidebar/defentry "Admin 2")
+                                  (sidebar/defentry "Admin 3")]
+                  :title "Administration")])
+
+(defn sidebar-page []
+  [:<>
+   [sidebar/sidebar :sidebar test-menu]
+   [:h2 "Values"]
+   [basic/render-map @store/default-store]
+   [:h3 "Input Data"]
+   [basic/render-vec test-menu]])
+
 (defn get-element [name]
   (gdom/getElement name))
 
@@ -46,6 +92,8 @@
 (defn current-page []
   (case (store/get-in (utils/spath :ui.menu))
     :navbar [navbar-page]
+    :paginate [paginate-page]
+    :sidebar [sidebar-page]
     [placeholder-page]))
 
 (defn greeting []
@@ -71,5 +119,5 @@
 
 (defn ^:dev/after-load init []
   (println "Hello World")
-  (store/assoc-in! (utils/spath :ui.menu) :navbar)
+  (store/assoc-in! (utils/spath :ui.menu) :sidebar)
   (mount-app))

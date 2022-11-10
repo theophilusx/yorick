@@ -1,7 +1,7 @@
 (ns theophilusx.yorick.input
   "A collection of convenience functions and components to support obtaining
   input from the user."
-  (:require [theophilusx.yorick.utils :refer [cs spath value-of value->keyword]]
+  (:require [theophilusx.yorick.utils :refer [cs spath value-of str->keyword]]
             [theophilusx.yorick.icon :as icons]
             [theophilusx.yorick.store :as store]
             [reagent.core :as r]))
@@ -207,14 +207,14 @@
                 (r/atom {}))
         btns (mapv (fn [b]
                      (let [v (or (:value b)
-                                 (value->keyword (:title b)))]
+                                 (str->keyword (:title b)))]
                        (when (:checked b)
                          (store/assoc-in! doc (spath sid) v))
                        {:title (:title b)
                         :value v})) labels)
         change-fn (if (fn? click-fn)
                     click-fn
-                 #(store/assoc-in! (spath sid) (value->keyword (value-of %)) :store doc))]
+                 #(store/assoc-in! (spath sid) (str->keyword (value-of %)) :store doc))]
     (fn [sid _ & {:keys [classes attrs]}]
       (into
        [:div.control {:class (cs (:control classes))}]

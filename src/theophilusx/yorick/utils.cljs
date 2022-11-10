@@ -57,11 +57,11 @@
   [kw]
   (str ":" (string/join "." (map name kw))))
 
-(defn value->keyword
+(defn str->keyword
   "Generates a keyword from the value `v`. Any spaces, commas, colons or
   ampersands are converted to a dash (-)."
   [v]
-  (keyword (string/replace v #"\.|:|@|\ " "-")))
+  (keyword (string/replace (string/lower-case v) #"\.|:|@|\ " "-")))
 
 (defn initcaps
   "Convert the first letter of each word in the string `s` to a capital."

@@ -1,7 +1,7 @@
 (ns theophilusx.yorick.tab
   "Provide basic page tabs for navigating between pages of information."
   (:require [theophilusx.yorick.basic :refer [a]]
-            [theophilusx.yorick.utils :refer [cs spath value->keyword]]
+            [theophilusx.yorick.utils :refer [cs spath str->keyword]]
             [theophilusx.yorick.store :refer [get-in assoc-in! global-state]]))
 
 (defn deftab
@@ -20,7 +20,7 @@
   |              | class names to add to the tab link                         |"
   [title & {:keys [id icon-data class]}]
   {:title title
-   :id (or id (value->keyword title))
+   :id (or id (str->keyword title))
    :icon-datat icon-data
    :class class})
 

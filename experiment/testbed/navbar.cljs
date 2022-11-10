@@ -1,5 +1,5 @@
 (ns testbed.navbar
-  (:require [theophilusx.yorick.utils :refer [cs spath value->keyword]]
+  (:require [theophilusx.yorick.utils :refer [cs spath str->keyword]]
             [theophilusx.yorick.store :as store]
             [theophilusx.yorick.basic :as basic]))
 
@@ -19,7 +19,7 @@
   [title & {:keys [value icon class id]}]
   {:type :link
    :title title
-   :value (or value (value->keyword title))
+   :value (or value (str->keyword title))
    :id (or id (gensym "link-"))
    :class class
    :icon-data icon})
@@ -125,11 +125,13 @@
 (defn- make-item
   "Given a navbar item definition map, generate a corresponding navbar item
   component.
-  | Keyword   |                                                             |
-  |-----------|-------------------------------------------------------------|
-  | `sid`     | The storage identifier associated with a navbar.            |
-  | `m`       | A navbar item definition map created using `nav-link`,      |
-  |           | `nav-container`, `nav-divider` or `nav-dropdown`.           |"
+  | Keyword        |                                                             |
+  |----------------|-------------------------------------------------------------|
+  | `sid`          | The storage identifier associated with a navbar.            |
+  | `active-cur`   | Cursor for active navbar item state                         |
+  | `dropdown-cur` | Cursor for active dropdown state                            |
+  | `m`            | A navbar item definition map created using `nav-link`,      |
+  |                | `nav-container`, `nav-divider` or `nav-dropdown`.           |"
   [sid active-cur dropdown-cur m]
   (condp = (:type m)
     :link [make-link active-cur dropdown-cur m]
@@ -221,7 +223,9 @@
   | `:tab?`        | If true, add a bottom boarder on hover and sets the|
   |                | bottom boarder when menu item is active            |
   | `:class`       | A string or vector of strings specifying additional|
-  |                | CSS classes to add to the navbar element           |"
+  |                | CSS classes to add to the navbar element           |
+  | `:shadow?`     | When true, add a subtle shadow effect              |"
+
   [sid _ & {:keys [default transparent?]}]
   (store/assoc-in! (spath sid) {:burger-active? false
                                 :active-dropdown nil

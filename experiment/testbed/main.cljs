@@ -6,7 +6,8 @@
             [theophilusx.yorick.basic :as basic]
             [testbed.navbar :as nav]
             [testbed.paginate :as paginate]
-            [testbed.sidebar :as sidebar]))
+            [testbed.sidebar :as sidebar]
+            [testbed.tab :as tab]))
 
 ;; navbar
 
@@ -76,6 +77,18 @@
    [:h3 "Input Data"]
    [basic/render-vec test-menu]])
 
+;; Tab bars
+
+
+(def tab-data [(tab/deftab "Tab 1")
+               (tab/deftab "Tab 2")
+               (tab/deftab "Tab 3")])
+
+(defn tab-page []
+  [:<>
+   [tab/tab-bar :tab tab-data]
+   [:h1 "Values"]
+   [basic/render-map @store/default-store]])
 (defn get-element [name]
   (gdom/getElement name))
 
@@ -94,6 +107,7 @@
     :navbar [navbar-page]
     :paginate [paginate-page]
     :sidebar [sidebar-page]
+    :tab [tab-page]
     [placeholder-page]))
 
 (defn greeting []
@@ -119,5 +133,5 @@
 
 (defn ^:dev/after-load init []
   (println "Hello World")
-  (store/assoc-in! (utils/spath :ui.menu) :sidebar)
+  (store/assoc-in! (utils/spath :ui.menu) :tab)
   (mount-app))

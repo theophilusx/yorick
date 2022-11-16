@@ -1,4 +1,6 @@
 (ns testbed.navbar
+  "A basic navibatgion bar component. Uses a storage identifier (aka sid) to
+  determine where to store data regarding the state of the navbar. "
   (:require [theophilusx.yorick.utils :refer [cs spath str->keyword]]
             [theophilusx.yorick.store :as store]
             [theophilusx.yorick.basic :as basic]))

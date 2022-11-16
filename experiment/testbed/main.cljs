@@ -7,7 +7,8 @@
             [testbed.navbar :as nav]
             [testbed.paginate :as paginate]
             [testbed.sidebar :as sidebar]
-            [testbed.tab :as tab]))
+            [testbed.tab :as tab]
+            [testbed.table :as table]))
 
 ;; navbar
 
@@ -79,7 +80,6 @@
 
 ;; Tab bars
 
-
 (def tab-data [(tab/deftab "Tab 1")
                (tab/deftab "Tab 2")
                (tab/deftab "Tab 3")])
@@ -91,6 +91,42 @@
    [basic/render-map @store/default-store]])
 (defn get-element [name]
   (gdom/getElement name))
+
+;; tables
+
+(def table-header [[(table/cell "Group A" :colspan 2 :type :th) (table/cell "Group B" :colspan 2 :type :th)
+                    (table/cell "Group C" :colspan 2 :type :th) (table/cell "Group D" :colspan 2 :type :th)]
+                   [(table/cell "A1" :type :th) (table/cell "A2" :type :th)
+                    (table/cell "B1" :type :th) (table/cell "B2" :type :th)
+                    (table/cell "C1" :type :th) (table/cell "C2" :type :th)
+                    (table/cell "D1" :type :th) (table/cell "D2" :type :th)]])
+
+(def table-data [[(table/cell 1) (table/cell 2) (table/cell 3) (table/cell 4)
+                   (table/cell "A") (table/cell "B") (table/cell "C") (table/cell "D")]
+                  [(table/cell 5) (table/cell 6) (table/cell 7) (table/cell 8)
+                   (table/cell "AA") (table/cell "BB") (table/cell "CC") (table/cell "DD")]])
+
+(def table-footer [[(table/cell 6) (table/cell 8) (table/cell 10) (table/cell 12)
+                    (table/cell 6) (table/cell 8) (table/cell 10) (table/cell 12)]
+                   [(table/cell 14 :colspan 2) (table/cell 22 :colspan 2)
+                    (table/cell 14 :colspan 2) (table/cell 22 :colspan 2)]])
+
+(def table-data2 (into []
+                       (for [r (range 1 3)]
+                         (into []
+                               (for [c (range 1 44)]
+                                 (table/cell (* r c)))))))
+
+(defn table-page []
+  [:<>
+   [:h1 "Basic Table"]
+   [:div.table-container
+    [table/table table-data :header table-header :footer table-footer]]
+   [:h1 "Scrollable Table"]
+   [table/scrollable-table [table/table table-data2]]
+   [:h1 "Try again!"]
+   [:div.table-container [table/table table-data2]]])
+
 
 (defn mount [el component]
   (rdom/render component el))
@@ -108,6 +144,7 @@
     :paginate [paginate-page]
     :sidebar [sidebar-page]
     :tab [tab-page]
+    :table [table-page]
     [placeholder-page]))
 
 (defn greeting []
@@ -133,5 +170,5 @@
 
 (defn ^:dev/after-load init []
   (println "Hello World")
-  (store/assoc-in! (utils/spath :ui.menu) :tab)
+  (store/assoc-in! (utils/spath :ui.menu) :table)
   (mount-app))

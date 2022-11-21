@@ -4,7 +4,7 @@
             [theophilusx.yorick.basic :as basic]
             [theophilusx.yorick.utils :refer [cs]]))
 
-(defn card-header
+(defn- card-header
   "Generate a card header from a map of values.
   This is an internal function used by the card component to generate a header
   for the card based on a map of values. The map supports the following keys
@@ -16,15 +16,15 @@
   | `:icon-action` | A function to execute when the icon is clicked             |
   | `:class`       | A string or vector of strings representing CSS class names |"
   [{:keys [title icon icon-action class]}]
-  [:header.card-header {:class (cs class)}
-   [:p.card-header-title title]
+  [:header.card-header 
+   [:p.card-header-title {:class (cs class)} title]
    (when icon
      [basic/a [icons/icon-component icon]
       :class "card-header-icon"
       :on-click (when (fn? icon-action)
                   #(icon-action %))])])
 
-(defn card-footer
+(defn- card-footer
   "Generates a card footer from a map of values.
   Internal function used to generate the card footer from a map. The map
   supports the following keys

@@ -1,7 +1,8 @@
 (ns theophilusx.yorick.input
   "A collection of convenience functions and components to support obtaining
   input from the user."
-  (:require [theophilusx.yorick.utils :refer [cs spath value-of str->keyword]]
+  (:require [theophilusx.yorick.utils :refer [cs spath value-of
+                                              str->keyword make-value]]
             [theophilusx.yorick.icon :as icons]
             [theophilusx.yorick.store :as store]
             [reagent.core :as r]))
@@ -206,8 +207,7 @@
   (let [doc (or store
                 (r/atom {}))
         btns (mapv (fn [b]
-                     (let [v (or (:value b)
-                                 (str->keyword (:title b)))]
+                     (let [v (make-value b "button-")]
                        (when (:checked b)
                          (store/assoc-in! doc (spath sid) v))
                        {:title (:title b)
@@ -386,11 +386,11 @@
   | `:disabled`     | boolean. If true, this option will be disabled            |
   | `:label`        | A shorter label to be used rather than the title          |
   | `:selected`     | Boolean. True if this option is to be selected by default |"
-  [title & {:keys [value option-class disabled label selected]}]
+  [title & {:keys [option-class disabled label selected] :as opts}]
   [:option {:class option-class
             :disabled disabled
             :label label
-            :value (str (or value title))
+            :value (make-value opts "option-")
             :selected selected}
    title])
 
@@ -436,22 +436,22 @@
                  change-fn
                  #(store/assoc-in! (spath sid) (value-of %) :store doc))]
     (store/assoc-in! (spath sid) (:value (default-option options)) :store doc)
-    (fn [sid options & {:keys [select-class multiple rounded select-size
+    (fn [sid options & {:keys [select-class multiple? rounded? select-size
                               icon-data size attrs]}]
       [:div.control {:class (cs (when icon-data
                                   (icons/icon-control-class icon-data)))}
-       [:div.select {:class (cs (when rounded "is-rounded")
+       [:div.select {:class (cs (when rounded? "is-rounded")
                                 (case select-size
                                   :small  "is-small"
                                   :medium "is-medium"
                                   :large  "is-large"
                                   nil)
-                                (when multiple "is-multiple"))}
+                                (when multiple? "is-multiple"))}
         (into
          [:select (merge attrs {:class (cs select-class)
                                 :id        (name sid)
                                 :name      (name sid)
-                                :multiple  (when multiple true false)
+                                :multiple  (if multiple? true false)
                                 :size      (when size
                                              (str size))
                                 :on-change chg-fn})]

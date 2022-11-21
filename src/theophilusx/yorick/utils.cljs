@@ -86,3 +86,17 @@
   "Format the `string` argument `num-str` with commas to indicate thousands."
   [num-str]
   (.format (NumberFormat. Format/DECIMAL) num-str))
+
+(defn make-value
+  "Generate a value based on map and optional default prefix.
+  If the map has a `:value` key, use it as the value, otherwise,
+  convert the value associated with the `:title` key. If map has
+  neither key, generate a unique keyword using gensym, using the
+  second argument `v` as the prefix. If `v` is not provided, default to
+  `var-`."
+  ([m]
+   (make-value m "val-"))
+  ([m v]
+   (or (:value m)
+       (str->keyword (or (:title m)
+                         (name (gensym v)))))))

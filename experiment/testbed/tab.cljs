@@ -70,4 +70,3 @@
                  :id (:id t)
                  :icon-data (:icon-data t)
                  :on-click #(reset! active-cur (:value t))]]))])))
-

@@ -1,15 +1,18 @@
 (ns testbed.paginate
-  "Provides a data pagination component to present data in pages of information."
+  "Provides a data pagination component to present data in pages of information.
+  Component accepts a vector of records and a render function used to display
+  a page of records. Optional keyword arguments are supported for controlling
+  number of records per page and appearance of page index."
   (:require [reagent.core :as r]
             [theophilusx.yorick.basic :as basic]
             [theophilusx.yorick.utils :refer [cs]]))
 
-(defn get-page
+(defn- get-page
   "Return the page associated with a page number."
   [pages page]
   (get pages (keyword (str "page-" page))))
 
-(defn make-link
+(defn- make-link
   "Create a link item for specified page."
   [current page]
   [:li
@@ -40,7 +43,11 @@
    :on-click (when-not (= @current max)
                #(swap! current inc))])
 
-(defn make-index [current max-page]
+(defn make-index
+  "Generate the pagination links for navigating pages of records.
+  `current` is the current page number and `max-page` is the maximum
+  page number."
+  [current max-page]
   (cond
     (<= max-page 4) (into [:ul.pagination-list]
                           (for [i (range 1 (inc max-page))]
@@ -91,4 +98,3 @@
         [next-page current @max-page]
         [make-index current @max-page]]
        (render-fn (get-page @pages @current))])))
-

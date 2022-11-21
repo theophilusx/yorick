@@ -1,14 +1,31 @@
 (ns testbed.navbar
-  "A basic navibatgion bar component. Uses a storage identifier (aka sid) to
-  determine where to store data regarding the state of the navbar. "
+  "A basic navigation bar component.
+  The navigation bar is a horizontal menu consisting of links, drop down
+  and generic containers for arbitrary content. This component also supports
+  a brand item, which may also contain a `burger` menu on mobile devices. 
+  Uses a storage identifier (aka sid) to determine where to store state
+  data regarding the navbar. Creates a map at the `sid` location which
+  contains the following keys
+
+  | Key               | Description                                        |
+  |-------------------|----------------------------------------------------|
+  | `burger-active?   | True if the burger menu is active (mobile device)  |
+  | `active-dropdown` | Contains the ID of any currently active dropdown   |
+  |                   | menu. Nil if no dropdown menus are active          |
+  | `active-item`     | Contains the ID of the currently active (selected) |
+  |                   | menu item                                          |
+  | `transparent?`    | True if the navbar is transparent. (internal state)|
+
+  User code can use the value of `burger-active?` and `active-item` to trigger
+  Javascript or CSS in order to modify behaviour/appearance."
   (:require [theophilusx.yorick.utils :refer [cs spath str->keyword]]
             [theophilusx.yorick.store :as store]
             [theophilusx.yorick.basic :as basic]))
 
 (defn nav-link
-  "Navbar link definition helper. Returns a map representing the basic link
-  definition. The `title` argument used as the text of the link. Supported
-  optional keyword arguments are
+  "Returns a navigation link item.
+  Returns a map defining a navbar link item.The `title` argument is
+  used as the text of the link. Supported optional keyword arguments are
 
   | Keyword   |                                                             |
   |-----------|-------------------------------------------------------------|
@@ -27,10 +44,11 @@
    :icon-data icon})
 
 (defn nav-container
-  "Navbar container definition. Provides a component to enable embedding of
-  arbitrary content into a navbar. The `contents` argument is any hiccup
-  component or string to be embedded into the navbar. Optional keyword
-  arguments supported are
+  "Returns a navigation container item.
+  A navigation container item is a generic container component which can be
+  defined to hold almost any type of content. E.g. a search box.The `contents`
+  argument is any hiccup component or string to be embedded into the navbar.
+  Optional keyword arguments supported are
 
   | Keyword   |                                                             |
   |-----------|-------------------------------------------------------------|
@@ -44,7 +62,10 @@
    :class class})
 
 (defn nav-dropdown
-  "A navbar dropdown menu component.
+  "Returns a navbar drop down menu item.
+  Provides a basic drop down menu which includes a down arrow to indicate it
+  is a menu. The drop down menu can contain link, container or divider items.
+  
   | Argument  |                                                             |
   |-----------|-------------------------------------------------------------|
   | `title`   | The title for the parent of the drop down menu. This is     |
@@ -73,13 +94,22 @@
    :icon-data icon})
 
 (defn nav-divider 
-  "Generates a divider used to separate items in a dropdown menu."
+  "Returns a navbar divider item.
+  An item used to separate items in a drop down menu."
   []
   {:type :divider
    :id (gensym "divider-")})
 
 (defn- make-link
-  "Generate a link component from a link definition map."
+  "Generate a link component from a link definition map.
+
+  | Argument       | Description                                      |
+  |----------------|--------------------------------------------------|
+  | `active-cur`   | A cursor linked to the `active-item` key in the  |
+  |                | default store.                                   |
+  | `dropdown-cur` | A cursor linked to the `active-dropdown` key in  |
+  |                | the default store.                               |
+  | `l`            | The link definition map as returned by `nav-link`|"
   [active-cur dropdown-cur l]
   [basic/a (:title l) :class (cs "navbar-item" (:class l)
                                  (when (= @active-cur (:value l))
@@ -104,7 +134,13 @@
   [:hr.navbar-divider {:id (:id m)}])
 
 (defn- make-dropdown
-  "Build a dropdown menu from a sid and a dropdown definition map."
+  "Build a dropdown menu from a sid and a dropdown definition map.
+
+  | Argument       | Description                                                 |
+  |----------------|-------------------------------------------------------------|
+  | `sid`          | The storage identifier associated with the navbar           |
+  | `active-cur`   | A cursor connected to the `active-item` key in the store    |
+  | `dropdown-cur` | A cursor connected to the `active-dropdown` key in the store|"
   [sid active-cur dropdown-cur d]
   [:div.navbar-item.has-dropdown {:class (cs (when (:hoverable? d) "is-hoverable")
                                              (when (= @dropdown-cur (:id d)) "is-active"))}
@@ -125,8 +161,8 @@
                (println (str "Unexpected value: " (:type c))))))])
 
 (defn- make-item
-  "Given a navbar item definition map, generate a corresponding navbar item
-  component.
+  "Given a navbar item definition map, generate a corresponding component.
+
   | Keyword        |                                                             |
   |----------------|-------------------------------------------------------------|
   | `sid`          | The storage identifier associated with a navbar.            |
@@ -140,8 +176,9 @@
     :container [make-container dropdown-cur m]
     :dropdown [make-dropdown sid active-cur dropdown-cur m]))
 
-(defn nav-menu
-  "Generate the navbar menus.
+(defn- nav-menu
+  "Build the navbar menus.
+
   | Argument  |                                                             |
   |-----------|-------------------------------------------------------------|
   | `sid`     | The storage identifier used with the navbar                 |
@@ -194,7 +231,7 @@
           [:span {:aria-hidden "false"}]])])))
 
 (defn navbar
-  "Basic navigation bar.
+  "Basic navigation bar component.
 
   | Argument      | Description                                          |
   |---------------|------------------------------------------------------|
@@ -205,7 +242,7 @@
   |               | for navbar menu items e.g. `nav-link`, `nav-dropdown`|
   |               | and `nav-container`                                  |
 
-  The function also accepts the following optional keyword arguments
+  The following optional keyword arguments are also supported.
 
   | Keyword        | Description                                        |
   |----------------|----------------------------------------------------|
@@ -227,7 +264,6 @@
   | `:class`       | A string or vector of strings specifying additional|
   |                | CSS classes to add to the navbar element           |
   | `:shadow?`     | When true, add a subtle shadow effect              |"
-
   [sid _ & {:keys [default transparent?]}]
   (store/assoc-in! (spath sid) {:burger-active? false
                                 :active-dropdown nil
@@ -247,5 +283,3 @@
      (when brand
        [nav-brand sid brand has-burger?])
      [nav-menu sid menu]]))
-
-

@@ -1,7 +1,6 @@
 (ns testbed.table
   "Provides a component to render an HTML table of data."
-  (:require [reagent.core :as r]
-            [theophilusx.yorick.store :as store]
+  (:require [theophilusx.yorick.store :as store]
             [theophilusx.yorick.utils :refer [cs]]))
 
 (defn cell
@@ -125,8 +124,7 @@
   | `:fullwidth?`| if true, tables are rendered to fill the full width of the  |
   |              | enclosing container.                                        |"
   [_ & _]
-  (let [doc (r/atom {:selected-row nil})
-        active-cur (store/cursor :selected-row)] 
+  (let [active-cur (store/cursor :selected-row)] 
     (fn [body & {:keys [classes header footer select? bordered? striped?
                        narrow? hover? fullwidth?]}]
       [:table.table {:class [(cs (:table classes)
@@ -144,35 +142,4 @@
   argument is a table component."
   [t]
   [:div.table-container t])
-
-(def table-header [[(cell "Group A" :colspan 2 :type :th) (cell "Group B" :colspan 2 :type :th)
-                    (cell "Group C" :colspan 2 :type :th) (cell "Group D" :colspan 2 :type :th)]
-                   [(cell "A1" :type :th) (cell "A2" :type :th)
-                    (cell "B1" :type :th) (cell "B2" :type :th)
-                    (cell "C1" :type :th) (cell "C2" :type :th)
-                    (cell "D1" :type :th) (cell "D2" :type :th)]])
-
-(def table-data [[(cell 1) (cell 2) (cell 3) (cell 4)
-                   (cell "A") (cell "B") (cell "C") (cell "D")]
-                  [(cell 5) (cell 6) (cell 7) (cell 8)
-                   (cell "AA") (cell "BB") (cell "CC") (cell "DD")]])
-
-(def table-footer [[(cell 6) (cell 8) (cell 10) (cell 12) (cell 6) (cell 8) (cell 10) (cell 12)]
-                   [(cell 14 :colspan 2) (cell 22 :colspan 2) (cell 14 :colspan 2) (cell 22 :colspan 2)]])
-
-(def table-data2 (into []
-                       (for [r (range 1 3)]
-                         (into []
-                               (for [c (range 1 44)]
-                                 (cell (* r c)))))))
-
-(defn table-page []
-  [:<>
-   [:h1 "Basic Table"]
-   [:div.table-container
-    [table table-data :header table-header :footer table-footer]]
-   [:h1 "Scrollable Table"]
-   [scrollable-table [table table-data2]]
-   [:h1 "Try again!"]
-   [:div.table-container [table table-data2]]])
 

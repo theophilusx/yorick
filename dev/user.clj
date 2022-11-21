@@ -17,7 +17,7 @@
 
 (defn cljs-repl
   ([]
-   (cljs-repl :testbed))
+   (cljs-repl :demo))
   ([build-id]
    (start-shadow-cljs build-id)
    ((jit shadow.cljs.devtools.api/nrepl-select) build-id)))

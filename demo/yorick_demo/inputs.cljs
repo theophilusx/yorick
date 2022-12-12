@@ -1,1042 +1,799 @@
 (ns yorick-demo.inputs
-  (:require [theophilusx.yorick.card :as c]
-            [theophilusx.yorick.input :as i]
+  (:require [theophilusx.yorick.input :as i]
             [reagent.core :as r]
             [theophilusx.yorick.icon :as icons]
             [theophilusx.yorick.tab :as t]
-            [theophilusx.yorick.store :refer [get-in global-state]]
-            [theophilusx.yorick.utils :refer [spath]]))
+            [theophilusx.yorick.store :refer [cursor]]
+            [theophilusx.yorick.utils :refer [spath]]
+            [yorick-demo.comp :refer [doc-comp doc-args example]]))
+
+(def field-eg "
+[:p \"This is a basic field example\"]
+[input/field [:p \"Field contents\"]]
+[:p \"This is a field with a label\"]
+[:input/field [:p \"Field contents\"] 
+  :label \"field label\"]
+[:p \"This is a basic field with label and additional classes\"]
+[input/field [:p \"Field contents\"] :label \"field label\"
+  :classes {:field \"has-background-danger\" 
+  :label \"has-text-warning\"}]
+")
 
 (defn field-component []
   [:div.columns
-   [:div.column.is-half
-    [c/card
-     [:div.content
-      [:p
-       "The " [:strong "field"] " component is a general purpose component "
-       "used as a container for other input components. The component has a "
-       "mandatory `body` argument, which represents the contents of the field. "
-       "This is typically an input component or a `<div>` element with the "
-       "`control` CSS class associated with it. The component also supports "
-       "two optional keyword arguments."]
-      [:ul
-       [:li [:strong ":label"] " - a text label to associate with the input "
-        "component"]
-       [:li [:strong ":classes"] " - a map of CSS class names to add. Supported "
-        "map keys are `:field` for CSS classes to add to the field div and "
-        "`:label` for CSS classes to add to the label component."]]]
-     :header {:title "field - a general purpose container for input fields"}]]
    [:div.column
-    [:pre
-     [:code
-      "[:p \"This is a basic field example\"]" [:br]
-      "[input/field [:p \"Field contents\"]]" [:br]
-      "[:p \"This is a field with a label\"]" [:br]
-      "[:input/field [:p \"Field contents\"] " [:br]
-      "  :label \"field label\"]" [:br]
-      "[:p \"This is a basic field with label and additional classes\"]" [:br]
-      "[input/field [:p \"Field contents\"] :label \"field label\"" [:br]
-      "  :classes {:field \"has-background-danger\" " [:br]
-      "  :label \"has-text-warning\"}]"]]
-    [:div.box
-     [:p "This is a basic field example"]
-     [i/field [:p "Field contents"]]
-     [:p "This is a field with a label"]
-     [i/field [:p "Field contents"] :label "field label"]
-     [:p "This is a basic field with label and additional classes"]
-     [i/field
-      [:p "Field contents"]
-      :label "field label"
-      :classes {:field "has-background-danger" :label "has-text-warning"}]]]])
+    [doc-comp "field - a general purpose container for input fields"
+     [:p "The " [:strong "field"] " component is a general purpose component 
+       used as a container for other input components."]
+     [["body"
+       "the contents of the field. This is typically an input component or a
+<div> element with the 'control' CSS class."]]
+     [[":label" "A text label to associate with the input component"]
+      [":classes" "A map of CSS class names to add. Supported keys are :field and :label.
+Values can be either a string or a vector of strings specifying CSS class names"]]]]
+   [:div.column
+    [example field-eg [:<> [:p "This is a basic field example"]
+                       [i/field [:p "Field contents"]]
+                       [:p "This is a field with a label"]
+                       [i/field [:p "Field contents"] :label "field label"]
+                       [:p "This is a basic field with label and additional classes"]
+                       [i/field
+                        [:p "Field contents"]
+                        :label "field label"
+                        :classes {:field "has-background-danger" :label "has-text-warning"}]]]]])
+
+(def horiz-eg1 "
+[:p \"A basic horizontal field example\"]
+[input/horizontal-field \"Field Label\" 
+  [:p \"field contents\"]]
+[:p \"A basic horizontal field with additional CSS classes\"]
+[input/horizontal-field \"Field Label\" [:p \"field contents\"]
+  :classes {:field \"has-background-danger\"
+            :label \"has-text-warning\"
+            :body \"has-background-primary\"}]
+")
 
 (defn horizontal-field-component []
   [:div.columns
-   [:div.column.is-half
-    [c/card
-     [:div.content
-      [:p
-       "The " [:strong "horizontal-field"] " component is similar to the "
-       [:strong "field"] " component, except that instead of putting label "
-       "and field elements vertically, they are placed horizontally. The "
-       "component has two mandatory arguments, `label` and `body`. The `label` "
-       "is text to be used as the field label. The `body` is the contents of "
-       "the field. The component also supports an optional keyword argument "
-       "`:classes`, which is a map containing CSS class names or vectors of "
-       "CSS class names. The supported keys in the map are `:field` for CSS "
-       "classes to be associated with the outer field element, `:label` for "
-       "CSS classes to associate with the field label and `:body` for CSS "
-       "classes to associate with the contents of the field."]]
-     :header {:title "horizontal-field - a horizontal field container"}]]
    [:div.column
-    [:pre
-     [:code
-      "[:p \"A basic horizontal field example\"]" [:br]
-      "[input/horizontal-field \"Field Label\" " [:br]
-      "  [:p \"field contents\"]]" [:br]
-      "[:p \"A basic horizontal field with additional CSS classes\"]" [:br]
-      "[input/horizontal-field \"Field Label\" [:p \"field contents\"]" [:br]
-      "  :classes {:field \"has-background-danger\"" [:br]
-      "            :label \"has-text-warning\"" [:br]
-      "            :body \"has-background-primary\"}]"]]
-    [:div.box
-     [:p "A basic horizontal field exmaple"]
-     [i/horizontal-field "Field Label" [:p "field contents"]]
-     [:p "A basic horizontal field with additional CSS classes"]
-     [i/horizontal-field "Field Label" [:p "field contents"]
-      :classes {:field "has-background-danger"
-                :label "has-text-warning"
-                :body "has-background-primary"}]]]])
+    [doc-comp "horizontal-field - a horizontal field container"
+     [:p "The " [:strong "horizontal-field"] " component is similar to the "
+      [:strong "field"] " component, except that instead of putting label "
+      "and field elements vertically, they are placed horizontally."]
+     [["label" "Text to be used as the field label"]
+      ["body" "Contents for the field"]]
+     [[":classes" "A map specifying CSS classes to add. The map supports the keys :field and :label. The value
+is either a string or a vector of stirings which specify CSS class names"]]]]
+   [:div.column
+    [example horiz-eg1 [:<>
+                        [:p "A basic horizontal field exmaple"]
+                        [i/horizontal-field "Field Label" [:p "field contents"]]
+                        [:p "A basic horizontal field with additional CSS classes"]
+                        [i/horizontal-field "Field Label" [:p "field contents"]
+                         :classes {:field "has-background-danger"
+                                   :label "has-text-warning"
+                                   :body "has-background-primary"}]]]]])
+
+(def input-eg1 "
+[:p \"A basic text input field\"]
+[input/field [input/input :text :value]]
+(let [doc (reagent/atom {})]
+      eg-fn (fn []
+              [:<>
+                [:p \"Basic password input field example\"]
+                [input/field 
+                  [input/input :password :pwd :store doc
+                     :attrs {:placeholder \"enter password\"}]
+                 :label \"Password:\"] 
+                [:p (str \"Value entered: \" (:pwd @doc))]])]
+  [eg-fn])
+")
 
 (defn input-component []
   [:div.columns
-   [:div.column.is-half
-    [c/card
-     [:div.content
-      [:p
-       "A basic text input component. This component is typically wrapped "
-       "inside a " [:em "field"] " or " [:em "horizontal-field"] " component. "
-       "The " [:code "type"] " argument specifies the type of input field. The "
-       "supported types are keywords derived from the HTML5 input types e.g. "
-       [:code ":text"] ", " [:code ":email"] ", " [:code ":password"] ", etc."
-       "The " [:code ":sid"] " argument specifies a storage identifier for the "
-       "user input. A storage identifier is a " [:em "keyword"] " that specifies "
-       "where the user input data will be stored within the document model "
-       "atom. Any period in the keyword will be treated as a path separator to "
-       "create key hierarchies for storage e.g. " [:code ":value"] ", "
-       [:code ":my-form.value"] "."]
-      [:p
-       "The " [:code "input"] " component also supports a number of optional "
-       "keyword arguments"]
-      [:ul
-       [:li [:strong ":model"] " - a reagent atom used as the document model "
-        "for storage"]
-       [:li [:strong "change-fn"] " - a function of one argument which will be "
-        "called when the input data changes. Manages the storage of input "
-        "data in the document model atom"]
-       [:li [:strong ":classes"] " - a map of CSS class names to add to HTML "
-        "elements which make up the component. Each value is either a string "
-        "representing a CSS class name or a vector of strings representing "
-        "CSS class names. Supported keys are " [:code ":control"] " and "
-        [:code ":input"] "."]
-       [:li [:strong ":icon-data"] " - either an icon-data map or a vector of "
-        "icon-data maps. See " [:strong "theophilusx.yorick.icon"] " for "
-        "details on the " [:code "icon-data"] " map."]
-       [:li [:strong ":attrs"] " - a map of HTML attribute values. Keys are "
-        "the HTML attribute names as keywords e.g. `:placeholder`"]]]
-     :header {:title "input - general purpose input component"}]]
    [:div.column
-    [:pre
-     [:code
-      "[:p \"A basic text input field\"]" [:br]
-      "[input/field [input/input :text :value]]" [:br]
-      "(let [doc (reagent/atom {})]" [:br]
-      "      eg-fn (fn []" [:br]
-      "              [:<>" [:br]
-      "                [:p \"Basic password input field example\"]" [:br]
-      "                [input/field " [:br]
-      "                  [input/input :password :pwd :model doc" [:br]
-      "                     :attrs {:placeholder \"enter password\"}]" [:br]
-      "                 :label \"Password:\"] " [:br]
-      "                [:p (str \"Value entered: \" (:pwd @doc))]])]" [:br]
-      "  [eg-fn])"]]
-    [:div.box
-     [:p "A basic text input field"]
-     [i/field [i/input :text :value]]
-     (let [doc (r/atom {})
-           eg-fn (fn []
-                   [:<>
-                    [:p "Basic password input field example"]
-                    [i/field [i/input :password :pwd :model doc
-                              :attrs {:placeholder "enter password"}]
-                     :lable "Password:"]
-                    [:p (str "Value entered: " (:pwd @doc))]])]
-       [eg-fn])]]])
+    [doc-comp "input - general purpose input component"
+     [:p "A basic text input component. This component is typically wrapped 
+       inside a " [:code "field"] " or " [:code "horizontal-field"] " component."]
+     [["type"
+       "Specifies the input type. Supported types are keywords derived
+from HTML5 input types e.g. :text"]
+      ["sid" "A storage identifier."]]
+     [[":store" "A reagent atom used to stroe the state (input) for the field"]
+      [":change-fn" "A change function which is called when the content of the input changes."]
+      [":classes" "Map of CSS class names. Supported keys are :control and :input.
+Values can be either a stgring or a vector of strings specifying CSS class names."]
+      [":icon-data" "An icon data map specifying an icon to add to the input field."]
+      [":attrs" "A map of HTML attributes. Each key is a kewordized name of an HTML attribute and the
+value is the value to set that attribute to."]]]]
+   [:div.column
+    [example input-eg1 [:<>
+                        [:p "A basic text input field"]
+                        [i/field [i/input :text :value]]
+                        (let [doc (r/atom {})
+                              eg-fn (fn []
+                                      [:<>
+                                       [:p "Basic password input field example"]
+                                       [i/field [i/input :password :pwd :store doc
+                                                 :attrs {:placeholder "enter password"}]
+                                        :label "Password:"]
+                                       [:p (str "Value entered: " (:pwd @doc))]])]
+                          [eg-fn])]]]])
+
+(def input-field-eg "
+[:p \"Example input-field component\"]
+(let [doc (r/atom {})
+      frm (fn []
+            [:<>
+              [input-field \"First Name\" :text 
+                 :name.first :model doc]
+              [input-field \"Last Name\" :text 
+                 :name.last :model doc]
+              [:p (str \"Result: \" @doc)])]]
+  [frm])")
 
 (defn input-field-component []
   [:div.columns
-   [:div.column.is-half
-    [c/card
-     [:div.content
-      [:p
-       "The " [:strong "inut-field"] " component is a convenience component "
-       "which combines the " [:strong "field"] " and " [:strong "input"]
-       " components. The " [:code "label"] " argument specifies a string to "
-       "use as the label for the field. The " [:code "type"] " argument is a "
-       "keyword representing the input type and corresponds to the HTML input "
-       "element types e.g. :text, :email, :password etc. The " [:code "sid"]
-       " argument is a storage identifier keyword which specifies the location "
-       "to store data within the document model atom e.g. :my-form.field-value "
-       "This component also supports a number of optional keyword arguments"]
-      [:ul
-       [:li [:strong ":classes"] " - a map of strings or vector of strings "
-        "that represent CSS class names. Supported keys are "
-        [:code ":field, :label and :input"]]
-       [:li [:strong ":icon-data"] " - an icon-data map or vector of icon-data "
-        "maps. See " [:code "theophilusx.yorick.icon"] " for details"]
-       [:li [:strong ":model"] " - a reagent atom to be used as the document "
-        "model"]
-       [:li [:strong ":change-fn"] " - a function of one argument which is "
-        "called when the input data changes to update the data stored in the "
-        "document model atom at the location specified by the " [:code "sid"]]
-       [:li [:strong ":attrs"] " - a map of HTML attribute values. Keys are "
-        "the HTML attribute names as keywords e.g. `:placeholder`"]]]
-     :header {:title "input-field - an input field convenience component"}]]
+   [:div.column.
+    [doc-comp "input-field - an input field convenience component"
+     [:p "The " [:strong "inut-field"] " component is a convenience component "
+      "which combines the " [:strong "field"] " and " [:strong "input"]
+      " components. "]
+     [["label" "A text label to associate with the input field"]
+      ["type" "The type of the input field. A keywrodised HTML input type e.g. :email"]
+      ["sid" "A storage identifier which specifies the key to use when saving the input into the store"]]
+     [[":classes" "A map of CSS class names. Supported keys are :field, :label and :input. Values
+are either strings or vectors of strings specifying CSS class names"]
+      [":icon-data" "An icon data map specifying an icon to add to the input field."]
+      [":stroe" "A reagent atom used as the data store for this input."]
+      [":change-fn" "A function of one argument which is executed when the content of the input changes.
+Argument is the new input."]
+      [":attrs" "Map of HTML attributes. The keys are keywordized HTML attribute names"]]]]
    [:div.column
-    [:pre
-     [:code
-      "[:p \"Example input-field component\"]" [:br]
-      "(let [doc (r/atom {})" [:br]
-      "      frm (fn []" [:br]
-      "            [:<>" [:br]
-      "              [input-field \"First Name\" :text " [:br]
-      "                 :name.first :model doc]" [:br]
-      "              [input-field \"Last Name\" :text " [:br]
-      "                 :name.last :model doc]" [:br]
-      "              [:p (str \"Result: \" @doc)])]]" [:br]
-      "  [frm])"]]
-    [:div.box
-     [:p "Example input-field component"]
-     (let [doc (r/atom {})
-           frm (fn []
-                 [:<>
-                  [i/input-field "First Name" :text :name.first :model doc]
-                  [i/input-field "Last Name" :text :name.last :model doc]
-                  [:p (str "Result: " @doc)]])]
-       [frm])]]])
+    [example input-field-eg [:<>
+                             [:p "Example input-field component"]
+                             (let [doc (r/atom {})
+                                   frm (fn []
+                                         [:<>
+                                          [i/input-field "First Name" :text :name.first :model doc]
+                                          [i/input-field "Last Name" :text :name.last :model doc]
+                                          [:p (str "Result: " @doc)]])]
+                               [frm])]]]])
+
+(def checkbox-eg "
+[:p \"A basic checkbox example\"]
+[input/checkbox \"I am a checkbox\" :value]
+(let [doc (r/atom {})
+      frm (fn []
+            [:<>
+              [:p \"Another checkbox example\"]
+              [input/checkbox \"Check me!\" :form.checkme 
+                 :store doc]
+              [:p (str \"Result: \" @doc)]])]
+  [frm])")
 
 (defn checkbox-component []
   [:div.columns
-   [:div.column.is-half
-    [c/card
-     [:div.content
-      [:p
-       "The " [:strong "checkbox"] " component provides a basic checkbox "
-       "input component. The mandatory argument " [:code "label"] " is a string "
-       "used as the label to associate with the checkbox. The " [:code "sid"]
-       " argument is a storage identifier which determines where the input will "
-       "be stored within the document model atom. This component also supports "
-       "a number of optional keyword arguments"]
-      [:ul
-       [:li [:strong ":model"] " - a reagent atom used as the document model"]
-       [:li [:strong ":change-fn"] " - a function of 1 argument which is called "
-        "when the input changes to update the document model atom"]
-       [:li [:strong ":classes"] " - a map of strings or vector of strings "
-        "representing CSS class names. Supported keys are "
-        [:code ":field, :control, :label and :input"]]
-       [:li [:strong ":checked"] " - boolean value used to set the HTML checked "
-        "attribute"]
-       [:li [:strong ":attrs"] " - a map of HTML attribute values. Keys are the "
-        "HTML attribute names as a keyword e.g. `:required`"]]]
-     :header {:title "checkbox - a basic checkbox component"}]]
    [:div.column
-    [:pre
-     [:code
-      "[:p \"A basic checkbox example\"]" [:br]
-      "[input/checkbox \"I am a checkbox\" :value]" [:br]
-      "(let [doc (r/atom {})" [:br]
-      "      frm (fn []" [:br]
-      "            [:<>" [:br]
-      "              [:p \"Another checkbox example\"]" [:br]
-      "              [input/checkbox \"Check me!\" :form.checkme " [:br]
-      "                 :model doc]" [:br]
-      "              [:p (str \"Result: \" @doc)]])]" [:br]
-      "  [frm])"]]
-    [:div.box
-     [:p "A basic checkbox example"]
-     [i/checkbox "I am a checkbox" :value]
+    [doc-comp "checkbox - a basic checkbox component"
+     [:p "The " [:strong "checkbox"] " component provides a basic checkbox "
+      "input component."]
+     [["label" "A text label to associate with the checkbox input field."]
+      ["sid" "A storage identifier which provides the path into the store where input will be recorded"]]
+     [[":store" "A reagent atom which is used to store the state of the checkbox"]
+      [":change-fn" "A function of one argument which is evaluated when the state of the checkbox chagnes"]
+      [":classes" "A map of CSS class names. Supported keys are :field, :control, :label and input.
+The values associated with each key can be a string or a vector of strings which specify CSS class names."]
+      [":checked?" "A boolean which is true if this HTML checked attribute shold be set for this checkbox."]
+      [":attrs" "A map of HTML attributes where keys are keywordized HTML attribute names."]]]]
+   [:div.column
+    [example checkbox-eg [:<>
+                          [:p "A basic checkbox example"]
+                          [i/checkbox "I am a checkbox" :value]
+                          (let [doc (r/atom {})
+                                frm (fn []
+                                      [:<>
+                                       [:p "another checkbox example"]
+                                       [i/checkbox "Check me!" :form.checkme :store doc]
+                                       [:p (str "Result: " @doc)]])]
+                            [frm])]]]])
+
+(def radio-ex "
+  [:p \"A basic radio button group\"]
+     [i/radio :value [{:title \"Red\"}
+                      {:title \"Green\"}
+                      {:title \"Blue\"}]]
      (let [doc (r/atom {})
            frm (fn []
                  [:<>
-                  [:p "another checkbox example"]
-                  [i/checkbox "Check me!" :form.checkme :model doc]
-                  [:p (str "Result: " @doc)]])]
-       [frm])]]])
+                  [:p \"Another radio button example\"]
+                  [i/radio :pet.type [{:title \"Dog\"
+                                       :value :dog
+                                       :checked true}
+                                      {:title \"Cat\"
+                                       :value :cat}
+                                      {:title \"Diamond Python\"
+                                       :value :snake}]
+                   :store doc]
+                  [:p (str \"Result: \" @doc)]])]
+       [frm])")
 
 (defn radio-component []
   [:div.columns
-   [:div.column.is-half
-    [c/card
-     [:div.content
-      [:p
-       "The " [:strong "radio"] " component provides a basic radio button "
-       "component. The " [:code "sid"] " argument is a keyword which specifies "
-       "where to store the input value within the document model atom. "
-       "The " [:code "labels"] " argument is a vector of maps which define the "
-       "buttons for the component. The following keys are supported "]
-      [:ul
-       [:li [:strong ":title"] " - a string to be used as the label for a "
-        "button"]
-       [:li [:strong ":value"] " - the value to be stored in the document model "
-        "atom when this button is selected. If not defined, the :title value, "
-        "converted to a keyword, will be used"]
-       [:li [:strong ":checked"] " - a boolean value. If true, that button will "
-        "be rendered checked. Only one button should have this attribute set to "
-        "true"]]
-      [:p
-       "The component also supports a number of optional keyword arguments"]
-      [:ul
-       [:li [:strong ":model"] " - a reagent atom used as the document model "
-        "for this component"]
-       [:li [:strong ":change-fn"] " - a function of 1 argument which is called "
-        "when input for the component changes. The argument is the new value to "
-        "be stored in the document model atom"]
-       :li [:strong ":classes"] " - a map of strings or vectors of strings "
-       "that represent CSS class names. Supported keys are "
-       [:code ":control"] ", " [:code ":input"] " and " [:code ":label"]
-       [:li [:strong ":attrs"] " - a map of HTML attribute values. Keys are the "
-        "HTML attribute name as a keyword e.g. `:disabled`"]]]
-     :header {:title "radio - a basic radio button component"}]]
    [:div.column
-    [:pre
-     [:code
-      "[:p \"A basic radio button group\"]" [:br]
-      "[input/radio :value [{:title \"Red\"}" [:br]
-      "                     {:title \"Green\"}" [:br]
-      "                     {:title \"Blue\"}]]" [:br]
-      [:br]
-      "(let [doc (r/atom {})" [:br]
-      "      frm (fn []" [:br]
-      "            [:<>" [:br]
-      "              [:p \"Another radio button example\"]" [:br]
-      "              [input/radio :pet.type [{:title \"Dog\"" [:br]
-      "                                       :value :dog" [:br]
-      "                                       :checked true}" [:br]
-      "                                      {:title \"Cat\"" [:br]
-      "                                       :value :cat}" [:br]
-      "                                      {:title \"Diamond Python\"" [:br]
-      "                                       :value :snake}]" [:br]
-      "                :model doc]" [:br]
-      "              [:p (str \"Result: \" @doc)]])]" [:br]
-      "   [frm])"]]
-    [:div.box
-     [:p "A basic radio button group"]
-     [i/radio :value [{:title "Red"} {:title "Green"} {:title "Blue"}]]
-     (let [doc (r/atom {})
-           frm (fn []
-                 [:<>
-                  [:p "Another radio button example"]
-                  [i/radio :pet.type [{:title "Dog"
-                                       :value :dog
-                                       :checked true}
-                                      {:title "Cat"
-                                       :value :cat}
-                                      {:title "Diamond Python"
-                                       :value :snake}]
-                   :model doc]
-                  [:p (str "Result: " @doc)]])]
-       [frm])]]])
+    [doc-comp "radio - a basic radio button component"
+     [:<>
+      [:p "The " [:strong "radio button"] " component provides a basic radio button "
+       "style input component. The radio buttons are defined by maps with the following keys:"]
+      [doc-args [[":title" "The text or label to associate with a button"]
+                 [":value" "The value to be recorded in the state atom when the button is selected.
+If not set, default to using the :title value converted to a keyword."]
+                 [":checked?" "If true, set this button to checked by default when first rendered."]]]]
+     [["sid" "A storage identifier used as the key for storing radio button state"]
+      ["buttons" "A vector of maps defining the radio buttons."]]
+     [[":store" "Specify a reagent atom to use as the store for tracking state. Defaults
+to a private store if none specified."]
+      [":change-fn" "A function of one argument called when the state of the component changes.
+Default function updates the store with the new state."]
+      [":classes" "A map of CSS class names. Supported keys are :control, :input and :label.
+Value can be a string or vector of strings which specify CSS class names."]
+      [":attrs" "Map of HTML attributes. The keys are keywordized versions of HTML attribute names."]]]]
+   [:div.column
+    [example radio-ex [:<>
+                       [:p "A basic radio button group"]
+                       [i/radio :value [{:title "Red"} {:title "Green"} {:title "Blue"}]]
+                       (let [doc (r/atom {})
+                             frm (fn []
+                                   [:<>
+                                    [:p "Another radio button example"]
+                                    [i/radio :pet.type [{:title "Dog"
+                                                         :value :dog
+                                                         :checked true}
+                                                        {:title "Cat"
+                                                         :value :cat}
+                                                        {:title "Diamond Python"
+                                                         :value :snake}]
+                                     :store doc]
+                                    [:p (str "Result: " @doc)]])]
+                         [frm])]]]])
+
+(def button-eg "
+  [:p \"A simple button example\"]
+      [i/button \"Click Me!\" #(js/alert \"You clicked me\")]
+      [:p \"A small button\"]
+      [i/button \"Small Button\" #(js/alert \"Clicked small button\")
+        :classes {:button \"is-small\"}]
+      [:p \"A large button\"]
+      [i/button \"Large Button\" #(js/alert \"Clicked large button\")
+       :classes {:button \"is-large\"}]
+      [:p \"A button with colour\"]
+      [i/button \"Coloured\" #(js/alert \"You clicked a coloured button\")
+       :classes {:button \"is-primary\"}]")
 
 (defn button-component []
   [:<>
    [:div.columns
-    [:div.column.is-half
-     [c/card
-      [:div.content
-       [:p
-        "The " [:strong "button"] " component is a basic HTML button component "
+    [:div.column
+     [doc-comp "button - a basic button component"
+      [:<>
+       [:p "The " [:strong "button"] " component is a basic HTML button component "
         "This component wraps an HTML button inside a " [:code "control"]
         " and " [:code "field"] " div elements to support spacing and "
-        "alignment. The " [:code "title"] " is a string which is used as the "
-        "text on the button. The " [:code "action"] " argument is a function "
-        "of no arguments which is called when the button is clicked. This "
-        "component also supports optional keyword arguments"]
-       [:ul
-        [:li [:strong ":classes"] " - a map of strings or vectors of strings "
-         "representing CSS class names. The supported keys in the map are "
-         [:code ":field"] ", " [:code ":control"] " and " [:code ":button"] "."]
-        [:li [:strong ":attrs"] " - a map of HTML attribute values. The keys "
-         "are the HTML attribute names as keywords e.g. " [:code ":disabled"]]]]
-      :header {:title "button - a basic button component"}]]
+        "alignment."]
+       [:p "The optional " [:strong ":classes"] " argument supports the following keys. The "
+        "allowed value for each key is either a string or a vector of strings which specify "
+        "CSS class names."]
+       [doc-args [[":field" "CSS classes to add to the field element."]
+                  [":control" "CSS classes to add to the control element."]
+                  [":button" "CSS classes to add to the button element."]]]]
+      [["title" "The text to be used in the button"]
+       ["action" "A zero argument function which will be executed when the button is clicked."]]
+      [[":classes" "A map of CSS class names to add to the elements that make up this
+component (see above)"]
+       [":attrs" "A map of HTML attributes to add to the button element. Map keys are
+keywordized HTML attribute names e.g. :id"]]]]
     [:div.column
-     [:pre
-      [:code
-       "[:p \"A simple button example\"]" [:br]
-       "[input/button \"Click Me!\" #(js/alert \"You clicked me\")]" [:br]
-       "[:p \"A small button\"]" [:br]
-       "[input/button \"Small Button\" " [:br]
-       "  #(js/alert \"Clicked small button\")" [:br]
-       "  :classes {:button \"is-small\"}]" [:br]
-       "[:p \"A large button\"]" [:br]
-       "[input/button \"Large Button\" " [:br]
-       "  #(js/alert \"Clicked large button\")" [:br]
-       "  :classes {:button \"is-large\"}]" [:br]
-       "[:p \"A button with colour\"]" [:br]
-       "[input/button \"Coloured\" " [:br]
-       "   #(js/alert \"You clicked a coloured button\")" [:br]
-       "   :classes {:button \"is-primary\"}]"]]
-     [:div.box
-      [:p "A simple button example"]
-      [i/button "Click Me!" #(js/alert "You clicked me")]
-      [:p "A small button"]
-      [i/button "Small Button" #(js/alert "Clicked small button")
-        :classes {:button "is-small"}]
-      [:p "A large button"]
-      [i/button "Large Button" #(js/alert "Clicked large button")
-       :classes {:button "is-large"}]
-      [:p "A button with colour"]
-      [i/button "Coloured" #(js/alert "You clicked a coloured button")
-       :classes {:button "is-primary"}]]]]])
+     [example button-eg [:<>
+                         [:p "A simple button example"]
+                         [i/button "Click Me!" #(js/alert "You clicked me")]
+                         [:p "A small button"]
+                         [i/button "Small Button" #(js/alert "Clicked small button")
+                          :classes {:button "is-small"}]
+                         [:p "A large button"]
+                         [i/button "Large Button" #(js/alert "Clicked large button")
+                          :classes {:button "is-large"}]
+                         [:p "A button with colour"]
+                         [i/button "Coloured" #(js/alert "You clicked a coloured button")
+                          :classes {:button "is-primary"}]]]]]])
+
+(def edit-field-eg "
+  (let [doc (r/atom {:name {:first \"John\" :last \"Doe\"}})
+           frm (fn []
+                 [:<>
+                  [:p \"Editable field example\"]
+                  [i/editable-field :text doc :name.first
+                   :label \"First Name:\"]
+                  [i/editable-field :text doc :name.last
+                   :label \"Last Name:\"]
+                  [:p (str \"Result: \" @doc)]])]
+       [frm])")
 
 (defn editable-field-component []
   [:div.columns
-   [:div.column.is-half
-    [c/card
-     [:div.content
+   [:div.column
+    [doc-comp "editable-field - a editable field component"
+     [:<>
       [:p
        "The " [:strong "editable-field"] " component is a utility component "
        "which displays a value followed by a 'pencil' icon, which when clicked "
        "allows for editing of the value. When editing the value, buttons are "
        "provided to save or cancel the edit."]
       [:p
-       "The " [:code "type"] " argument is a keyword representing the HTML "
-       "input type e.g. :text, :email, :password. The " [:code "src"]
-       " argument is a reagent atom representing the data to be edited. "
-       "The " [:code "sid"] " argument is a storage identifier keyword which "
-       "defines the path into the reagent document model atom where the data "
-       "to edit is stored."]
-      [:p
-       "This component also supports two optional keyword arguments. The "
-       [:code ":label"] " argument is a string representing a label to be used "
-       "as a label for the data being displayed or edited. The "
-       [:code ":classes"] " argument is a map of string or vectors of strings "
-       "representing CSS class names. The following keys are supported: "]
-      [:ul
-       [:li [:strong ":edit-input"] " - CSS class names to be associated with "
-        "the input element when values are being edited"]
-       [:li [:strong ":display-input"] " - CSS class names to be associated with "
-        "the div wrapping the data when being displayed"]
-       [:li [:strong ":save-btn-field"] " - CSS class names to be associated "
-        "with the field div that wraps the save button component"]
-       [:li [:strong ":save-btn-control"] " - CSS class names associated with "
-        "the control div which wraps the save button component."]
-       [:li [:strong ":save-btn-button"] " - CSS class names associated with "
-        "the button element within the save button component."]
-       [:li [:strong ":cancel-btn-field"] " - CSS class names associated with "
-        "the field div that wraps the cancel button component"]
-       [:li [:strong ":cancel-btn-control"] " - CSS class names associated with "
-        "the control div that wraps the cancel button component"]
-       [:li [:strong ":cancel-btn-button"] " - CSS class names associated with "
-        "the button element used in the cancel button component"]
-       [:li [:strong ":label"] " - CSS class names to associate with the label "
-        "element associated with the data"]
-       [:li [:strong ":field-edit"] " - CSS class names to associate with the "
-        "field div used to wrap the edit component"]
-       [:li [:strong ":field-edit-body"] " - CSS class names to associate with "
-        "the field body div used in the edit component"]
-       [:li [:strong ":field-display"] " - CSS class names to associate with "
-        "the field div used to wrap the data display component"]
-       [:li [:strong ":field-display-body"] " - CSS class names to associate "
-        "with the field body div used to wrap display of data"]]]
-     :header {:title "editable-field - a editable field component"}]]
+       "The component supports an optional " [:strong ":clases"] " keywrod argument which provides "
+       "a mechanism for setting CSS classes on the elements used to build this component. The value "
+       "associated with each key can be a string or a vector of strings. Each string specifies a CSS "
+       "class name. The supported keys are:"]
+      [doc-args
+       [[":edit-input" "CSS classes to associate with the edit input element."]
+        [":display-input" "CSS classes to associatge with the display input element."]
+        [":save-btn-field" "CSS classes to add to the save button field element."]
+        [":save-btn-control" "CSS classes to add to the save button control element."]
+        [":save-btn-button" "CSS classes to add to the save button button element."]
+        [":cancel-btn-field" "CSS classes to add to the cancel button field element"]
+        [":cancel-btn-control" "CSS classes to add to the cancel button contgrol element."]
+        [":cancel-btn-button" "CSS classes to add to the cancel button button element."]
+        [":label" "CSS classes to add to the label element"]
+        [":field-edit" "CSS classes to add to the field element when editing the value."]
+        [":field-edit-body" "CSS classes to add to the body of the edit field when editing the value."]
+        [":field-display" "CSS classes to add to the field element when display the value."]
+        [":field-display-body" "CSS classes to add to the field body element when display the value."]]]]
+     [["type" "A keyword which specifies the type of the input field e.g. :text, :password etc"]
+      ["store" "A reagent atom where the original/master version of the data is located."]
+      ["sid" "A storage identifier which identifies the location in the store the value is located"]]
+     [[":lable" "A string used to label the input field."]
+      [":classes" "A map of CSS class names to add to HTML elements which make up the component.
+See above for description of supported keys."]]]]
    [:div.column
-    [:pre
-     [:code
-      "(let [doc (r/atom {:name {:first \"John\" :last \"Doe\"}})" [:br]
-      "      frm (fn []" [:br]
-      "            [:<>"
-      "              [:p \"Editable field exmaple\"]" [:br]
-      "              [input/editable-field :text doc :name.first" [:br]
-      "                :label \"First Name:\"]" [:br]
-      "              [input/editable-field :text doc :name.last" [:br]
-      "                :label \"Last Name:\"]" [:br]
-      "              [:p (str \"Result: \" @doc)])]]" [:br]
-      "  [frm])"]]
-    [:div.box
-     (let [doc (r/atom {:name {:first "John" :last "Doe"}})
+    [example edit-field-eg (let [doc (r/atom {:name {:first "John" :last "Doe"}})
+                                 frm (fn []
+                                       [:<>
+                                        [:p "Editable field example"]
+                                        [i/editable-field :text doc :name.first
+                                         :label "First Name:"]
+                                        [i/editable-field :text doc :name.last
+                                         :label "Last Name:"]
+                                        [:p (str "Result: " @doc)]])]
+                             [frm])]]])
+
+(def textarea-eg "
+  [:p \"A basic textarea example\"]
+     (let [doc (r/atom {})
            frm (fn []
                  [:<>
-                  [:p "Editable field example"]
-                  [i/editable-field :text doc :name.first
-                   :label "First Name:"]
-                  [i/editable-field :text doc :name.last
-                   :label "Last Name:"]
-                  [:p (str "Result: " @doc)]])]
-       [frm])]]])
+                  [i/textarea \"Text Area Label\" :text.value :store doc
+                   :attrs {:placeholder \"Write text here\"}]
+                  [:p (str \"Result: \" @doc)]])]
+       [frm])")
 
 (defn textarea-component []
   [:div.columns
-   [:div.column.is-half
-    [c/card
-     [:div.content
-      [:p
-       "The " [:strong "textarea"] " component provides a basic text area "
-       "component for free-form text input. The " [:code "label"] " argument "
-       "is a string of text used as a label for the text area. The "
-       [:code "sid"] " argument is a storage identifier keyword used to "
-       "determine the location within the document model atom to store the "
-       "data entered into the text area. The component also supports a number "
-       "of optional keyword arguments"]
-      [:ul
-       [:li [:strong ":model"] " - A reagent atom used as the document model"]
-       [:li [:strong ":change-fn"] " - A function of one argument called when "
-        "the input data changes. The argument is the updated data. Used to "
-        "determine where the data will be stored."]
-       [:li [:strong ":classes"] " - A map of CSS class names or vectors of CSS "
-        "class names to be associated with elements within the component. "
-        "Supported keys are " [:code ":field, :label and :textarea"]]
-       [:li [:strong ":attrs"] " - a map of HTML attribute values. The keys are "
-        "the HTML attribute name as a keyword e.g. " [:code ":placeholder"]]]]
-     :header {:title "textarea - a basic text area component"}]]
    [:div.column
-    [:pre
-     [:code
-      "[:p \"A basic textarea example\"]" [:br]
-      "(let [doc (r/atom {})" [:br]
-      "      frm (fn []" [:br]
-      "            [:<>" [:br]
-      "              [input/textarea \"Text Area Label\" :text.value " [:br]
-      "                :attrs {:placeholder \"Write text here\"}" [:br]
-      "                :model doc]" [:br]
-      "              [:p (str \"Result: \" @doc)]])]" [:br]
-      "  [fmt])"]]
-    [:div.box
-     [:p "A basic textarea example"]
-     (let [doc (r/atom {})
-           frm (fn []
-                 [:<>
-                  [i/textarea "Text Area Label" :text.value :model doc
-                   :attrs {:placeholder "Write text here"}]
-                  [:p (str "Result: " @doc)]])]
-       [frm])]]])
+    [doc-comp "textarea - a basic text area component"
+     [:p
+       "The " [:strong "textarea"] " component provides a basic text area "
+      "component for free-form text input. The input is stored in the defualt "
+      "store or the store specified using a keywrod argument. The " [:code "sid"]
+      " argument determines the location within the store where the input is saved."]
+     [["label" "A text label to associate with the input field."]
+      ["sid" "A storage identifier which specifies the location where the input data will be stored"]]
+     [[":store" "A reagent atom used as the store for the component's input state. Will default to the global default store if not specified."]
+      [":change-fn" "A funciton of one argument which is evaluated when the contents of the input field change. Typically used to save input to a store."]
+      [":classes" "A string or vector of strings specifying CSS class names. Supported keys are :field, :label and :textarea."]
+      [":atrs" "A map of HTML attributes. Keys are keywordized HTML attribute names."]]]]
+   [:div.column
+    [example textarea-eg [:<>
+                          [:p "A basic textarea example"]
+                          (let [doc (r/atom {})
+                                frm (fn []
+                                      [:<>
+                                       [i/textarea "Text Area label" :text.value :store doc
+                                        :attrs {:placeholder "Write text here"}]
+                                       [:p (str "Result: " @doc)]])]
+                            [frm])]]]])
+
+(def select-eg1 "
+  [:p \"A simple select box\"]
+      (let [doc (r/atom {})
+            frm (fn []
+                  [:<>
+                   [i/select :sel.value [(i/defoption \"One\")
+                                         (i/defoption \"Two\")
+                                         (i/defoption \"Three\")]
+                    :store doc]
+                   [:p (str \"Result: \" @doc)]])]
+        [frm])")
+
+(def select-eg2 "
+  [:p \"A more complex select box example\"]
+      (let [doc (r/atom {})
+            frm (fn []
+                  [:<>
+                   [i/select :pet.value [(i/defoption \"A Dog\" :value :dog)
+                                         (i/defoption \"A Cat\" :value :cat)
+                                         (i/defoption \"A Mouse\" :value :mouse
+                                           :selected? true)]
+                    :store doc :rounded? true]
+                   [:p (str \"Result: \" @doc)]])]
+        [frm])")
 
 (defn select-component []
   [:div.columns
-   [:div.column.is-half
-    [c/card
-     [:div.content
-      [:p
-       "The " [:strong "select"] " component provides a basic select list. The "
-       [:code "sid"] " argument is a storage identifier keyword. The "
-       [:code "options"] " argument is a vector of option maps which define "
-       "each of the options for the select list. The " [:strong "defoption"]
-       "function can be used to assist in defining the option definition maps"]
-      [:p
-       "The " [:strong "defoption"] " function is a helper function which "
-       "assists in defining the option maps used in a select component. It has "
-       "one compulsory argument, " [:code "title"] ", which defines the option "
-       "title. The function also accepts a number of optional keyword arguments"]
-      [:ul
-       [:li [:strong ":value"] " - sets the value to be used when the option "
-        "is selected. If not specified, the " [:code "title"] " argument is used"]
-       [:li [:strong ":option-class"] " - a string or vector of strings "
-        "representing CSS class names to add to the option element"]
-       [:li [:strong ":disabled"] " - boolean which if true disables this option"]
-       [:li [:strong ":label"] " - a shorthand label which is used if supported "
-        "by the browser instead of the title"]]
-      [:p
-       "The " [:strong "select"] " component also supports a number of optional "
-       "keyword arguments"]
-      [:ul
-       [:li [:strong ":model"] " - a reagent atom used as the document model "
-        "for data storage"]
-       [:li [:strong ":change-fn"] " - a function of one argument which is "
-        "called when the input data changes. The argument is the new data."]
-       [:li [:strong ":selected"] " - the value to use as the default selected "
-        "option."]
-       [:li [:strong ":multiple"] " - boolean. If true, allow multiple options "
-        "to be selected"]
-       [:li [:strong ":rounded"] " - boolean. If true, use rounded corners on "
-        "the selection box"]
-       [:li [:strong ":select-size"] " - sets the size of the select box. Can "
-        "be " [:code ":large, :medium or :small"]]
-       [:li [:strong ":icon-data"] " - an icon data map defining an icon to "
-        "associate with the select box. See " [:strong "theophilusx/yorick/icon"]]
-       [:li [:strong ":attrs"] " - a map of HTML attribute values. The keys are "
-        "HTML attribute names as keywords e.g. " [:code ":disabled"]]]]
-     :header {:title "select - a basic select box component"}]]
    [:div.column
-    [:div.content
-     [:pre
-                [:code
-        "[:p \"A simple select box\"]" [:br]
-        "(let [doc (r/atom {})" [:br]
-        "      frm (fn []" [:br]
-        "            [:<>" [:br]
-        "              [input/select :sel.value " [:br]
-        "                 [(defoption \"One\")" [:br]
-        "                  (defoption \"Two\")" [:br]
-        "                  (defoption \"Three\")]" [:br]
-        "                 :model doc]" [:br]
-        "              [:p (str \"Result: \" @doc)]])]" [:br]
-         "  [frm])"]]
-     [:div.box
-      [:p "A simple select box"]
-      (let [doc (r/atom {})
-            frm (fn []
-                  [:<>
-                   [i/select :sel.value [(i/defoption "One")
-                                         (i/defoption "Two")
-                                         (i/defoption "Three")]
-                    :model doc]
-                   [:p (str "Result: " @doc)]])]
-        [frm])]
-     [:pre
-      [:code
-       "[:p \"A more complex select box example\"]" [:br]
-       "(let [doc (r/atom {})" [:br]
-       "      frm (fn []" [:br]
-       "            [:<>" [:br]
-       "              [input/select :pet.value " [:br]
-       "                 [(input/defoption \"A Dog\" :value :dog)" [:br]
-       "                  (input/defoption \"A Cat\" :value :cat)" [:br]
-       "                  (input/defoption \"A Mouse\" :value :mouse" [:br]
-       "                     :selected true)]" [:br]
-       "                :model doc :rounded true]" [:br]
-       "             [:p (str \"Result: \" @doc)]])]" [:br]
-       "  [frm])"]]
-     [:div.box
-      [:p "A more complex select box example"]
-      (let [doc (r/atom {})
-            frm (fn []
-                  [:<>
-                   [i/select :pet.value [(i/defoption "A Dog" :value :dog)
-                                         (i/defoption "A Cat" :value :cat)
-                                         (i/defoption "A Mouse" :value :mouse
-                                           :selected true)]
-                    :model doc :rounded true]
+    [doc-comp "defoption - define an option for a selection list"
+     [:p "The " [:strong "defoption"] " function is a convenience function which can help with defining "
+      "the option maps used to define options for a selection list component. The function "
+      "returns an option map. A vector of option maps is used to define the list of optons available in a "
+      "selection list component."]
+     [["title" "The title to use for the option."]]
+     [[":value" "A value to use when this option is selected. Defaults to :label if :value is not supplied.
+Defualts to title if :label and :value are not supplied. Defualts to a gensym starting with `option-` if neither title, :value or :label are not supplied."]
+      [":option-class" "A string or vector of strings specifying CSS class names."]
+      [":disabled?" "If true, this option will be disabled."]
+      [":label" "A short form of the title which can be used internally."]
+      [":selected?" "When true, this otion is marked as selected by default."]]]
+    [doc-comp "select - a basic select box component"
+     [:p "The " [:strong "select"] " component provides a basic selection list component where the "
+      "user can select from a number of options in a drop-down selection box. The options are defined "
+      "using the " [:code "defoptions"] " function."]
+     [["sid" "A storage identifier used to determine where the selected option(s) state will be reocrded."]
+      ["options" "A vector of option maps. The option maps are defined using the defoption function."]]
+     [[":store" "A reagent atom to be used as the compnent state store. Defaults to the default global store if not specified."]
+      [":change-fn" "A functon of one argument which is called when the state of the selection component changes. Argument is the changed state."]
+      [":select-class" "A string or vector of strings specifying CSS class names to be added to the select element."]
+      [":multiple?" "If true, allow multiple options to be selected at one time."]
+      [":rounded?" "If true, use rounded corners on selection list box"]
+      [":select-size" "Size of the selection box. Can be :large, :medium or :small"]
+      [":icon-data" "An icon data map defining an icon to add to the selection box."]
+      [":size" "Number of options to display in the selection box."]
+      [":attrs" "A map of HTML attributes. Keys are HTML attribute names converted into keywords."]]]]
+   [:div.column
+    [example select-eg1 [:<>
+                         [:p "A simple select box"]
+                         (let [doc (r/atom {})
+                               frm (fn []
+                                     [:<>
+                                      [i/select :sel.value [(i/defoption "One")
+                                                            (i/defoption "Two")
+                                                            (i/defoption "Three")]
+                                       :store doc]
+                                      [:p (str "Result: " @doc)]])]
+                           [frm])]]
+    [example select-eg2 [:<>
+                         [:p "A more complex select box example"]
+                         (let [doc (r/atom {})
+                               frm (fn []
+                                     [:<>
+                                      [i/select :pet.value [(i/defoption "A Dog" :value :dog)
+                                                            (i/defoption "A Cat" :value :cat)
+                                                            (i/defoption "A Mouse" :value :mouse
+                                                              :selected? true)]
+                                       :store doc :rounded true]
                    [:p (str "Result: " @doc)]])]
         [frm])]]]])
 
+(def select-field-eg "
+  [:p \"A select-field example\"]
+  (let [doc (r/atom {})
+           frm (fn []
+                 [:<>
+                  [i/select-field :car.value [(i/defoption \"Holden\")
+                                              (i/defoption \"Audi\")
+                                              (i/defoption \"Saab\")]
+                   :title \"My Car\" :select-size :large :store doc
+                   :icon-data {:name \"fa-car\" :position :left}]
+                  [:p (str \"Result: \" @doc)]])]
+       [frm])")
+
 (defn select-field-component []
   [:div.columns
-   [:div.column.is-half
-    [c/card
-     [:div.content
-      [:p
+   [:div.column
+    [doc-comp "select-field - a select field component"
+     [:p
        "The " [:strong "select-field"] " component is a convenience component "
        "which wraps a select box inside a " [:code "field"] " div and adds a "
        [:code "label"] " element. This helps to ensure appropriate spacing when "
-       "rendering the select box. The " [:code "sid"] " argument is a storage "
-       "identifier keyword. The " [:code "options"] " argument is a vector of "
-       "option elements for the select box. (see " [:strong "defoption"]
-       " for definition of select options. The component also supports a number "
-       "optonal keyword arguments:"]
-      [:ul
-       [:li [:strong ":title"] " - a string used as the label to associate with "
-        "the select box."]
-       [:li [:strong ":classes"] " - a map of strings or vectors of strings "
-        "representing CSS class names. The following keys are supported - "
-        [:code ":field, :title, and :select"]]
-       [:li [:strong ":multiple"] " - boolean. If true, allow selection of "
-        "multiple options"]
-       [:li [:strong ":rounded"] " - Boolean. If true, use rounded corners "
-        "for the select box"]
-       [:li [:strong ":select-size"] " - Keyword. Set the size of the select "
-        "box. Possible values are " [:code ":small, :medium and :large"]]
-       [:li [:strong ":icon-data"] " - an icon data map. (see "
-        [:strong "theophilusx/yorick/icon"] " for details. Adds an icon to the "
-        "select box."]
-       [:li [:strong ":model"] " - a reagent atom used as the document model "
-        "store."]
-       [:li [:strong ":change-fn"] " - a function of one argument called when "
-        "the input data changes. Argument is the new data. Used to update the "
-        "document model store."]
-       [:li [:strong ":attrs"] " - a map of HTML attribute values. The keys are "
-        "HTML attribute names as keywords e.g. " [:code ":disabled"]]]]
-     :header {:title "select-field - a select field component"}]]
+      "rendering the select box."]
+     [["sid" "A storage identifiier which specifies the storage location for this state of this component."]
+      ["options" "A vector of option maps which define the selection list. See the defoption function for details on map format."]]
+     [[":title" "A string title to use as the label for this input component."]
+      [":classes" "A map of strings or vector of strings which specify CSS class names. The supported keys for the map are :field, :title and :select"]
+      [":multiple?" "A boolean. If true, allow selection of multiple entries."]
+      [":rounded?" "Use rounded corners in select box."]
+      [":select-size" "Set the size of the select box. Possible values are :small, :medium and :large"]
+      [":icon-data" "An icon data map which is used to set an icon as part of the select box."]
+      [":store" "A reagent atom used as the store for the component state. If not specified, default to the global store."]
+      [":change-fn" "A function of one argument called when the state of the component changes. The argument is the changed state."]
+      [":attrs" "A map of HTML attribute values. Keys are keywordized HTML attribute names."]]]]
    [:div.column
-    [:pre
-     [:code
-      "[:p \"A select-field example\"" [:br]
-      "(let [doc (r/atom {})" [:br]
-      "      frm (fn []" [:br]
-      "            [:<>" [:br]
-      "              [input/select-field :car.value " [:br]
-      "                 [(input/defoption \"Holden\")" [:br]
-      "                  (input/defoption \"Audi\")" [:br]
-      "                  (input/defoption \"Saab\")]" [:br]
-      "                :title \"My Car\" :select-size :large " [:br]
-      "                :model doc]" [:br]
-      "              [:p (str \"Result: \" @doc)]])]" [:br]
-      "  [frm])"]]
-    [:div.box
-     [:p "A select-field example"]
-     (let [doc (r/atom {})
-           frm (fn []
-                 [:<>
-                  [i/select-field :car.value [(i/defoption "Holden")
-                                              (i/defoption "Audi")
-                                              (i/defoption "Saab")]
-                   :title "My Car" :select-size :large :model doc
-                   :icon-data {:name "fa-car" :position :left}]
-                  [:p (str "Result: " @doc)]])]
-       [frm])]]])
+    [example select-field-eg [:<>
+                              [:p "A select-field example"]
+                              (let [doc (r/atom {})
+                                    frm (fn []
+                                          [:<>
+                                           [i/select-field :car.value [(i/defoption "Holden")
+                                                                       (i/defoption "Audi")
+                                                                       (i/defoption "Saab")]
+                                            :title "My Car" :select-size :large :store doc
+                                            :icon-data {:name "fa-car" :position :left}]
+                                           [:p (str "Result: " @doc)]])]
+                                [frm])]]]])
+
+(def file-eg "
+  [:p \"A basic file selector example\"]
+  (let [doc (r/atom {})
+        frm (fn []
+               [:<>
+                 [i/file :file1.value :store doc
+                  :action #(js/alert (str \"You selected \" (.-name %)))]
+                  [:p (str \"Result: \" @doc)]])]
+       [frm])")
 
 (defn file-component []
   [:div.columns
-   [:div.column.is-half
-    [c/card
-     [:div.content
-      [:p
-       "The " [:strong "file"] " component provides a file select box. The "
-       "mandatory argument " [:code "sid"] " is a storage identifier keyword "
-       "used to determine the storage location for entered data. The component "
-       "also supports a number of optional keyword arguments"]
-      [:ul
-       [:li [:strong ":model"] " - a reagent atom to be used as the document "
-        "model store"]
-       [:li [:strong ":change-fn"] " - a function of one argument which is "
-        "called when the input data changes. The argument is the event object "
-        "associated with the component. The function should test for the "
-        [:code ":action"] " keyword argument and if found, execute it with the "
-        "File object of the selected file if one has been selected."]
-       [:li [:strong ":action"] " - a function of 1 argument which is to be "
-        "called if a file has been selected. This function can be used to "
-        "perform some action if a file is selected."]
-       [:li [:strong ":classes"] " - a map of strings or vectors of strings "
-        "representing CSS class names. Supported keys include "
-        [:code ":field, :file, :label, :input and :file-cta"]]
-       [:li [:strong ":label"] " - a string to be used as the label to "
-        "associate with the file select box"]
-       [:li [:strong ":right"] " - a boolean which if true, will cause the "
-        "label to be placed on the right of the select box."]
-       [:li [:strong ":fullwidth"] " - if true, make the file select box the "
-        "full width of the enclosing container."]
-       [:li [:strong ":boxed"] " - enclose the component inside a box"]
-       [:li [:strong ":size"] " - set the size of the file upload box. "
-        "Available values are " [:code ":small, :medium and :large"]]
-       [:li [:strong ":position"] " - set the position of the file upload "
-        "box within the enclosing container. Possible values are "
-        [:code ":center and :right"]]]]
-     :header {:title "file - file selector box component"}]]
    [:div.column
-    [:pre
-     [:code
-      "[:p \"A basic file selector example\"]" [:br]
-      "(let [doc (r/atom {})" [:br]
-      "      frm (fn []" [:br]
-      "            [:<>" [:br]
-      "              [input/file :file1.value :model doc" [:br]
-      "                :action #(js/alert (str \"You selected \" %))]" [:br]
-      "              [:p (str \"Result: \" @doc)]])]" [:br]
-      "  [frm])"]]
-    [:div.box
-     [:p "A basic file selector example"]
-     (let [doc (r/atom {})
-           frm (fn []
-                 [:<>
-                  [i/file :file1.value :model doc
-                   :action #(js/alert (str "You selected " (.-name %)))]
-                  [:p (str "Result: " @doc)]])]
-       [frm])]
-    [:pre
-     [:code
-      "[:p \"A more complex file selector example\"]" [:br]
-      "(let [doc (r/atom {})" [:br]
-      "      frm (fn []" [:br]
-      "            [:<>" [:br]
-      "              [input/file :file2.value :model doc " [:br]
-      "                :label \"My File\" :boxed true" [:br]
-      "                :action #(js/alert (str \"You selected \" %))]" [:br]
-      "              [:p (str \"Result: \" @doc)]])]" [:br]
-      "  [frm])"]]
-    [:div.box
-     [:p "A more complex file selector example"]
-     (let [doc (r/atom {})
-           frm (fn []
-                 [:<>
-                  [i/file :file2.value :model doc :label "My File"
-                   :boxed true :action #(js/alert (str "You selected "
-                                                       (.-name %)))]
-                  [:p (str "Result: " @doc)]])]
-       [frm])]]])
+    [doc-comp "file - file selector box component"
+     [:p
+       "The " [:strong "file"] " component provides a file select box."]
+     [["sid" "A storage identifier which defines the location where state for this component is stored."]]
+     [[":store" "A reagent atom used as the store for the component. If not supplied, use the default global store."]
+      [":change-fn" "A function of one argument called when the state of the component changes. The argument is the changed state."]
+      [":action" "A function of 1 argument called once a file has been selected. The argument is the selected file object"]
+      [":classes" "A map of strings or vectors of strings which specify CSS class names. Suppported keys are :field, :file, :label, :input and :file-cta."]
+      [":label" "The text label to associate with the file selection box."]
+      [":right?" "Place label to the right of the selection box if true."]
+      [":fullwidth?" "Make the selection box full width if true."]
+      [":boxed?" "Use a boxed version of the selection box."]
+      [":size" "Set the size of the selection box. Possible values are :small, :medium and :large."]
+      [":position" "Set the position of the selection box. Possible values are :right and :center"]]]]
+   [:div.column
+    [example file-eg [:<>
+                      [:p "A basic file selector example"]
+                      (let [doc (r/atom {})
+                            frm (fn []
+                                  [:<>
+                                   [i/file :file1.value :store doc
+                                    :action #(js/alert (str "You selected " (.-name %)))]
+                                   [:p (str "Result: " @doc)]])]
+                        [frm])]]]])
+
+(def search-eg1 "
+  [:p \"A simple search box example\"]
+  [i/search #(js/alert (str \"You are searching for \" %))]")
+
+(def search-eg2 "
+  [:p \"Search box with placeholder, icon and colour\"]
+  [i/search #(js/alert (str \"You are searching for \" %))
+   :placeholder \"enter search terms\" :button-text \"\"
+   :icon-data (icons/deficon \"fas fa-search\")
+   :classes {:button \"has-background-link has-text-white\"}]")
 
 (defn search-component []
   [:div.columns
-   [:div.column.is-half
-    [c/card
-     [:div.content
-      [:p
-       "The " [:strong "search"] " component is a simple search box. The "
-       [:code "action"] " argument is a function of 1 argument which is called "
-       "when the user clicks on the search button. The argument is the string "
-       "entered into the search box by the user. The component also supports "
-       "a number of optional keyword arguments:"]
-      [:ul
-       [:li [:strong ":classes"] " - a map of strings or vectors of strings "
-        "representing CSS class names. Supported keys are "
-        [:code ":field, :input"] " and " [:code ":button"]]
-       [:li [:strong ":icon-data"] " - an icon data map. See "
-        [:code "theophilusx/yorick/icon"] " for details regarding the icon data "
-        "map format"]
-       [:li [:strong ":button-text"] " - the text to be used on the search "
-        "button. Will default to " [:code "Search"] " if not specified. Use "
-        [:code "nil"] " as the value to have no text and just an icon "
-        "(specifying the icon with " [:code ":icon-data"] ")"]
-       [:li [:strong ":attrs"] " - a map of HTML attribute values. The keys are "
-        "HTML attribute names as keywords e.g. " [:code ":disabled"]]]]
-     :header {:title "search - a basic search box component"}]]
    [:div.column
-    [:pre
-     [:code
-      "[:p \"A simple search box exmaple\"]" [:br]
-      "[input/search #(js/alert (str \"You are searching for \" %))]"]]
-    [:div.box
-     [:p "A simple search box example"]
-     [i/search #(js/alert (str "You are searching for " %))]]
-    [:pre
-     [:code
-      "[:p \"Search box with placeholder, icon and colour\"]" [:br]
-      "[input/search #(js/alert (str \"You are searching for \" %))" [:br]
-      "  :placeholder \"enter search terms\" :button-text \"\"" [:br]
-      "  :icon-data (icons/deficon \"fas fa-search\")" [:br]
-      "  :classes {:button \"has-background-link has-text-white\"}]"]]
-    [:div.box
-     [:p "Search box with placeholder, icon and colour"]
-     [i/search #(js/alert (str "You are searching for " %))
-      :placeholder "enter search terms" :button-text ""
-      :icon-data (icons/deficon "fas fa-search")
-      :classes {:button "has-background-link has-text-white"}]]]])
+    [doc-comp "search - a basic search box component"
+     [:p
+       "The " [:strong "search"] " component is a simple search box. "]
+     [["action" "A function of one argument executed when the user clicks on the search button. The argument is the text entered into the search box."]]
+     [[":classes" "A map of strings or vectors of strings specifying CSS class names. Supported keys are :field, :input and :button"]
+      [":icon-data" "An icon data map used to specify an icon to add to the search box."]
+      [":button-text" "Text to put on the serach box button. Defaults to Search"]
+      [":attrs" "A map of HTML attributes. The keys are keywrodized HTML attribute names."]]]]
+   [:div.column
+    [example search-eg1 [:<>
+                        [:p "A simple search box example"]
+                        [i/search #(js/alert (str "You are searching for " %))]]]
+    [example search-eg2 [:<>
+                         [:p "Search box with placeholder, icon and colour"]
+                         [i/search #(js/alert (str "You are searching for " %))
+                          :placeholder "enter search terms" :button-text ""
+                          :icon-data (icons/deficon "fas fa-search")
+                          :classes {:button "has-background-link has-text-white"}]]]]])
+
+(def range-eg1 "
+  [:p \"A simple range example\"]
+  (let [doc (r/atom {})
+        frm (fn []
+              [:<>
+                [i/range-field :range1.value 0 100 :store doc]
+                [:p (str \"Result: \" @doc)]])]
+     [frm])")
+
+(def range-eg2 "
+  [:p \"Range with label, step and default value\"]
+  (let [doc (r/atom {})
+        frm (fn []
+              [:<>
+               [i/range-field :range2.value 0 1000 :store doc
+                :value 100 :step 10 :label \"Quantity\"]
+               [:p (str \"Result: \" @doc)]])]
+     [frm])")
 
 (defn range-component []
   [:div.columns
-   [:div.column.is-half
-    [c/card
-     [:div.content
-      [:p
-       "The " [:strong "range-field"] " component provides a basic range input "
-       "field with a minimum and maximum range values. The " [:code "sid"]
-       " argument is a storage identifier keyword. The " [:code "min"]
-       " and " [:code "max"] " arguments set the minimum and maximum values "
-       "for the range. The component also supports a number of optional "
-       "keyword arguments:"]
-      [:ul
-       [:li [:strong ":model"] " a reagent atom to use as the document model "
-        "store"]
-       [:li [:strong ":change-fn"] " a function of one argument to use as the "
-        "function to update the value in the document model store. The argument "
-        "is the new value entered by the user"]
-       [:li [:strong ":value"] " a default initial value for the range"]
-       [:li [:strong ":label"] " a text label to associate with the range field"]
-       [:li [:strong ":classes"] " a map of strings or vectors of strings "
-        "representing CSS class names. The allowed keys are "
-        [:code ":field, :input"] " and " [:code ":label"]]
-       [:li [:strong ":step"] " set the step size for the range. Defaults to "
-        "1 if not supplied"]
-       [:li [:strong ":attrs"] " - a map of HTML attribute values. The keys are "
-        "HTML attribute names as keywords e.g. " [:code ":disabled"]]]]
-     :header {:title "range-field - a basic range input field"}]]
    [:div.column
-    [:pre
-     [:code
-      "[:p \"A simple range example\"]" [:br]
-      "(let [doc (r/atom {})" [:br]
-      "      frm (fn []" [:br]
-      "            [:<>" [:br]
-      "              [input/range-field :range1.value 0 100 " [:br]
-      "                 :model doc]" [:br]
-      "              [:p (str \"Result: \" @doc)]])]" [:br]
-      "  [frm])"]]
-    [:div.box
-     [:p "A simple range example"]
-     (let [doc (r/atom {})
-           frm (fn []
-                 [:<>
-                  [i/range-field :range1.value 0 100 :model doc]
-                  [:p (str "Result: " @doc)]])]
-       [frm])]
-    [:pre
-     [:code
-      "[:p \"Range with label, step and default value\"]" [:br]
-      "(let [doc (r/atom {})" [:br]
-      "      frm (fn []" [:br]
-      "            [:<>" [:br]
-      "              [input/range-field :range2.value 0 1000 " [:br]
-      "                 :model doc :value 100 :step 10" [:br]
-      "                 :label \"Quantity\"]" [:br]
-      "              [:p (str \"Result: \" @doc)]])]" [:br]
-      "  [frm])"]]
-    [:div.box
-     [:p "Range with label, step and default value"]
-     (let [doc (r/atom {})
-           frm (fn []
-                 [:<>
-                  [i/range-field :range2.value 0 1000 :model doc
-                   :value 100 :step 10 :label "Quantity"]
-                  [:p (str "Result: " @doc)]])]
-       [frm])]]])
+    [doc-comp "range-field - a basic range input field"
+     [:p
+       "The " [:strong "range-field"] " component provides a basic range input "
+      "field with a minimum and maximum range values."]
+     [["sid" "A storage identifier which specifies where the input state will be stored."]
+      ["min" "The minimum acceptable value for the input."]
+      ["max" "The maximum accepted value for the input."]]
+     [[":store" "A reagent atom which is used to store the component state."]
+      [":change-fn" "A function of one argument which is called when the component state changes. The argument is the new state."]
+      [":value" "A default initial value for the range."]
+      [":label" "A label to associate with the range input field."]
+      [":classes" "A map of strings or vectors of strings which specify CSS class names. The supported keys are :field, :input and :label"]
+      [":step" "Set the step size for the range. Defaults to 1."]
+      [":attrs" "A map of HTML attribute values. Keys are keywordized HTML attribute names."]]]]
+   [:div.column
+    [example range-eg1 [:<>
+                        [:p "A simple range example"]
+                        (let [doc (r/atom {})
+                              frm (fn []
+                                    [:<>
+                                     [i/range-field :range1.value 0 100 :store doc]
+                                     [:p (str "Result: " @doc)]])]
+                          [frm])]]
+    [example range-eg2 [:<>
+                        [:p "Range with label, step and default value"]
+                        (let [doc (r/atom {})
+                              frm (fn []
+                                    [:<>
+                                     [i/range-field :range2.value 0 1000 :store doc
+                                      :value 100 :step 10 :label "Quantity"]
+                                     [:p (str "Result: " @doc)]])]
+                          [frm])]]]])
+
+(def number-eg1 "
+  [:p \"A number input component\"]
+  (let [doc (r/atom {})
+        frm (fn []
+              [:<>
+               [i/field [i/number :num1.value :store doc]]
+               [:p (str \"Result: \" @doc)]])]
+    [frm])")
 
 (defn number-component []
   [:div.columns
-   [:div.column.is-half
-    [c/card
-     [:div.content
-      [:p
-       "The " [:strong "number"] " component is a base number input "
-       "component. It is typically used inside a field component e.g. "
-       [:code "field"] " or " [:code "horizontal-field"] ". The " [:code "sid"]
-       " argument is a storage identifier keyword which determines where the "
-       "input value is stored within the document model store. The component "
-       "also supports a number of optional keyword arguments:"]
-      [:ul
-       [:li [:strong ":model"] " - a reagent atom to use as the document "
-        "model store"]
-       [:li [:strong ":change-fn"] " - a function of 1 argument called when "
-        "the input data changes. Used to update the document model store"]
-       [:li [:strong ":value"] " - a default value used to initialise the "
-        "component"]
-       [:li [:strong ":min"] " - set  the minimum acceptable input value"]
-       [:li [:strong ":max"] " - set the maximum acceptable input value"]
-       [:li [:strong ":step"] " - set the step value for input numbers"]
-       [:li [:strong ":classes"] " - a map of strings or vectors of strings "
-        "representing CSS class names. Allowed keys are " [:code ":control"]
-        " and " [:code ":input"]]
-       [:li [:strong ":attrs"] " - a map of HTML attribute values. The keys "
-        "are HTML attribute names as keywords e.g. " [:code ":id"]]]]
-     :header {:title "number-input - a basic number input component"}]]
    [:div.column
-    [:pre
-     [:code
-      "[:p \"A number input component example\"]" [:br]
-      "(let [doc (r/atom {})" [:br]
-      "      frm (fn []" [:br]
-      "            [:<>" [:br]
-      "              [input/field [input/number :num1.value " [:br]
-      "                 :model doc]]" [:br]
-      "              [:p (str \"Result: \" @doc)]])]" [:br]
-      "  [frm])"]]
-    [:div.box
-     [:p "A number input component"]
-     (let [doc (r/atom {})
-           frm (fn []
-                 [:<>
-                  [i/field [i/number :num1.value :model doc]]
-                  [:p (str "Result: " @doc)]])]
-       [frm])]]])
+    [doc-comp "number-input - a basic number input component"
+     [:p
+       "The " [:strong "number"] " component is a basic number input "
+       "component. It is typically used inside a field component e.g. "
+      [:code "field"] " or " [:code "horizontal-field"] "."]
+     [["sid" "A storage identifier which determines where the input state for this component is recorded."]]
+     [[":store" "A reagent atom used to store the state of this component."]
+      [":change-fn" "A function of one argument which is evaluated when the state of the component changes. The argument is the new state."]
+      [":value" "The default value used to initialise the component."]
+      [":min" "A minimum value for this component. User cannot ennter a value below this amount."]
+      [":max" "A maximum value for this component. User cannot enter a value above this amount."]
+      [":step" "The step size for this component. Defaults to 1."]
+      [":classes" "A map of strings or vectors of strings which specify CSS class names. Supported keys are :control and :inut."]
+      [":attrs" "A map of HTML attributes. Keys are keywordized HTML attribute names."]]]]
+   [:div.column
+    [example number-eg1 [:<>
+                         [:p "A number input component"]
+                         (let [doc (r/atom {})
+                               frm (fn []
+                                     [:<>
+                                      [i/field [i/number :num1.value :store doc]]
+                                      [:p (str "Result: " @doc)]])]
+                           [frm])]]]])
+
+(def num-field-eg "
+  [:p \"A number input field example\"]
+  (let [doc (r/atom {})
+        frm (fn []
+              [:<>
+               [i/number-field :num2.value :min 100 :max 1000
+                :step 10 :store doc :label \"Your Number\"
+                :value 500 :attrs {:maxLength \"4\"}]
+               [:p (str \"Result: \" @doc)]])]
+       [frm])")
 
 (defn number-field-component []
   [:div.columns
-   [:div.column.is-half
-    [c/card
-     [:div.content
-      [:p
-       "The " [:strong "number-field"] " component is a basic number input "
-       "field. It is essentially the " [:code "number-input"] " component "
-       "wrapped in a " [:code "field"] " component. The " [:code "sid"]
-       " argument is a storage identifier keyword used to determine where to "
-       "store input data within the document model store. The component "
-       "supports a number of optional keyword arguments:"]
-      [:ul
-       [:li [:strong ":model"] " - a reagent atom to use as the document model "
-        "store."]
-       [:li [:strong ":change-fn"] " - a function of one argument which is "
-        "called when the input data changes. The argument is the new input data. "
-        "Used to update the value in the document model store."]
-       [:li [:strong ":value"] " a default value used to initialise the "
-        "component"]
-       [:li [:strong ":min"] " - set a minimum acceptable input value"]
-       [:li [:strong ":max"] " - set a maximum acceptable input value"]
-       [:li [:strong ":step"] " - set the increment/decrement step size"]
-       [:li [:strong ":classes"] " - a map of strings or vectors of strings "
-        "representing CSS class names. Supported keys are "
-        [:code ":field, :label, :control"] " and " [:code ":input"]]
-       [:li [:strong ":label"] " - a string to use as the field label"]
-       [:li [:strong ":attrs"] " - a map of HTML attribute values. Keys are "
-        "HTML attribute names as keywords e.g. " [:code ":id"]]]]
-     :header {:title "number-field - a basic number input field"}]]
    [:div.column
-    [:pre
-     [:code
-      "[:p \"A number input field example\"]" [:br]
-      "(let [doc (r/atom {})" [:br]
-      "      frm (fn []" [:br]
-      "            [:<>" [:br]
-      "              [input/number-field :num2.value :min 100 :max 1000" [:br]
-      "                 :step 10 :model doc :label \"Your Number\"" [:br]
-      "                 :value 500 :attrs {:maxLength \"4\"}]" [:br]
-      "             [:p (str \"Result: \" @doc)]])]" [:br]
-      "  [frm])"]]
-    [:div.box
-     [:p "A number input field example"]
-     (let [doc (r/atom {})
-           frm (fn []
-                 [:<>
-                  [i/number-field :num2.value :min 100 :max 1000
-                   :step 10 :model doc :label "Your Number"
-                   :value 500 :attrs {:maxLength "4"}]
-                  [:p (str "Result: " @doc)]])]
-       [frm])]]])
+    [doc-comp "number-field - a basic number input field"
+     [:p "The " [:strong "number-field"] " component is a basic number input "
+       "field. It is essentially the " [:code "number-input"] " component "
+       "wrapped in a " [:code "field"] " component."]
+     [["sid" "Storage identifier which specifies where state will be stored within the data store."]]
+     [[":store" "A reagent atom to use as the data store for this component. Defaults to the default global store if not specified."]
+      [":change-fn" "A function of one argument which is called when the contgents of the component change. Argument is the updated contents."]
+      [":value" "A default value to use for initial value."]
+      [":min" "The minimum value which can be entered."]
+      [":max" "The maximum value which can be entered."]
+      [":step" "The step size for changes in the number value. Defaults to 1."]
+      [":classes" "A map of strings or vectors of strings which specify CSS classes to be added. Supported keys are :field, :label, :control and :input"]
+      [":label" "A text label to associate with the field."]
+      [":attrs" "A map of HTML attributes. Keys are keywordized HTML attribute names."]]]]
+    [:div.column
+     [example num-field-eg [:<>
+                            [:p "A number input field example"]
+                            (let [doc (r/atom {})
+                                  frm (fn []
+                                        [:<>
+                                         [i/number-field :num2.value :min 100 :max 1000
+                                          :step 10 :store doc :label "Your Number"
+                                          :value 500 :attrs {:maxLength "4"}]
+                                         [:p (str "Result: " @doc)]])]
+                              [frm])]]]])
+  
+(def page-info1
+  [:p "The " [:strong "theopohilus.yorick.input"] " namespace provides components for
+collecting user input. Two key concepts used when dealing wiht user input in " [:em "Yorick"] "
+ are " [:em "fields"] " and " [:em "stores"] ". A field is a component used to associatge a label and
+an input component and is used ot help manage placement, sizing and aliagnment. Functions are provided
+for vertical and horizontal alignment of " [:em "fields"] "."])
+
+(def page-info2
+  [:p "The " [:em "store"] " refers to a data store object. This is a " [:code "reagent atom"] " used
+to track state information. When collecting data from the user, it needs to be recorded somewhere so
+that some other process can collect that information and process it in some way. " [:em "Yorick"] " has
+a default global store, which is uses for tracking UI related state information. By default, input
+components will also use this global store. However, usually, the client coce will define an input specific
+store. For example, you might define a store associated with a user input form. All the fields in that form
+would store tehir input into keys within that store. Once the user indicates they have finished data input,
+other code might then take that store and process the data accordingly. The " [:em "storage identifier"] " or "
+   [:code "sid"] " is used to specify the path into the store where the data will be recorded. The sid is
+a keyword where periods are used as path separators. The path is a hierarchy of map keys which identify a
+specific locaiton within the store. For example, the sid " [:code ":a.b.c"] " represents the path "
+   [:code "[:a :b :c]"] ". Using this sid to retrieve data would be equivalent to " [:code "(get-in store [:a :b :c])"]
+   ". "])
 
 (defn input-page []
-  [:<>
-   [:div.content
-    [:h2.title.is-2 "Input Components"]
-    [:p
-     "The " [:strong "theophilusx.yorick.input"] " namespace provides various "
-     "components useful for collecting input from the user. Components in this "
-     "group are typically used inside HTML forms, although some components are "
-     "also useful in menus, toolbars and other areas where user input is "
-     "required."]
-    [:p
-     "In " [:em "Bulma"] " input components are typically wrapped in a "
-     [:code "<div>"] " element which has the " [:code "field"] " CSS class, with "
-     "the actual input component in a " [:code "<div>"] " element with the "
-     [:code "control"] " CSS class. This is done to ensure correct spacing and "
-     "alignment of input fields. Often a " [:code "<label>"] " element is also "
-     "added to the field to provide input labels. The components provided by "
-     "this namespace ensure input fields meet these requirements and provide "
-     "some higher level convenience components for common or useful input types."]
-    [:h4.title.is-4 "Document Models and Storage identifiers"]
-    [:p
-     "Input data obtained from the user must be stored somewhere to be of use. "
-     "The components in " [:em "Yorick"] " use reagent atoms for this storage. "
-     "This library uses the term " [:em "document model"] " to refer to the "
-     "Reagent atoms used to store user input. A " [:em "document model"] " is an "
-     "atom witht the shape of a Clojurescript " [:em "map"] ". This means that "
-     "multiple values can be stored within one document model (for example, all "
-     "the inputs from a form can be stored in one document model). To control "
-     "where data is stored within a document model, the concept of "
-     [:em "storage identifiers"] " or " [:code "sid"] " is introduced. A "
-     [:code "sid"] " is a " [:code "keyword"] " which specifies the path into a "
-     "document model map atom where the data should be stored. To support key "
-     "hierarchies in the map, the " [:code "sid"] " uses a period (.) as a path "
-     "separator. For example, a sid with the value " [:code ":value"] " will "
-     "store the input in the document model map under the key " [:code ":value"]
-     " and a sid with the value " [:code ":my-form.value"] " will store the "
-     "input in the document model map under the key " [:code ":value"] " which is "
-     "under the key " [:code ":my-form"] "."]
-    [:p
-     "Most of the components in this namespace which accept user input have a "
-     "local document model reagent atom which will be used if none is specified "
-     "with the " [:code ":model"] " keyword argument. You can also specify a change function "
-     "of one argument for more complex storage requirements. The " [:code ":change-fn"] 
-     " optional argument allows you to specify the function that will be called "
-     "whenever the input data changes. The argument represents the new input "
-     "value."]]
-   [:hr]
-   [t/tab :ui.tabs.input-page [(t/deftab "field" :id :field)
-                               (t/deftab "input" :id :input)
-                               (t/deftab "checkbox" :id :checkbox)
-                               (t/deftab "radio" :id :radio)
-                               (t/deftab "button" :id :button)
-                               (t/deftab "editable-field" :id :efield)
-                               (t/deftab "textarea" :id :textarea)
-                               (t/deftab "select" :id :select)
-                               (t/deftab "file" :id :file)
-                               (t/deftab "search" :id :search)
-                               (t/deftab "range" :id :range)
-                               (t/deftab "number" :id :number)]
-    :size :medium :position :center]
-   (case (get-in global-state (spath :ui.tabs.input-page))
-     :field [:div
-             [field-component]
-             [horizontal-field-component]]
-     :input [:<>
-             [input-component]
-             [input-field-component]]
-     :checkbox [checkbox-component]
-     :radio [radio-component]
-     :button [button-component]
-     :efield [editable-field-component]
-     :textarea [textarea-component]
-     :select [:<>
-              [select-component]
-              [select-field-component]]
-     :file [file-component]
-     :search [search-component]
-     :range [range-component]
-     :number [:<>
-              [number-component]
-              [number-field-component]]
-     [field-component])])
+  (let [tab-cur (cursor (spath :ui.tabs.input-page.active-tab))]
+    (fn []
+      [:<>
+       [:div.content
+        [:h2.title.is-2 "Input Components"]
+        page-info1
+        page-info2]
+       [:hr]
+       [t/tab-bar :ui.tabs.input-page [(t/deftab "field" :value :field)
+                                       (t/deftab "input" :value :input)
+                                       (t/deftab "checkbox" :value :checkbox)
+                                       (t/deftab "radio" :value :radio)
+                                       (t/deftab "button" :value :button)
+                                       (t/deftab "editable-field" :value :efield)
+                                       (t/deftab "textarea" :value :textarea)
+                                       (t/deftab "select" :value :select)
+                                       (t/deftab "file" :value :file)
+                                       (t/deftab "search" :value :search)
+                                       (t/deftab "range" :value :range)
+                                       (t/deftab "number" :value :number)]
+        :size :medium :position :center]
+       (case @tab-cur
+         :field    [:div
+                    [field-component]
+                    [horizontal-field-component]]
+         :input    [:<>
+                    [input-component]
+                    [input-field-component]]
+         :checkbox [checkbox-component]
+         :radio    [radio-component]
+         :button   [button-component]
+         :efield   [editable-field-component]
+         :textarea [textarea-component]
+         :select   [:<>
+                    [select-component]
+                    [select-field-component]]
+         :file     [file-component]
+         :search   [search-component]
+         :range    [range-component]
+         :number   [:<>
+                    [number-component]
+                    [number-field-component]]
+         [field-component])])))
 

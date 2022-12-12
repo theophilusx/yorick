@@ -40,7 +40,7 @@
    [:div.field-body {:class (cs (:body classes))}
     body]])
 
-(defn input-helper
+(defn- input-helper
   "This function is a helper for text input field components. It is not meant
   to be called directly, but rather used by other components. The function has
   the following mandatory arguments:
@@ -68,7 +68,7 @@
                               :class (cs class)
                               :id (name sid)
                               :name (name sid)
-                              :value (str (store/get-in (spath sid)) :store store)
+                              :value (str (store/get-in (spath sid) :store store)) 
                               :on-change chg-fn})])
 
 (defn input
@@ -155,7 +155,7 @@
   | `:classes`   | a map of string or vectors of strings representing CSS    |
   |              | class names. Supported keys are `:field`, `:control`,     |
   |              | `:label` and `:input`                                     |
-  | `:checked`   | boolean used to set the HTML attribute checked            |
+  | `:checked?`   | boolean used to set the HTML attribute checked            |
   | `:attrs`     | a map of HTML attributes. The keys are the HTML attribute |
   |              | name as a keyword e.g. `:required`                        |"
   [_ sid & {:keys [store change-fn]}]
@@ -164,7 +164,7 @@
         chg-fn (if (fn? change-fn)
                  change-fn
                  #(store/update-in! (spath sid) not :store doc))]
-    (fn [label sid & {:keys [classes checked attrs]}]
+    (fn [label sid & {:keys [classes checked? attrs]}]
       [:div.field {:class (cs (:field classes))}
        [:div.control {:class (cs (:control classes))}
         [:label.checkbox {:class (cs (:label classes))}
@@ -172,13 +172,13 @@
                                :type "checkbox"
                                :id (name sid)
                                :name (name sid)
-                               :checked checked
+                               :checked checked?
                                :on-change chg-fn})]
          (str " " label)]]])))
 
 (defn radio
   "A radio button component. The `sid` argument is a keyword used as the storage
-  identifier to store data in the document model atom. The `labels` argument
+  identifier to store data in the document model atom. The `buttons` argument
   is a vector of maps specifying each radio button. The map has the following keys
 
   | Key        | Description                                                  |
@@ -187,7 +187,7 @@
   | `:value`   | the value to store in the document model atom when a button  |
   |            | sis elected. If not provided, the title, converted to a      |
   |            | keyword, is used                                             |
-  | `:checked` | if `true`, the button will be rendered checked. Only one of  |
+  | `:checked?` | if `true`, the button will be rendered checked. Only one of  |
   |            | the button definitions should have this value set to `true`  |
 
   The component also supports a number of optional keyword arguments
@@ -203,15 +203,15 @@
   |              | `:label`                                                 |
   | `:attrs`     | a map of HTML attributes. Keys are the HTML attribute    |
   |              | name as a keyword e.g. `:required`                       |"
-  [sid labels & {:keys [store click-fn]}]
+  [sid buttons & {:keys [store click-fn]}]
   (let [doc (or store
                 (r/atom {}))
         btns (mapv (fn [b]
                      (let [v (make-value b "button-")]
-                       (when (:checked b)
+                       (when (:checked? b)
                          (store/assoc-in! doc (spath sid) v))
                        {:title (:title b)
-                        :value v})) labels)
+                        :value v})) buttons)
         change-fn (if (fn? click-fn)
                     click-fn
                  #(store/assoc-in! (spath sid) (str->keyword (value-of %)) :store doc))]
@@ -301,8 +301,8 @@
   (let [doc (r/atom {:value (store/get-in (spath sid) :store store)
                      :editing false})
         src-val (store/cursor (spath sid) :store store)
-        edit-val (store/cursor :value :store doc)
-        edit-state (store/cursor :editing :store doc)
+        edit-val (store/cursor [:value] :store doc)
+        edit-state (store/cursor [:editing] :store doc)
         save-fn (fn []
                   (reset! src-val @edit-val)
                   (swap! edit-state not))
@@ -383,15 +383,15 @@
   |-----------------|-----------------------------------------------------------|
   | `:value`        | A value to use when this option is selected               |
   | `:option-class` | A string or vector of strings representing CSS classes    |
-  | `:disabled`     | boolean. If true, this option will be disabled            |
+  | `:disabled?`    | boolean. If true, this option will be disabled            |
   | `:label`        | A shorter label to be used rather than the title          |
-  | `:selected`     | Boolean. True if this option is to be selected by default |"
-  [title & {:keys [option-class disabled label selected] :as opts}]
+  | `:selected?`    | Boolean. True if this option is to be selected by default |"
+  [title & {:keys [option-class disabled? label selected? value]}]
   [:option {:class option-class
-            :disabled disabled
+            :disabled disabled?
             :label label
-            :value (make-value opts "option-")
-            :selected selected}
+            :value (make-value {:title (or label title) :value value} "option-")
+            :selected selected?}
    title])
 
 (defn- default-option [options]
@@ -420,8 +420,8 @@
   |                 | is selected. The argument is the new data value selected|
   | `:select-class` | A string or vector of strings representing CSS class    |
   |                 | names to associate with the select element              |
-  | `:multiple`     | Boolean. If true, allow multiple options to be selected |
-  | `:rounded`      | Boolean. If true, use rounded corners                   |
+  | `:multiple?`    | Boolean. If true, allow multiple options to be selected |
+  | `:rounded?`     | Boolean. If true, use rounded corners                   |
   | `:select-size`  | Sets the size of the select box. Can be `:large`,       |
   |                 | `:medium` or `:small`                                   |
   | `:icon-data`    | An icon-data map defining an icon to include with the   |
@@ -488,9 +488,9 @@
   | `:classes`     | A map of string or vectors of strings representing CSS    |
   |                | class names. The following keys are supported - `:field`, |
   |                | `:title` and `:select`                                    |
-  | `:multiple`    | A boolean which if true allows multiple options to be     |
+  | `:multiple?`   | A boolean which if true allows multiple options to be     |
   |                | selected                                                  |
-  | `:rounded`     | A boolean which if true will set rounded corners on       |
+  | `:rounded?`    | A boolean which if true will set rounded corners on       |
   |                | select box                                                |
   | `:select-size` | Specifies the size of the select box. Possible values are |
   |                | `:small`, `:medium` and `:large`.                         |
@@ -501,13 +501,13 @@
   |                | changes. The argument is the new data value               |
   | `:attrs`       | a map of HTML attribute values. Keys are HTML attribute   |
   |                | names as keywords e.g. `:disabled`                        |"
-  [sid options & {:keys [title classes multiple rounded select-size icon-data
+  [sid options & {:keys [title classes multiple? rounded? select-size icon-data
                          store change-fn attrs]}]
   [:div.field {:class (:field classes)}
    (when title
      [:div.label {:class (cs (:title classes))} title])
-   [select sid options :select-class (:select classes) :multiple multiple
-    :rounded rounded :select-size select-size :icon-data icon-data
+   [select sid options :select-class (:select classes) :multiple multiple?
+    :rounded rounded? :select-size select-size :icon-data icon-data
     :store store :change-fn change-fn :attrs attrs]])
 
 (defn file
@@ -532,9 +532,9 @@
   |              | class names. Supported keys are `:field`, `:file`, `:label` |
   |              | `:input` and `:file-cta`                                    |
   | `:label`     | The text label to associate with the file selector box      |
-  | `:right`     | Place label to the right of the selection box if true       |
-  | `:fullwidth` | Use the full width of the surrounding container if true     |
-  | `:boxed`     | Use a boxed version of the upload component. Useful for     |
+  | `:right?`    | Place label to the right of the selection box if true       |
+  | `:fullwidth?`| Use the full width of the surrounding container if true     |
+  | `:boxed?`    | Use a boxed version of the upload component. Useful for     |
   |              | managing layout                                             |
   | `:size`      | Set the size of the selection box. Possible values are      |
   |              | `:small`, `:medium` and `:large`.                           |
@@ -552,12 +552,12 @@
                          (store/assoc-in! (spath sid) (.-name file) :store doc)
                          (when (fn? action)
                            (action file)))))))]
-    (fn [id & {:keys [classes label right fullwidth boxed size position attrs]}]
+    (fn [id & {:keys [classes label right? fullwidth? boxed? size position attrs]}]
       [:div.field {:class (cs (:field classes))}
        [:div.file.has-name {:class (cs (:file classes)
-                                       (when right "is-right")
-                                       (when fullwidth "is-fullwidth")
-                                       (when boxed "is-boxed")
+                                       (when right? "is-right")
+                                       (when fullwidth? "is-fullwidth")
+                                       (when boxed? "is-boxed")
                                        (case size
                                          :small "is-small"
                                          :medium "is-medium"
@@ -565,7 +565,6 @@
                                          nil)
                                        (case position
                                          :center "is-centered"
-                                         :centre "is-centered"
                                          :right "is-right"
                                          nil))}
         [:label.file-label {:class (cs (:label classes))}

@@ -25,16 +25,15 @@
 
 (defn- tr
   "Renders a table row. The `cells` argument is a vector of cell definition
-  maps (see `defcell` function for details on supported keys for a cell map.)
-  The `model` argument is a reagent atom used as the document model store used
-  to track which row has been selected for selection highlighting. The
-  following optional keyword arguments are also supported:
+  maps (see `cell` function for details on supported keys for a cell map.)
+  The `active-cur` argument is a cursor pointing to state information for the
+  table which shows which line is active
 
   | Keyword   | Description                                                 |
   |-----------|-------------------------------------------------------------|
   | `:class`  | a string or vector of strings specifying CSS class names to |
   |           | add to the `tr` element                                     |
-  | `:select` | if true, add a click handler which allows a row to be       |
+  | `:select?`| if true, add a click handler which allows a row to be       |
   |           | selected and highlighted.                                   |
   | `:row-id` | a unique row id value used when select highlighting is      |
   |           | enabled                                                    | "
@@ -100,7 +99,7 @@
 
 (defn table
   "Render a table of data. The `body` argument is a vector of vectors containing
-  cell definition maps. See `defcell` for details on cell structure and supported
+  cell definition maps. See `cell` for details on cell structure and supported
   keys. The component supports the following optional keywords:
 
   | Keyword      | Description                                                 |
@@ -109,10 +108,10 @@
   |              | names. The following keys are supported `:table`, `:thead`, |
   |              | `:tfoot` and `:tbody`                                       |
   | `:header`    | a vector of vectors containing cell definition maps         |
-  |              | defining the table header. See `defcell` function for       |
+  |              | defining the table header. See `cell` function for       |
   |              | details on cell structure.                                  |
   | `:footer`    | a vector of vectors containing cell definition maps         |
-  |              | defining the table footer. See `defcell` function for       |
+  |              | defining the table footer. See `cell` function for       |
   |              | details on cell structure.                                  |
   | `:select?`   | if true, add a click handler to table body rows to support  |
   |              | selection and highlighting of specific row.                 |

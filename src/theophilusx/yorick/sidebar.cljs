@@ -125,6 +125,6 @@
   (let [menu-cur (store/cursor (conj (spath sid) :active-menu))
         active-cur (store/cursor (conj (spath sid) :active-item))]
     (fn [_ menus & _]
-      (into [:aside.menu]
+      (into [:nav.menu]
             (for [m menus]
               [make-menu menu-cur active-cur m])))))

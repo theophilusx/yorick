@@ -80,7 +80,7 @@
   | Keyword        | Description                                           |
   |----------------|-------------------------------------------------------|
   | `:page-size`   | number of records to show per page. Default 10        |
-  | `:rounded?`     | if true, page navigation items have a rounded look    |
+  | `:rounded?`    | if true, page navigation items have a rounded look    |
   | `:button-size` | sets the size of navigation buttons. Supported values |
   |                | are `:small`, `:medium` and `:large`                  |"
   [records _ & {:keys [page-size] :or {page-size 10}}]

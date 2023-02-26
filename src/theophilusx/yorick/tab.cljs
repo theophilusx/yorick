@@ -11,10 +11,12 @@
 
   | Keyword      | Description                                                |
   |--------------|------------------------------------------------------------|
-  | `:id`        | a unique value used as the value set in the global state   |
+  | `:value`     | a unique value used as the value set in the global state   |
   |              | when a tab is selected. If not specified, the title,       |
   |              | converted to a keyword, will be used as the default        |
-  | `:icon-data` | an icon data map defining an icon to add to the tab.       |
+  | `:id`        | A unique ID value used as the ID HTML attribute.  Default  |
+  |              | to the :value value as a string                            |
+  | `:icon`      | an icon data map defining an icon to add to the tab.       |
   |              | see `theophilusx.yorick.icon` for details on map structure |
   | `:class`     | a string or vector of strings specifying additional CSS    |
   |              | class names to add to the tab link                         |"
@@ -42,16 +44,17 @@
   |              | for classes to add to the tab bar                           |
   | `:size`      | Set the size of the tab bar. Possible values are `:small`   |
   |              | `:medium` and `:large`                                      |
-  | `:boxed`     | If true, put borders around tabs to give them a traditional |
+  | `:boxed?`    | If true, put borders around tabs to give them a traditional |
   |              | boxed appearance.                                           |
-  | `:toggle`    | If true, make tab bar toggle e.g. like a radio button       |
-  | `:rounded`   | If true and if `:boxed`, round the edge and corners of the  |
+  | `:toggle?`   | If true, make tab bar toggle e.g. like a radio button       |
+  | `:rounded?`  | If true and if `:boxed`, round the edge and corners of the  |
   |              | left most and right most tabs.                              |
   | `:fullwidth?`| Make the tab bar full width when true                       |"
-  [sid tabs & _]
-  (store/assoc-in! (conj (spath sid) :active-tab) (:value (first tabs)))
-  (let [active-cur (store/cursor (conj (spath sid) :active-tab))]
-    (fn [_ tabs & {:keys [position class size boxed? toggle? rounded?]}]
+  [sid tab-list & _]
+  (store/assoc-in! (conj (spath sid) :active-tab) (:value (first tab-list)))
+  (let [tabs tab-list
+        active-cur (store/cursor (conj (spath sid) :active-tab))]
+    (fn [_ _ & {:keys [position class size boxed? toggle? rounded?]}]
       [:div.tabs {:class (cs class
                              (when position
                                (str "is-" (name position)))

@@ -22,7 +22,7 @@
             [theophilusx.yorick.store :as store]
             [theophilusx.yorick.basic :as basic]))
 
-(defn nav-link
+(defn link
   "Returns a navigation link item.
   Returns a map defining a navbar link item.The `title` argument is
   used as the text of the link. Supported optional keyword arguments are
@@ -35,7 +35,7 @@
   | `:class`  | Additional CSS classes to add to the component              |
   | `:id`     | An HTML ID attribute. Should be unique. Will be generated   |
   |           | using `gensym` if absent                                    |"
-  [title & {:keys [value icon class id] :as opts}]
+  [title & {:keys [icon class id] :as opts}]
   {:type :link
    :title title
    :value (make-value opts)
@@ -43,7 +43,7 @@
    :class class
    :icon-data icon})
 
-(defn nav-container
+(defn container
   "Returns a navigation container item.
   A navigation container item is a generic container component which can be
   defined to hold almost any type of content. E.g. a search box.The `contents`
@@ -61,7 +61,7 @@
    :id (or id (gensym "container-"))
    :class class})
 
-(defn nav-dropdown
+(defn dropdown
   "Returns a navbar drop down menu item.
   Provides a basic drop down menu which includes a down arrow to indicate it
   is a menu. The drop down menu can contain link, container or divider items.
@@ -79,21 +79,21 @@
   |--------------|---------------------------------------------------------|
   | `:class`     | Additional CSS class names to add to the component      |
   | `:icon`      | An icon data map defining an icon to add to the parent  |
-  | `:hoverable?`| If true, the dropdown will be exposed when the mouse    |
+  | `:hover?`| If true, the dropdown will be exposed when the mouse    |
   |              | hovers over it.                                         |
   | `:id`        | An HTML ID attribute. Used to track the state of the    |
   |              | dropdown. A unique value will be generated via `gensym` |
   |              | if none is supplied.                                    |"
-  [title children & {:keys [class icon hoverable? id]}]
+  [title children & {:keys [class icon hover? id]}]
   {:type :dropdown
    :title title
    :children children
-   :hoverable? hoverable?
+   :hoverable? hover?
    :class class
    :id (or id (gensym "dropdown-"))
    :icon-data icon})
 
-(defn nav-divider 
+(defn divider 
   "Returns a navbar divider item.
   An item used to separate items in a drop down menu."
   []
@@ -204,23 +204,23 @@
                (for [i (:end entries)]
                  [make-item sid active-cur dropdown-cur i])))])))
 
-(defn nav-brand
+(defn- brand
   "Generate a brand component for left most position in navbar.
 
   | Argument | Description                                            |
   |--------------|----------------------------------------------------|
   | `sid`        | Storage identifier used for the navbar             |
   | `brand-data` | Vector of navbar item definition maps              |
-  | `has-burger` | When true, add a burger menu on small screens      |"
+  | `burger?`    | When true, add a burger menu on small screens      |"
   [sid _ _]
   (let [active-cur   (store/cursor (conj (spath sid) :active-item))
         dropdown-cur (store/cursor (conj (spath sid) :active-dropdown))
         burger-cur (store/cursor (conj (spath sid) :burger-active))]
-    (fn [_ brand-data has-burger?]
+    (fn [_ brand-data burger?]
       [:div.navbar-brand
        (for [i brand-data]
          ^{:key (:id i)} [make-item sid active-cur dropdown-cur i])
-       (when has-burger?
+       (when burger?
          [:a.navbar-burger {:role          "button"
                             :aria-label    "menu"
                             :aria-expanded "false"
@@ -248,11 +248,11 @@
   |----------------|----------------------------------------------------|
   | `:default`     | The default menu selection. This will be the active|
   |                | menu choice when component is first loaded         |
-  | `:brand`       | Vector of navbar items representing the brand to be|
+  | `:brand-data`  | Vector of navbar items representing the brand to be|
   |                | placed in the left most position of the navbar.    |
-  | `:has-burger?` | If true, a burger menu will be added when the      |
+  | `:burger?`     | If true, a burger menu will be added when the      |
   |                | display device is a small screen                   |
-  | `:spaced?      | When true, add additional space around menu items  |
+  | `:spaced?``      | When true, add additional space around menu items  |
   |                | to space them out more.                            |
   | `:color`       | Set the navbar color. This is a keyword which is   |
   |                | same as the Bulma color classes i.e. `:is-dark`    |
@@ -269,7 +269,7 @@
                                 :active-dropdown nil
                                 :active-item default
                                 :transparent? transparent?})
-  (fn [_ menu & {:keys [brand has-burger? spaced? color transparent? class
+  (fn [_ menu & {:keys [brand-data burger? spaced? color transparent? class
                        expanded? tab? shadow?]}]
     [:nav.navbar {:class (cs class
                              (when spaced? "is-spaced")
@@ -280,6 +280,11 @@
                              (when shadow? "has-shadow"))
                   :role "navigation"
                   :aria-label "main navigation"}
-     (when brand
-       [nav-brand sid brand has-burger?])
+     (when :brand-data
+       [brand sid brand-data burger?])
      [nav-menu sid menu]]))
+
+(comment
+  ((brand :fred [(link "test")] false) :fred [(link "test")] false)
+
+  )

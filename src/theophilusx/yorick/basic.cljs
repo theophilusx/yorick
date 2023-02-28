@@ -28,7 +28,7 @@
                     :id (or id (gensym "a-"))
                     :class (cs class)})
    (when icon-data
-     [icon/icon-component icon-data])
+     [icon/icon icon-data])
    [:span title]])
 
 (defn img

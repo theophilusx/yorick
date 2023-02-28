@@ -617,7 +617,7 @@
                          :type "button"
                          :on-click #(action (:search @doc))}
          (when icon-data
-           [icons/icon-component icon-data])
+           [icons/icon icon-data])
          (or button-text "Search")]]])))
 
 (defn range-field

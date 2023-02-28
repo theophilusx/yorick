@@ -23,7 +23,7 @@
    :icon-class icon-class
    :span-class span-class})
 
-(defn icon-component
+(defn icon
   "Generate an icon component from `icon-data` map. The `icon-data` map is a
   `map` with keys for `:name`, `:position`, `:size`, `:icon-class` and
   `:span-class`. Only `:name` is required. See the function `deficon` for a
@@ -53,9 +53,9 @@
   can be either a `map` or a `vector` of icon data `maps`"
   [icon-data]
   (if (map? icon-data)
-    [[icon-component icon-data]]
+    [[icon icon-data]]
     (vec (for [i icon-data]
-           [icon-component i]))))
+           [icon i]))))
 
 (defn icon-control-class
   "This function is used to extract the icon position classes from a vector

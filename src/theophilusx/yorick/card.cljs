@@ -19,7 +19,7 @@
   [:header.card-header 
    [:p.card-header-title {:class (cs class)} title]
    (when icon
-     [basic/a [icons/icon-component icon]
+     [basic/a [icons/icon icon]
       :class "card-header-icon"
       :on-click (when (fn? icon-action)
                   #(icon-action %))])])

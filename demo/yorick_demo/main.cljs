@@ -4,18 +4,18 @@
             [theophilusx.yorick.sidebar :as sb]
             [theophilusx.yorick.utils :as utils]
             [theophilusx.yorick.store :as store]
-            [yorick-demo.basic :refer [basic-page]]
-            [yorick-demo.cards :refer [card-page]]
-            [yorick-demo.icons :refer [icon-page]]
-            [yorick-demo.inputs :refer [input-page]]
-            [yorick-demo.media :refer [media-page]]
-            [yorick-demo.modals :refer [modal-page]]
-            [yorick-demo.navbars :refer [navbar-page]]
-            [yorick-demo.pagination :refer [paginate-page]]
+            [yorick-demo.basic :as basic]
+            [yorick-demo.cards :as card]
+            [yorick-demo.icons :as icons]
+            [yorick-demo.inputs :as inputs]
+            [yorick-demo.media :as media]
+            [yorick-demo.modals :as modal]
+            [yorick-demo.navbars :as navbars]
+            [yorick-demo.pagination :as pagination]
             [yorick-demo.sidebars :refer [sidebar-page]]
-            [yorick-demo.tables :refer [tables-page]]
-            [yorick-demo.toolbars :refer [toolbar-page]]
-            [yorick-demo.tabs :refer [tabs-page]]))
+            [yorick-demo.tables :as tables]
+            [yorick-demo.toolbars :as tbar]
+            [yorick-demo.tabs :as tabs]))
 
 (println "Reloading code")
 
@@ -25,69 +25,47 @@
 (defn mount [el component]
   (rdom/render component el))
 
-(def demo-sidebar {:sid :ui.menu
-                   :default-link :basic
-                   :data (sb/defsidebar-item
-                           :type :menu
-                           :title "Components"
-                           :items [(sb/defsidebar-item
-                                     :title "Basic"
-                                     :id :basic)
-                                   (sb/defsidebar-item
-                                     :title "Cards"
-                                     :id :cards)
-                                   (sb/defsidebar-item
-                                     :title "Icons"
-                                     :id :icons)
-                                   (sb/defsidebar-item
-                                     :title "Input"
-                                     :id :input)
-                                   (sb/defsidebar-item
-                                     :title "Media"
-                                     :id :media)
-                                   (sb/defsidebar-item
-                                     :title "Modal"
-                                     :id :modal)
-                                   (sb/defsidebar-item
-                                     :title "Navbar"
-                                     :id :navbar)
-                                   (sb/defsidebar-item
-                                     :title "Paginate"
-                                     :id :paginate)
-                                   (sb/defsidebar-item
-                                     :title "Sidebar"
-                                     :id :sidebar)
-                                   (sb/defsidebar-item
-                                     :title "Tables"
-                                     :id :tables)
-                                   (sb/defsidebar-item
-                                     :title "Toolbar"
-                                     :id :toolbar)
-                                   (sb/defsidebar-item
-                                     :title "Tabs"
-                                     :id :tab)])})
+(def demo-sidebar [(sb/defmenu [(sb/defentry "Introduction" :value :intro)
+                               (sb/defentry "State Management" :value :state)
+                               (sb/defentry "Bulma & Classes" :value :css)
+                               (sb/defentry "Getting Started" :value :start)
+                               (sb/defentry "Feedback & Bug Reports" :value :bugs)
+                               (sb/defentry "Changelog" :value :changlog)
+                               (sb/defmenu [(sb/defentry "Basic" :value :basic)
+                                            (sb/defentry "Cards" :value :cards)
+                                            (sb/defentry "Icons" :value :icons)
+                                            (sb/defentry "Input" :value :input)
+                                            (sb/defentry "Media" :value :media)
+                                            (sb/defentry "Modal" :value :modal)
+                                            (sb/defentry "Navbar" :value :navbar)
+                                            (sb/defentry "Paginate" :value :paginate)
+                                            (sb/defentry "Sidebar" :value :sidebar)
+                                            (sb/defentry "Tables" :value :tables)
+                                            (sb/defentry "Toolbar" :value :toolbar)
+                                            (sb/defentry "Tabs" :value :tabs)]
+                                 :title "Components")])])
 
 (defn placeholder-page []
   [:div.columns
    [:div.column
     [:h2.title.is-2 "Placeholder Page"]
     [:p "This is the placeholder page for "
-     [:strong (str (store/get-in store/global-state (utils/spath :ui.menu)))]]]])
+     [:strong (str (store/get-in (utils/spath :ui.menu)))]]]])
 
 (defn current-page []
-  (case (store/get-in store/global-state (utils/spath :ui.menu))
-    :basic [basic-page]
-    :cards [card-page]
-    :icons [icon-page]
-    :input [input-page]
-    :media [media-page]
-    :modal [modal-page]
-    :navbar [navbar-page]
-    :paginate [paginate-page]
+  (case (store/get-in (utils/spath :ui.menu.active-item))
+    :basic [basic/ns-page]
+    :cards [card/ns-page]
+    :icons [icons/ns-page]
+    :input [inputs/ns-page]
+    :media [media/ns-page]
+    :modal [modal/ns-page]
+    :navbar [navbars/ns-page]
+    :paginate [pagination/ns-page]
     :sidebar [sidebar-page]
-    :tables [tables-page]
-    :toolbar [toolbar-page]
-    :tab [tabs-page]
+    :tables [tables/ns-page]
+    :toolbar [tbar/ns-page]
+    :tabs [tabs/ns-page]
     [placeholder-page]))
 
 (defn greeting []
@@ -103,7 +81,7 @@
     [:div.container
      [:div.columns
       [:div.column.is-2
-       [sb/sidebar demo-sidebar]]
+       [sb/sidebar :ui.menu demo-sidebar :default :basic]]
       [:div.column
        [current-page]]]]]])
 
@@ -114,3 +92,5 @@
 (defn ^:dev/after-load init []
   (println "Hello World")
   (mount-app))
+
+@store/default-store

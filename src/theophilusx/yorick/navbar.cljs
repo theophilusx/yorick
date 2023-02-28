@@ -36,12 +36,13 @@
   | `:id`     | An HTML ID attribute. Should be unique. Will be generated   |
   |           | using `gensym` if absent                                    |"
   [title & {:keys [icon class id] :as opts}]
-  {:type :link
-   :title title
-   :value (make-value opts)
-   :id (or id (gensym "link-"))
-   :class class
-   :icon-data icon})
+  (let [v (make-value (assoc opts :title title) "link-")]
+    {:type :link
+     :title title
+     :value v
+     :id (or id (name v))
+     :class class
+     :icon-data icon}))
 
 (defn container
   "Returns a navigation container item.
@@ -55,11 +56,13 @@
   | `:class`  | Additional CSS class names to add to the component          |
   | `:id`     | A unique HTML ID attribute. If none is provided, use        |
   |           | `gensym` to create a unique value.                          |"
-  [contents & {:keys [class id]}]
-  {:type :container
-   :contents contents
-   :id (or id (gensym "container-"))
-   :class class})
+  [contents & {:keys [class id] :as opts}]
+  (let [v (make-value opts)]
+    {:type :container
+     :contents contents
+     :value v
+     :id (or id (name v))
+     :class class}))
 
 (defn dropdown
   "Returns a navbar drop down menu item.
@@ -79,19 +82,23 @@
   |--------------|---------------------------------------------------------|
   | `:class`     | Additional CSS class names to add to the component      |
   | `:icon`      | An icon data map defining an icon to add to the parent  |
-  | `:hover?`| If true, the dropdown will be exposed when the mouse    |
+  | `:hover?`    | If true, the dropdown will be exposed when the mouse    |
   |              | hovers over it.                                         |
+  | `:value`     | A unique value used to track the state of the dropdown  |
+  |              | If not supplied, title, converted to a keyword, is used |
   | `:id`        | An HTML ID attribute. Used to track the state of the    |
   |              | dropdown. A unique value will be generated via `gensym` |
   |              | if none is supplied.                                    |"
-  [title children & {:keys [class icon hover? id]}]
-  {:type :dropdown
-   :title title
-   :children children
-   :hoverable? hover?
-   :class class
-   :id (or id (gensym "dropdown-"))
-   :icon-data icon})
+  [title children & {:keys [class icon hover? id] :as opts}]
+  (let [v (make-value (assoc opts :title title) "ddown-")]
+    {:type :dropdown
+     :title title
+     :children children
+     :hoverable? hover?
+     :class class
+     :value v
+     :id (or id (name v))
+     :icon-data icon}))
 
 (defn divider 
   "Returns a navbar divider item.
@@ -143,12 +150,12 @@
   | `dropdown-cur` | A cursor connected to the `active-dropdown` key in the store|"
   [sid active-cur dropdown-cur d]
   [:div.navbar-item.has-dropdown {:class (cs (when (:hoverable? d) "is-hoverable")
-                                             (when (= @dropdown-cur (:id d)) "is-active"))}
+                                             (when (= @dropdown-cur (:value d)) "is-active"))}
      [basic/a (:title d) :class (cs "navbar-link" (:class d))
       :on-click (fn []
-                  (if (= @dropdown-cur (:id d))
+                  (if (= @dropdown-cur (:value d))
                     (reset! dropdown-cur nil)
-                    (reset! dropdown-cur (:id d))))
+                    (reset! dropdown-cur (:value d))))
       :icon-data (:icon-data d)
       :id (:id d)]
    (into [:div.navbar-dropdown (when (store/get-in (conj (spath sid) :transparent?))

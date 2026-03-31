@@ -71,7 +71,7 @@
       "")
     (string/join (map (fn [i]
                         (case (:position i)
-                          :left "has-icon-left"
-                          :right "has-icon-right"
+                          :left "has-icons-left"
+                          :right "has-icons-right"
                           ""))
                       icon-data) " ")))

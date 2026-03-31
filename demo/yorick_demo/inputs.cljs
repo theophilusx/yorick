@@ -66,7 +66,7 @@ Values can be either a string or a vector of strings specifying CSS class names"
 
 (def hf-opt-args
   [[":classes" "A map specifying CSS classes to add. The map supports the keys :field and :label. The value
-is either a string or a vector of stirings which specify CSS class names"]])
+is either a string or a vector of strings which specify CSS class names"]])
 
 (def hf-examples
   [{:text  "
@@ -81,7 +81,7 @@ is either a string or a vector of stirings which specify CSS class names"]])
 "
     :code (fn []
             [:<>
-             [:p "A basic horizontal field exmaple"]
+             [:p "A basic horizontal field example"]
              [i/horizontal-field "Field Label" [:p "field contents"]]
              [:p "A basic horizontal field with additional CSS classes"]
              [i/horizontal-field "Field Label" [:p "field contents"]
@@ -111,7 +111,7 @@ from HTML5 input types e.g. :text"]
    ["sid" "A storage identifier."]])
 
 (def input-opt-args
-  [[":store" "A reagent atom used to stroe the state (input) for the field"]
+  [[":store" "A reagent atom used to store the state (input) for the field"]
    [":change-fn" "A change function which is called when the content of the input changes."]
    [":classes" "Map of CSS class names. Supported keys are :control and :input.
 Values can be either a stgring or a vector of strings specifying CSS class names."]
@@ -159,20 +159,20 @@ value is the value to set that attribute to."]])
 
 (def if-title  "input-field - an input field convenience component")
 
-(def if-desc [:p "The " [:strong "inut-field"] " component is a convenience component "
+(def if-desc [:p "The " [:strong "input-field"] " component is a convenience component "
               "which combines the " [:strong "field"] " and " [:strong "input"]
               " components. "])
 
 (def if-args
   [["label" "A text label to associate with the input field"]
-      ["type" "The type of the input field. A keywrodised HTML input type e.g. :email"]
+      ["type" "The type of the input field. A keywordised HTML input type e.g. :email"]
       ["sid" "A storage identifier which specifies the key to use when saving the input into the store"]])
 
 (def if-opt-args
   [[":classes" "A map of CSS class names. Supported keys are :field, :label and :input. Values
 are either strings or vectors of strings specifying CSS class names"]
       [":icon-data" "An icon data map specifying an icon to add to the input field."]
-      [":stroe" "A reagent atom used as the data store for this input."]
+      [":store" "A reagent atom used as the data store for this input."]
       [":change-fn" "A function of one argument which is executed when the content of the input changes.
 Argument is the new input."]
       [":attrs" "Map of HTML attributes. The keys are keywordized HTML attribute names"]])
@@ -183,10 +183,10 @@ Argument is the new input."]
 (let [doc (r/atom {})
       frm (fn []
             [:<>
-              [input-field \"First Name\" :text 
-                 :name.first :model doc]
-              [input-field \"Last Name\" :text 
-                 :name.last :model doc]
+              [input-field \"First Name\" :text
+                 :name.first :store doc]
+              [input-field \"Last Name\" :text
+                 :name.last :store doc]
               [:p (str \"Result: \" @doc)])]]
   [frm])"
     :code (fn []
@@ -195,8 +195,8 @@ Argument is the new input."]
              (let [doc (r/atom {})
                    frm (fn []
                          [:<>
-                          [i/input-field "First Name" :text :name.first :model doc]
-                          [i/input-field "Last Name" :text :name.last :model doc]
+                          [i/input-field "First Name" :text :name.first :store doc]
+                          [i/input-field "Last Name" :text :name.last :store doc]
                           [:p (str "Result: " @doc)]])]
                [frm])])}])
 
@@ -405,7 +405,7 @@ keywordized HTML attribute names e.g. :id"]])
        "allows for editing of the value. When editing the value, buttons are "
        "provided to save or cancel the edit."]
       [:p
-       "The component supports an optional " [:strong ":clases"] " keywrod argument which provides "
+       "The component supports an optional " [:strong ":classes"] " keyword argument which provides "
        "a mechanism for setting CSS classes on the elements used to build this component. The value "
        "associated with each key can be a string or a vector of strings. Each string specifies a CSS "
        "class name. The supported keys are:"]
@@ -763,7 +763,7 @@ Defualts to title if :label and :value are not supplied. Defualts to a gensym st
   [[":classes" "A map of strings or vectors of strings specifying CSS class names. Supported keys are :field, :input and :button"]
       [":icon-data" "An icon data map used to specify an icon to add to the search box."]
       [":button-text" "Text to put on the serach box button. Defaults to Search"]
-      [":attrs" "A map of HTML attributes. The keys are keywrodized HTML attribute names."]])
+      [":attrs" "A map of HTML attributes. The keys are keywordized HTML attribute names."]])
 
 (def search-examples
   [{:text  "
@@ -987,7 +987,7 @@ would store tehir input into keys within that store. Once the user indicates the
 other code might then take that store and process the data accordingly. The " [:em "storage identifier"] " or "
    [:code "sid"] " is used to specify the path into the store where the data will be recorded. The sid is
 a keyword where periods are used as path separators. The path is a hierarchy of map keys which identify a
-specific locaiton within the store. For example, the sid " [:code ":a.b.c"] " represents the path "
+specific location within the store. For example, the sid " [:code ":a.b.c"] " represents the path "
    [:code "[:a :b :c]"] ". Using this sid to retrieve data would be equivalent to " [:code "(get-in store [:a :b :c])"]
    ". "]])
 
@@ -1000,7 +1000,7 @@ specific locaiton within the store. For example, the sid " [:code ":a.b.c"] " re
                {:title "input"
                 :value :input
                 :page input-page}
-               {:title "input-field-page"
+               {:title "input-field"
                 :value :input-field
                 :page input-field-page}
                {:title "checkbox"

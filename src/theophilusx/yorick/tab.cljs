@@ -25,7 +25,7 @@
     {:title      title
      :value      v
      :id         (or id (name v))
-     :icon-datat icon-data
+     :icon-data icon-data
      :class      class}))
 
 (defn tab-bar
@@ -54,7 +54,7 @@
   (store/assoc-in! (conj (spath sid) :active-tab) (:value (first tab-list)))
   (let [tabs tab-list
         active-cur (store/cursor (conj (spath sid) :active-tab))]
-    (fn [_ _ & {:keys [position class size boxed? toggle? rounded?]}]
+    (fn [_ _ & {:keys [position class size boxed? toggle? rounded? fullwidth?]}]
       [:div.tabs {:class (cs class
                              (when position
                                (str "is-" (name position)))
@@ -62,7 +62,8 @@
                                (str "is-" (name size)))
                              (when boxed? "is-boxed")
                              (when toggle? "is-toggle")
-                             (when rounded? "is-toggle-rounded"))}
+                             (when rounded? "is-toggle-rounded")
+                             (when fullwidth? "is-fullwidth"))}
        (into [:ul]
              (for [t tabs]
                [:li {:class (cs (when (= @active-cur (:value t))

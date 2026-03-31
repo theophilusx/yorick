@@ -10,6 +10,7 @@
   keywords:
 
   | Keyword | Description |
+  |---------|-------------|
   | `:class` | A string or vector of strings representing CSS class names  |
   | `:attrs` | a map of HTML attribute values. The keys are HTML attribute |
   |          | names as keywords e.g. `:id`                                |"
@@ -25,6 +26,7 @@
   keywords:
 
   | Keyword | Description |
+  |---------|-------------|
   | `:class` | A string or vector of strings representing CSS class names  |
   | `:attrs` | a map of HTML attribute values. The keys are HTML attribute |
   |          | names as keywords e.g. `:id`                                |"

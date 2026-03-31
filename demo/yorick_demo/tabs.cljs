@@ -135,7 +135,7 @@
      "or right of the page and is available in three different sizes."]
     [:p
      "The " [:code "tab"] " component tracks the current selected tab in the "
-     "global state atom defined by " [:code "theophilusx.yorick.store/global-state"]
+     "global state atom defined by " [:code "theophilusx.yorick.store/default-store"]
      " under the key specified by the " [:code "sid"] " argument, allowing other "
      "components and ClojureScript code to react to tab changes. A convenience "
      "function " [:code "deftab"] " is provided to support the definition of "

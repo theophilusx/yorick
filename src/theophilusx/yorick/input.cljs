@@ -168,7 +168,7 @@
       [:div.field {:class (cs (:field classes))}
        [:div.control {:class (cs (:control classes))}
         [:label.checkbox {:class (cs (:label classes))}
-         [:input (merge attrs {:classs (cs (:input classes))
+         [:input (merge attrs {:class (cs (:input classes))
                                :type "checkbox"
                                :id (name sid)
                                :name (name sid)
@@ -209,7 +209,7 @@
         btns (mapv (fn [b]
                      (let [v (make-value b "button-")]
                        (when (:checked? b)
-                         (store/assoc-in! doc (spath sid) v))
+                         (store/assoc-in! (spath sid) v :store doc))
                        {:title (:title b)
                         :value v})) buttons)
         change-fn (if (fn? click-fn)
@@ -649,7 +649,7 @@
         chg-fn (if (fn? change-fn)
                  change-fn
                  (fn [e]
-                   (store/assoc-in! (spath sid) (js/parseInt (value-of e) :store doc))))]
+                   (store/assoc-in! (spath sid) (js/parseInt (value-of e)) :store doc)))]
     (store/assoc-in! (spath sid) (or value 0) :store doc)
     (fn [sid min max & {:keys [label classes step attrs]}]
       [field [:div.field.has-addons

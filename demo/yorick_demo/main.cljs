@@ -15,7 +15,8 @@
             [yorick-demo.sidebars :refer [sidebar-page]]
             [yorick-demo.tables :as tables]
             [yorick-demo.toolbars :as tbar]
-            [yorick-demo.tabs :as tabs]))
+            [yorick-demo.tabs :as tabs]
+            [yorick-demo.intro :as intro]))
 
 (println "Reloading code")
 
@@ -30,7 +31,7 @@
                                (sb/defentry "Bulma & Classes" :value :css)
                                (sb/defentry "Getting Started" :value :start)
                                (sb/defentry "Feedback & Bug Reports" :value :bugs)
-                               (sb/defentry "Changelog" :value :changlog)
+                               (sb/defentry "Changelog" :value :changelog)
                                (sb/defmenu [(sb/defentry "Basic" :value :basic)
                                             (sb/defentry "Cards" :value :cards)
                                             (sb/defentry "Icons" :value :icons)
@@ -54,6 +55,7 @@
 
 (defn current-page []
   (case (store/get-in (utils/spath :ui.menu.active-item))
+    :intro [intro/intro-page]
     :basic [basic/ns-page]
     :cards [card/ns-page]
     :icons [icons/ns-page]

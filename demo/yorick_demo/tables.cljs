@@ -141,11 +141,11 @@
               (t/cell \"900\")]]]
        [:<>
         [:p \"A basic table with headers\"]
-        [t/table bdy :header hdr]
+        [t/table :table.demo bdy :header hdr]
         [:p \"A table with headers and selectable rows\"]
-        [t/table bdy :header hdr :select true]
+        [t/table :table.demo bdy :header hdr :select? true]
         [:p \"A table with striped rows and borders\"]
-        [t/table bdy :header hdr :striped true :bordered true]])"
+        [t/table :table.demo bdy :header hdr :striped? true :bordered? true]])"
     :code (fn []
     (let [hdr [[(t/cell "Header 1" :type :th)
                  (t/cell "Header 2" :type :th)
@@ -168,11 +168,11 @@
                  (t/cell "900")]]]
        [:<>
         [:p "A basic table with headers"]
-        [t/table bdy :header hdr]
+        [t/table :table.demo bdy :header hdr]
         [:p "A table with headers and selectable rows"]
-        [t/table bdy :header hdr :select true]
+        [t/table :table.demo bdy :header hdr :select? true]
         [:p "A table with striped rows and borders"]
-        [t/table bdy :header hdr :striped true :bordered true]]))}])
+        [t/table :table.demo bdy :header hdr :striped? true :bordered? true]]))}])
 
 (defn table-page []
   [doc-fn {:title table-title

@@ -1,7 +1,7 @@
 (ns theophilusx.yorick.table
   "Provides a component to render an HTML table of data."
   (:require [theophilusx.yorick.store :as store]
-            [theophilusx.yorick.utils :refer [cs]]))
+            [theophilusx.yorick.utils :refer [cs spath]]))
 
 (defn cell
   "Generates a map defining a table cell. The 'val' argument is the data to
@@ -94,7 +94,7 @@
   (into
    [:tbody {:class (cs (:tbody classes))}]
    (map-indexed (fn [idx r]
-                  [tr r active-cur :class (:tr classes) :select select? :row-id idx])
+                  [tr r active-cur :class (:tr classes) :select? select? :row-id idx])
                 rows)))
 
 (defn table
@@ -122,10 +122,10 @@
   | `:hover?`    | if true, rows are highlighted when mouse hovers over them   |
   | `:fullwidth?`| if true, tables are rendered to fill the full width of the  |
   |              | enclosing container.                                        |"
-  [_ & _]
-  (let [active-cur (store/cursor :selected-row)] 
-    (fn [body & {:keys [classes header footer select? bordered? striped?
-                       narrow? hover? fullwidth?]}]
+  [sid & _]
+  (let [active-cur (store/cursor (spath sid))]
+    (fn [_ body & {:keys [classes header footer select? bordered? striped?
+                         narrow? hover? fullwidth?]}]
       [:table.table {:class [(cs (:table classes)
                                  (when bordered? "is-bordered")
                                  (when striped? "is-striped")
@@ -134,7 +134,7 @@
                                  (when fullwidth? "is-fullwidth"))]}
        (when header [thead header active-cur :class (:header classes)])
        (when footer [tfoot footer active-cur :class (:footer classes)])
-       [tbody body active-cur :class (:body classes) :select select?]])))
+       [tbody body active-cur :class (:body classes) :select? select?]])))
 
 (defn scrollable-table
   "Wrap a table component in a table container to make it scrollable. The `t`

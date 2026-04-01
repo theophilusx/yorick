@@ -20,7 +20,7 @@
   [["title" "The title to use as the text of the link."]])
 
 (def link-opt-args
-  [[":value" "Set the value associatged with the link when activatged. Defaults to the title converted to a keyword when absent."]
+  [[":value" "Set the value associated with the link when activated. Defaults to the title converted to a keyword when absent."]
    [":icon" "An icon data map which specifies an icon to be added to the title text for th elink. See theophilusx.yorick.icon namespace for more details"]
    [":class" "A string or vector of strings specifying CSS class names to be added to the component."]
    [":id" "A unique value to be associagted with the link via the HTML id attribute. If not supplied, a gensym is used to generate a unique value"]])
@@ -57,7 +57,7 @@
 
 (def cont-desc
   [:p "The " [:strong "theophilusx.yorick.navbar/container"] " function is a "
-      "conveniennce function used to create a generic container that can be used "
+      "convenience function used to create a generic container that can be used "
       "in the navigation bar to hold another component, such as some text, an image "
       "or a search box. Returns the correctly formatted contgainer map used by the navigation "
       "bar component."])

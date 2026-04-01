@@ -233,9 +233,9 @@
                             :aria-expanded "false"
                             :on-click      #(swap! burger-cur not)
                             :class         (when @burger-cur "is-active")}
-          [:span {:aria-hidden "false"}]
-          [:span {:aria-hidden "false"}]
-          [:span {:aria-hidden "false"}]])])))
+          [:span {:aria-hidden "true"}]
+          [:span {:aria-hidden "true"}]
+          [:span {:aria-hidden "true"}]])])))
 
 (defn navbar
   "Basic navigation bar component.
@@ -259,7 +259,7 @@
   |                | placed in the left most position of the navbar.    |
   | `:burger?`     | If true, a burger menu will be added when the      |
   |                | display device is a small screen                   |
-  | `:spaced?``      | When true, add additional space around menu items  |
+  | `:spaced?`      | When true, add additional space around menu items  |
   |                | to space them out more.                            |
   | `:color`       | Set the navbar color. This is a keyword which is   |
   |                | same as the Bulma color classes i.e. `:is-dark`    |
@@ -287,7 +287,7 @@
                              (when shadow? "has-shadow"))
                   :role "navigation"
                   :aria-label "main navigation"}
-     (when :brand-data
+     (when brand-data
        [brand sid brand-data burger?])
      [nav-menu sid menu]]))
 

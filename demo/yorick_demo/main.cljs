@@ -77,7 +77,7 @@
      [:header.header
       [:h1.title.is-1.has-text-white "Yorick Examples"]
       [:h3.subtitle.is-3
-       "Example of " [:strong "Reagent"] " components styled with "
+       "Example of Yorick's " [:strong "Reagent"] " components styled with "
        [:strong "Bulma"]]]]]
    [:section.section
     [:div.container

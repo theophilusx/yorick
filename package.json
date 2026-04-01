@@ -7,7 +7,7 @@
     "release": "shadow-cljs release testbed;",
     "server": "shadow-cljs server;",
     "clean": "rm -rf target; rm -rf public/js",
-    "test": "shadow-cljs node-test test",
+    "test": "shadow-cljs test test",
     "test:browser": "shadow-cljs compile browser-test && karma start --single-run",
     "test:watch": "shadow-cljs watch browser-test"
   },

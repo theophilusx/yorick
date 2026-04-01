@@ -10,7 +10,7 @@
                     :modules {:main {:init-fn testbed.main/init}}}
           :test {:target    :node-test
                  :output-to "target/test/test.js"
-                 :ns-regexp "theophilusx.yorick.(utils|store)-test"}
+                 :ns-regexp "theophilusx.yorick.(utils|store|assets)-test"}
           :browser-test {:target    :karma
                          :output-to "target/karma/test.js"
                          :ns-regexp "theophilusx.yorick.components.*-test"}}}

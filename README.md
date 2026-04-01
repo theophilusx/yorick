@@ -1,174 +1,358 @@
-- [Yorick](#sec-1)
-  - [Key Objectives](#sec-1-1)
-  - [Installation](#sec-1-2)
-  - [Running the Demo](#sec-1-3)
-  - [Using the API](#sec-1-4)
-    - [Source Code Documentation](#sec-1-4-1)
-    - [Namespaces](#sec-1-4-2)
-    - [Optional Keyword Arguments](#sec-1-4-3)
-    - [HTML Attribute Support](#sec-1-4-4)
-    - [Layout](#sec-1-4-5)
-    - [Working with Classes](#sec-1-4-6)
-    - [Component Contents](#sec-1-4-7)
-    - [Managing State](#sec-1-4-8)
-  - [License](#sec-1-5)
+# Yorick
 
-# Yorick<a id="sec-1"></a>
+*Yorick* is a library of reagent components which use the
+[Bulma](https://bulma.io) framework for CSS styling. Bulma is a full
+featured pure CSS framework which does not include any Javascript. This
+library builds on this and adds necessary ClojureScript to create high
+level Reagent components to represent functionality commonly required
+when developing web based applications.
 
-*Yorick* is a library of reagent components which use the [Bulma](https://bulma.io) framework for CSS styling. Bulma is a full featured pure CSS framework which does not include any Javascript. This library builds on this and adds necessary ClojureScript to create high level Reagent components to represent functionality commonly required when developing web based applications.
+Yorick has been developed using the excellent
+[shadow-cljs](https://github.com/thheller/shadow-cljs) library, but can
+be used with any ClojureScript build environment, such as *lein*, *CLI
+tools* or *boot*.
 
-Yorick has been developed using the excellent [shadow-cljs](https://github.com/thheller/shadow-cljs) library, but can be used with any ClojureScript build environment, such as *lein*, *CLI tools* or *boot*.
+## Key Objectives
 
-## Key Objectives<a id="sec-1-1"></a>
+- High level API. Make it easy to do the easy stuff
+- Flexible. Make it possible to do the hard stuff
+- Interchangeable. Easily combine components and compose components to
+  create new components
+- Consistent and intuitive. Once you get use to the library, be able to
+  make reasonable guesses regarding available arguments and options
+- Data driven. Whenever possible, allow definition of components to be
+  done in basic data structures like *maps* and *vectors*.
 
--   High level API. Make it easy to do the easy stuff
--   Flexible. Make it possible to do the hard stuff
--   Interchangeable. Easily combine components and compose components to create new components
--   Consistent and intuitive. Once you get use to the library, be able to make reasonable guesses regarding available arguments and options
--   Data driven. Whenever possible, allow definition of components to be done in basic data structures like *maps* and *vectors*.
+## Installation
 
-## Installation<a id="sec-1-2"></a>
+*Yorick* is available in [Clojars](https://clojars.org). To add *Yorick*
+to your project, add the following dependency to your `project.clj`,
+`deps.edn` etc.
 
-*Yorick* is available in [Clojars](https://clojars.org). To add *Yorick* to your project, add the following dependency to your `project.clj`, `deps.edn` etc.
+``` example
+[theophilusx/yorick "2.0.0"]
+```
 
-    [theophilusx/yorick "1.0.0"]
+## Running the Demo
 
-## Running the Demo<a id="sec-1-3"></a>
+The repository includes a simple demonstration site which shows the use
+of *Yorick* and provides some documentation on the various components
+provided by the library. To run the demo, do the following:
 
-The repository includes a simple demonstration site which shows the use of *Yorick* and provides some documentation on the various components provided by the library. To run the demo, do the following:
-
-```shell
-git clone https://github.com/theophilusx/yorick .
+``` shell
+git clone https://github.com/theophilusx/yorick
 cd yorick
 npm install
-npx shadow-cljs server build demo
+npx shadow-cljs watch demo
 ```
 
 Then visit [demo page](http://localhost:8080)
 
-## Using the API<a id="sec-1-4"></a>
+## Using the API
 
-### Source Code Documentation<a id="sec-1-4-1"></a>
+### Source Code Documentation
 
-Codox documentation generated from the *Yorick* source code is available at <https://theophilusx.github.io/yorick>
+Codox documentation generated from the *Yorick* source code is available
+at <https://theophilusx.github.io/yorick>
 
-### Namespaces<a id="sec-1-4-2"></a>
+### Namespaces
 
-The *Yorick* library is broken up into several namespaces representing different functionality. Rather than having a single *core* namespace, you load the namespace with the specific functionality you want. Currently, the following namespaces are defined:
+The *Yorick* library is broken up into several namespaces representing
+different functionality. Rather than having a single *core* namespace,
+you load the namespace with the specific functionality you want.
+Currently, the following namespaces are defined:
 
--   ****theophilusx.yorick.basic**:** A collection of basic utility components:
-    -   **a:** a simple anchor component
-    -   **img:** a simple image component
-    -   **render-vec:** a simple component for rendering vectors of data
-    -   **render-map:** a simple component for rendering maps of data
-    -   **breadcrumbs:** a simple breadcrumbs component to provide link breadcrumbs
-    -   **notification:** a simple notification component
--   ****theophilusx.yorick.card**:** a basic card presentation component
--   **\*theophilusx.yorick.icon:** components to manage display of icons
--   **\*theophilusx.yorick.input:** a collection of user input components
-    -   **field:** a general purpose input field component
-    -   **horizontal-field:** a general purpose horizontal input field
-    -   **input:** a basic text input component
-    -   **input-field:** a text input component wrapped in an input field
-    -   **checkbox:** a basic checkbox component
-    -   **radio:** a basic radio button component
-    -   **button:** a basic button component
-    -   **editable-field:** an editable field component
-    -   **textarea:** a basic text area component
-    -   **select:** a select box component
-    -   **select-field:** a select box component wrapped in a field component
-    -   **file:** a file selection component
-    -   **search:** a basic search box component
-    -   **range-field:** a range input component wrapped in a field component
-    -   **number-input:** an input component for numbers
-    -   **number-field:** a number-input component wrapped in a field component
--   ****theophilusx.yorick.media**:** a basic and flexible media presentation component
--   ****theophilusx.yorick.modal**:** a modal overlay window component
--   ****theophilusx.yorick.navbar**:** a basic navigation bar component
--   ****theophilusx.yorick.paginate**:** a basic pagination component
--   ****theophilusx.yorick.sidebar**:** a side menu (vertical) component
--   ****theophilusx.yorick.store**:** various functions to manipulate Reagent atoms for data storage
--   ****theophilusx.yorick.table**:** a component to render data in HTML tables
--   ****theophilusx.yorick.toolbars**:** a basic component for rendering a toolbar
--   ****theophilusx.yorick.utils**:** a collection of useful utility functions
+**theophilusx.yorick.basic**  
+A collection of basic utility components:
 
-### Optional Keyword Arguments<a id="sec-1-4-3"></a>
+a  
+a simple anchor component
 
-The library makes extensive use of keyword arguments. This has the advantage of making simple default function calls very clean and easy to do, but provides an *escape hatch* when you need to do more complicated things. The disadvantage is that ifyou need to do lots of complicated things, the function calls can become very long. However, if you do need to do such complicated things a lot, it is probably a sign you need to create higher level abstractions to restrict the complexity to well defined points.
+img  
+a simple image component
 
-### HTML Attribute Support<a id="sec-1-4-4"></a>
+render-vec  
+a simple component for rendering vectors of data
 
-Many HTML entities support large numbers of attributes. To support this, many components allow for an `:attrs` keyword, which consists of HTML attribute names as keywords and an associated string value. This map will be merged into the definition of the component.
+render-set  
+a simple component for rendering sets of data
 
-### Layout<a id="sec-1-4-5"></a>
+render-map  
+a simple component for rendering maps of data
 
-The *Bulma* CSS framework is based on **flexbox**, providing a simple, fast and flexible grid system to layout your web content. Bulma uses classes to support containers, responsive columns, levels and other layout components. Unlike other *Reagent* component libraries, *Yorick* does not attempt to provide any additional layout functionality. All the standard *Bulma* classes used to manage layout are compatible with the components provided by *Yorick*.
+breadcrumbs  
+a simple breadcrumbs component to provide link breadcrumbs
 
-To get the most out of *Yorick* you will need to have a basic familiarity with *Bulma*. The good news is that *Bulma* is clear, simple and easy to learn. Use *Bulma* classes like `columns`, `level` and `tiles` to manage your layout and *bulma* helper classes to style the *Yorick* components. s
+notification  
+a simple notification component
 
-### Working with Classes<a id="sec-1-4-6"></a>
+**theophilusx.yorick.card**  
+a basic card presentation component
 
-The standard way to modify the appearance of a component is by adding CSS classes. As *bulma* is a pure CSS framework, all Bulma features are controlled by adding Bulma specific class names to elements. See the Bulma documentation for details on what class names are supported for each element.
+**theophilusx.yorick.icon**  
+components to manage display of icons
 
-Many components are actually made up of multiple HTML elements and applying specific classes to each of these elements can become untidy and difficult to maintain. To handle this level of complexity, this library uses the following conventions
+deficon  
+define an icon map for use with the `icon` component
 
-1.  When these is just a single element in the component, allow a keyword argument of `:class`. This argument can have either a string value where the string lists the CSS classes to be added to the element or a vector, which contains strings or values that will resolve to a string (or nil).
+icon  
+render a single icon
 
-2.  When the component is a composition of HTML elements, a `:classes` argument is supported. The value of this argument should be a `map` where the keys are keywords representing HTML elements and the value associated with the key is either a string containing CSS class names or a vector which contains values that will resolve to CSS class name strings or nil.
+icons  
+render a pair of icons (left and right)
 
-The `utils` namespace contains a function call `cs`, which accepts a variable list of arguments that are combined to generate a string of CSS class names. Arguments can be strings, vectors with values that resolve to strings or keywords. When the value is a keyword, it will be converted to a string with the `name` function. Components within the library use the `cs` function to process `:class` and `:classes` arguments.
+**theophilusx.yorick.input**  
+a collection of user input components
+
+field  
+a general purpose input field component
+
+horizontal-field  
+a general purpose horizontal input field
+
+input  
+a basic text input component
+
+input-field  
+a text input component wrapped in an input field
+
+checkbox  
+a basic checkbox component
+
+radio  
+a basic radio button component
+
+button  
+a basic button component
+
+editable-field  
+an editable field component
+
+textarea  
+a basic text area component
+
+defoption  
+define an option map for use with the `select` component
+
+select  
+a select box component
+
+select-field  
+a select box component wrapped in a field component
+
+file  
+a file selection component
+
+search  
+a basic search box component
+
+range-field  
+a range input component wrapped in a field component
+
+number  
+an input component for numbers
+
+number-field  
+a number input component wrapped in a field component
+
+**theophilusx.yorick.media**  
+a basic and flexible media presentation component
+
+**theophilusx.yorick.modal**  
+a modal overlay window component
+
+**theophilusx.yorick.navbar**  
+a basic navigation bar component
+
+**theophilusx.yorick.paginate**  
+a basic pagination component
+
+**theophilusx.yorick.sidebar**  
+a side menu (vertical) component
+
+defentry  
+define a sidebar menu entry
+
+defmenu  
+define a sidebar menu
+
+sidebar  
+render a sidebar from one or more menus
+
+**theophilusx.yorick.store**  
+various functions to manipulate Reagent atoms for data storage
+
+**theophilusx.yorick.tab**  
+a tabbed interface component
+
+deftab  
+define a tab entry
+
+tab-bar  
+render a tab bar from a collection of tab entries
+
+**theophilusx.yorick.table**  
+a component to render data in HTML tables
+
+**theophilusx.yorick.toolbar**  
+a basic component for rendering a toolbar
+
+defitem  
+define a toolbar item
+
+toolbar  
+render a toolbar from a collection of items
+
+**theophilusx.yorick.utils**  
+a collection of useful utility functions
+
+### Optional Keyword Arguments
+
+The library makes extensive use of keyword arguments. This has the
+advantage of making simple default function calls very clean and easy to
+do, but provides an *escape hatch* when you need to do more complicated
+things. The disadvantage is that ifyou need to do lots of complicated
+things, the function calls can become very long. However, if you do need
+to do such complicated things a lot, it is probably a sign you need to
+create higher level abstractions to restrict the complexity to well
+defined points.
+
+### HTML Attribute Support
+
+Many HTML entities support large numbers of attributes. To support this,
+many components allow for an `:attrs` keyword, which consists of HTML
+attribute names as keywords and an associated string value. This map
+will be merged into the definition of the component.
+
+### Layout
+
+The *Bulma* CSS framework is based on **flexbox**, providing a simple,
+fast and flexible grid system to layout your web content. Bulma uses
+classes to support containers, responsive columns, levels and other
+layout components. Unlike other *Reagent* component libraries, *Yorick*
+does not attempt to provide any additional layout functionality. All the
+standard *Bulma* classes used to manage layout are compatible with the
+components provided by *Yorick*.
+
+To get the most out of *Yorick* you will need to have a basic
+familiarity with *Bulma*. The good news is that *Bulma* is clear, simple
+and easy to learn. Use *Bulma* classes like `columns`, `level` and
+`tiles` to manage your layout and *Bulma* helper classes to style the
+*Yorick* components.
+
+### Working with Classes
+
+The standard way to modify the appearance of a component is by adding
+CSS classes. As *bulma* is a pure CSS framework, all Bulma features are
+controlled by adding Bulma specific class names to elements. See the
+Bulma documentation for details on what class names are supported for
+each element.
+
+Many components are actually made up of multiple HTML elements and
+applying specific classes to each of these elements can become untidy
+and difficult to maintain. To handle this level of complexity, this
+library uses the following conventions
+
+1.  When these is just a single element in the component, allow a
+    keyword argument of `:class`. This argument can have either a string
+    value where the string lists the CSS classes to be added to the
+    element or a vector, which contains strings or values that will
+    resolve to a string (or nil).
+
+2.  When the component is a composition of HTML elements, a `:classes`
+    argument is supported. The value of this argument should be a `map`
+    where the keys are keywords representing HTML elements and the value
+    associated with the key is either a string containing CSS class
+    names or a vector which contains values that will resolve to CSS
+    class name strings or nil.
+
+The `utils` namespace contains a function call `cs`, which accepts a
+variable list of arguments that are combined to generate a string of CSS
+class names. Arguments can be strings, vectors with values that resolve
+to strings or keywords. When the value is a keyword, it will be
+converted to a string with the `name` function. Components within the
+library use the `cs` function to process `:class` and `:classes`
+arguments.
 
 1.  Examples
 
-    The \`a\` component is a basic component that renders an HTML link element. As it only has one element, the `:class` keyword argument is supported. For example
-    
-    ```clojurescript
+    The \`a\` component is a basic component that renders an HTML link
+    element. As it only has one element, the `:class` keyword argument
+    is supported. For example
+
+    ``` clojurescript
     [:p "This is a paragraph with a link of " [a "link name" :class "button"]
      ". It is a button link"]
     ```
-    
+
     This will generate HTML which looks like
-    
-    ```html
+
+    ``` html
     <p>This is a paragraph with a link of 
     <a href="#" class="button">link name</a>. It is a button link
     </p>
     ```
-    
-    Alternatively, you could use a vector for the value of `:class`. This can be very useful when you want to add something dynamic i.e. which calculates the value of the class name to add. For example
-    
-    ```clojurescript
+
+    Alternatively, you could use a vector for the value of `:class`.
+    This can be very useful when you want to add something dynamic i.e.
+    which calculates the value of the class name to add. For example
+
+    ``` clojurescript
     [:p "This is a link with a dynamic class name "
      [a "link name" :class ["button"
                             (when (= (:link-state @state) :active)
                               "is-active")]
       ". It is an active button link"]]
     ```
-    
-    The above uses a `when` conditional to add the *is-active* class if the value of the key `:link-state` is `:active`. If it is not `:active`, it will add `nil`, which will be ignored. So if the value is `:active` the result will be
-    
-    ```html
+
+    The above uses a `when` conditional to add the *is-active* class if
+    the value of the key `:link-state` is `:active`. If it is not
+    `:active`, it will add `nil`, which will be ignored. So if the value
+    is `:active` the result will be
+
+    ``` html
     <p>
       This is a link with a dynamic class name  
       <a href="#" class="button is-active">link name</a>
       . It is an active button link
     </p>
     ```
-    
-    The `input-field` component is an example of a component which is made up of multiple HTML elements. There is an outer `:div` element for the field, a `:label` element for the field label, a `:control` field to contain the final `:input` element. Therefore, the `input-field` element supports the `:classes` keyword argument, which should have a `map` as the value. This map should have keys for one or more of the inner elements i.e. `:field`, `:label`, `:control` or `:input`. You only need to add keys for the elements you want to add classes to. The value of each key can be either a string of class names or a vector with components that will resolve to a class name string or nil.
 
-### Component Contents<a id="sec-1-4-7"></a>
+    The `input-field` component is an example of a component which is
+    made up of multiple HTML elements. There is an outer `:div` element
+    for the field, a `:label` element for the field label, a `:control`
+    field to contain the final `:input` element. Therefore, the
+    `input-field` element supports the `:classes` keyword argument,
+    which should have a `map` as the value. This map should have keys
+    for one or more of the inner elements i.e. `:field`, `:label`,
+    `:control` or `:input`. You only need to add keys for the elements
+    you want to add classes to. The value of each key can be either a
+    string of class names or a vector with components that will resolve
+    to a class name string or nil.
 
-In most cases, a component is really just a wrapper around other components or Hiccup markup. An element can be as simple as just a string or as complex as a nested HTML table. In most cases, the components provided by *Yorick* only accept a single value for the *body* argument of the component. However, sometimes you might want to provide multiple values. To enable passing multiple values into a component, it is necessary to wrap it in either an explicit `:div` element or you can use the handy `:<>` shortcut. This is also a requirement of `React` - the value passed into a `React` component must be either a vector or a function which returns a vector. You cannot just pass in a nested vector, so something like
+### Component Contents
 
-```clojurescript
+In most cases, a component is really just a wrapper around other
+components or Hiccup markup. An element can be as simple as just a
+string or as complex as a nested HTML table. In most cases, the
+components provided by *Yorick* only accept a single value for the
+*body* argument of the component. However, sometimes you might want to
+provide multiple values. To enable passing multiple values into a
+component, it is necessary to wrap it in either an explicit `:div`
+element or you can use the handy `:<>` shortcut. This is also a
+requirement of `React` - the value passed into a `React` component must
+be either a vector or a function which returns a vector. You cannot just
+pass in a nested vector, so something like
+
+``` clojurescript
 [field [[button "Save"]
         [Button "Cancel"]]]
 ```
 
-won't work. It will generate an error about invalid hiccup. However the following two approaches will work just fine.
+won't work. It will generate an error about invalid hiccup. However the
+following two approaches will work just fine.
 
-```clojurescript
+``` clojurescript
 [field [:div
         [button "Save"]
         [button "Cancel"]]]
@@ -178,40 +362,116 @@ won't work. It will generate an error about invalid hiccup. However the followin
         [button "Cancel"]]]
 ```
 
-The first will wrap the two button components in a `<div>`, which is usually fine. The second will enable `React` to handle the two button components and may avoid the addition of an explicit `<div>` element.
+The first will wrap the two button components in a `<div>`, which is
+usually fine. The second will enable `React` to handle the two button
+components and may avoid the addition of an explicit `<div>` element.
 
-### Managing State<a id="sec-1-4-8"></a>
+### Managing State
 
-The `theophilusx.yorick.store` namespace contains functions to assist in managing Reagent `atoms`. In Reagent, state is typically managed inside special `atoms`. Reagent components know which atoms they reference. When a value inside a referenced atom is updated, Reagent knows that the associated component may need to be re-rendered to reflect the new value.
+The `theophilusx.yorick.store` namespace contains functions to assist in
+managing Reagent `atoms`. In Reagent, state is typically managed inside
+special `atoms`. Reagent components know which atoms they reference.
+When a value inside a referenced atom is updated, Reagent knows that the
+associated component may need to be re-rendered to reflect the new
+value.
 
-The components within *Yorick* use Reagent `atoms` containing `maps` when they need to track state information. The `store` namespace provides a number of functions for manipulating these atom maps. The namespace also defines a global atom called `global-state` to store state information which needs to be accessed by code and other components external to the main component that manages the state e.g. menus, navigation bars tabs etc.
+The components within *Yorick* use Reagent `atoms` containing `maps`
+when they need to track state information. The `store` namespace
+provides a number of functions for manipulating these atom maps. The
+namespace also defines a global atom called `default-store` to store
+state information which needs to be accessed by code and other
+components external to the main component that manages the state e.g.
+menus, navigation bars tabs etc.
 
-The library uses the term *model* to refer to the atom used to track state. The atom is the data model for a component, page or document. Values in the model map stored in the atom are accessed using a *storage identifier* or `sid`. The `sid` is a keyword with a particular format. Any period within the keyword is interpreted as a path separator. The path components are interpreted as keyword keys which define a path into the model map stored in the atom. For example, the keywords `:person.name.first`, `:person.name.last` and `:person.age` will map to the paths `[:person :name :first]`, `[:person :name :last]` and `[:person :age]`. These vectors all represent paths into a nested map and would correspond to
+The library uses the term *model* to refer to the atom used to track
+state. The atom is the data model for a component, page or document.
+Values in the model map stored in the atom are accessed using a *storage
+identifier* or `sid`. The `sid` is a keyword with a particular format.
+Any period within the keyword is interpreted as a path separator. The
+path components are interpreted as keyword keys which define a path into
+the model map stored in the atom. For example, the keywords
+`:person.name.first`, `:person.name.last` and `:person.age` will map to
+the paths `[:person :name :first]`, `[:person :name :last]` and
+`[:person :age]`. These vectors all represent paths into a nested map
+and would correspond to
 
-```clojurescript
+``` clojurescript
 {:person {:name {:first "John"
                  :last "Doe"}
           :age 47}}
 
 ```
 
-The `utils` namespace includes the function `spath`, which takes a storage identifier keyword and returns the corresponding storage path vector.
+The `utils` namespace includes the function `spath`, which takes a
+storage identifier keyword and returns the corresponding storage path
+vector.
 
-```clojurescript
+``` clojurescript
 (spath :person.name.first)
   => [:person :name :first]
 ```
 
 *Yorick* uses reagent atoms in three ways:
 
-1.  Tracking local state. Some components need internal state information to manage rendering. For example, which menu is active or whether a modal window is being displayed. In this case, the atom is defined as a local atom and the component *closes* over that atom, making it only accessible to code in the component.
+1.  Tracking local state. Some components need internal state
+    information to manage rendering. For example, which menu is active
+    or whether a modal window is being displayed. In this case, the atom
+    is defined as a local atom and the component *closes* over that
+    atom, making it only accessible to code in the component.
 
-2.  Tracking shared state. Sometimes, you may need to share state information between multiple components, but don't want to pollute the global state atom with this information. Many components support a `:model` optional keyword argument. If supplied, this argument should be a Reagent atom containing a `map`. This is most often used when defining forms or collecting input from the user. A single atom can be used to hold the input values from multiple input components, making it easy to pass the full list of input data to other functions or components for further processing.
+2.  Tracking shared state. Sometimes, you may need to share state
+    information between multiple components, but don't want to pollute
+    the global state atom with this information. Many components support
+    a `:model` optional keyword argument. If supplied, this argument
+    should be a Reagent atom containing a `map`. This is most often used
+    when defining forms or collecting input from the user. A single atom
+    can be used to hold the input values from multiple input components,
+    making it easy to pass the full list of input data to other
+    functions or components for further processing.
 
-3.  Tracking state globally. The `store` namespace defines an atom called `global-state`, which can be used to store global state information. This atom can be used by both components and any ClojureScript code in your application. It is up to the programmer to manage how data is stored in this atom. For components, like havbars, tab bars or sidebars, which use the global state, you set the storage identifier used by the component when you call it. That storage identifier will determine where the component stores its state within the global state atom map.
+3.  Tracking state globally. The `store` namespace defines an atom
+    called `default-store`, which can be used to store global state
+    information. This atom can be used by both components and any
+    ClojureScript code in your application. It is up to the programmer
+    to manage how data is stored in this atom. For components, like
+    navbars, tab bars or sidebars, which use the global state, you set
+    the storage identifier used by the component when you call it. That
+    storage identifier will determine where the component stores its
+    state within the global state atom map.
 
-## License<a id="sec-1-5"></a>
+## Testing
 
-Copyright &copy; 2020 Tim Cross
+*Yorick* does not have an automated test suite. Testing is performed
+manually using two interactive builds included in the repository:
 
-Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.
+**Demo** (`demo/yorick_demo/`)  
+a showcase site with live examples of every component, along with usage
+notes. This is the primary reference for understanding how components
+behave.
+
+**Testbed** (`experiment/testbed/`)  
+an interactive scratch environment for experimenting with individual
+components in isolation.
+
+If you are trying to diagnose a bug or verify behaviour, start the demo
+build and navigate to the relevant component page:
+
+``` shell
+npx shadow-cljs watch demo
+```
+
+Then open <http://localhost:8080> in your browser.
+
+You can also run the Clojure linting tools to catch potential issues:
+
+``` shell
+clj-kondo --lint src/
+lein eastwood
+```
+
+## License
+
+Copyright -2026 Tim Cross
+
+Distributed under the Eclipse Public License either version 1.0 or (at
+your option) any later version.

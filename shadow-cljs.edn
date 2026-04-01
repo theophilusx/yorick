@@ -7,4 +7,10 @@
           :testbed {:target :browser
                     :output-dir "resources/public/js"
                     :asset-path "/js"
-                    :modules {:main {:init-fn testbed.main/init}}}}}
+                    :modules {:main {:init-fn testbed.main/init}}}
+          :test {:target    :node-test
+                 :output-to "target/test/test.js"
+                 :ns-regexp "theophilusx.yorick.(utils|store)-test"}
+          :browser-test {:target    :karma
+                         :output-to "target/karma/test.js"
+                         :ns-regexp "theophilusx.yorick.components.*-test"}}}

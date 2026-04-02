@@ -1,6 +1,6 @@
 (ns yorick-demo.main
   (:require [goog.dom :as gdom]
-            [reagent.dom :as rdom]
+            [reagent.dom.client :as rdomc]
             [theophilusx.yorick.sidebar :as sb]
             [theophilusx.yorick.utils :as utils]
             [theophilusx.yorick.store :as store]
@@ -23,8 +23,7 @@
 (defn get-element [name]
   (gdom/getElement name))
 
-(defn mount [el component]
-  (rdom/render component el))
+(defonce root (atom nil))
 
 (def demo-sidebar [(sb/defmenu [(sb/defentry "Introduction" :value :intro)
                                (sb/defentry "State Management" :value :state)
@@ -89,7 +88,9 @@
 
 (defn mount-app []
   (when-let [el (get-element "app")]
-    (mount el [greeting])))
+    (when-not @root
+      (reset! root (rdomc/create-root el)))
+    (rdomc/render @root [greeting])))
 
 (defn ^:dev/after-load init []
   (println "Hello World")

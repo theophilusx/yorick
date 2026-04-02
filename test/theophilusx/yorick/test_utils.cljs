@@ -1,19 +1,23 @@
 (ns theophilusx.yorick.test-utils
   (:require [reagent.core :as r]
-            [reagent.dom :as rdom]
+            [reagent.dom.client :as rdomc]
             [theophilusx.yorick.store :as store]))
 
 (def container (atom nil))
+(def root (atom nil))
 
 (defn setup! []
   (assert (nil? @container) "setup! called without a preceding teardown!")
   (let [el (js/document.createElement "div")]
     (js/document.body.appendChild el)
-    (reset! container el)))
+    (reset! container el)
+    (reset! root (rdomc/create-root el))))
 
 (defn teardown! []
+  (when @root
+    (.unmount @root)
+    (reset! root nil))
   (when @container
-    (rdom/unmount-component-at-node @container)
     (js/document.body.removeChild @container)
     (reset! container nil))
   ;; Reset default-store so components using it don't leak state between tests
@@ -22,7 +26,7 @@
 (defn render!
   "Render a Reagent component into the test container and flush synchronously."
   [component]
-  (rdom/render component @container)
+  (rdomc/render @root component)
   (r/flush))
 
 (defn query

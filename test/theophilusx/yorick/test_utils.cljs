@@ -1,6 +1,7 @@
 (ns theophilusx.yorick.test-utils
   (:require [reagent.core :as r]
             [reagent.dom.client :as rdomc]
+            ["react-dom" :as react-dom]
             [theophilusx.yorick.store :as store]))
 
 (def container (atom nil))
@@ -24,9 +25,10 @@
   (store/reset! {}))
 
 (defn render!
-  "Render a Reagent component into the test container and flush synchronously."
+  "Render a Reagent component into the test container and flush synchronously.
+  Uses flushSync to force React 19's concurrent scheduler to commit immediately."
   [component]
-  (rdomc/render @root component)
+  (react-dom/flushSync (fn [] (rdomc/render @root component)))
   (r/flush))
 
 (defn query
@@ -43,3 +45,14 @@
   "Returns true if the given DOM element has the CSS class."
   [el class-name]
   (.contains (.-classList el) class-name))
+
+(defn set-input-value!
+  "Set the value of a controlled React input element using the native prototype
+  setter, bypassing React 19's _valueTracker so the subsequent input event is
+  recognised as a real change. Dispatch a bubbling 'input' event afterwards."
+  [el value]
+  (let [native-setter (-> js/Object
+                          (.getOwnPropertyDescriptor js/HTMLInputElement.prototype "value")
+                          .-set)]
+    (.call native-setter el value))
+  (.dispatchEvent el (js/Event. "input" #js {"bubbles" true})))

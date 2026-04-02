@@ -8,6 +8,9 @@ module.exports = function(config) {
       'karma-cljs-test',
       'karma-chrome-launcher'
     ],
+    client: {
+      args: ['shadow.test.karma.init']
+    },
     colors: true,
     logLevel: config.LOG_INFO,
     singleRun: true

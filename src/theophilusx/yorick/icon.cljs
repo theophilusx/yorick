@@ -69,9 +69,9 @@
       :left "has-icons-left"
       :right "has-icons-right"
       "")
-    (string/join (map (fn [i]
-                        (case (:position i)
-                          :left "has-icons-left"
-                          :right "has-icons-right"
-                          ""))
-                      icon-data) " ")))
+    (string/join " " (map (fn [i]
+                            (case (:position i)
+                              :left "has-icons-left"
+                              :right "has-icons-right"
+                              ""))
+                          icon-data))))

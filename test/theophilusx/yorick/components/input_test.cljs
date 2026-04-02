@@ -47,8 +47,7 @@
     (let [doc (r/atom {})]
       (tu/render! [i/input :text :test.input :store doc])
       (let [inp (tu/query "input")]
-        (set! (.-value inp) "hello")
-        (.dispatchEvent inp (js/Event. "input" #js {"bubbles" true}))
+        (tu/set-input-value! inp "hello")
         (r/flush)
         (is (= "hello" (store/get-in (spath :test.input) :store doc)))))))
 
@@ -118,8 +117,7 @@
       (tu/render! [i/range-field :test.range 0 100 :store doc :value 50])
       (is (= 50 (store/get-in (spath :test.range) :store doc)))
       (let [inp (tu/query "input[type=range]")]
-        (set! (.-value inp) "75")
-        (.dispatchEvent inp (js/Event. "input" #js {"bubbles" true}))
+        (tu/set-input-value! inp "75")
         (r/flush)
         (is (= 75 (store/get-in (spath :test.range) :store doc))))))
   (testing "min and max attributes correct"

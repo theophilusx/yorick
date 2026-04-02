@@ -1,6 +1,6 @@
 (ns testbed.main
   (:require [goog.dom :as gdom]
-            [reagent.dom :as rdom]
+            [reagent.dom.client :as rdomc]
             [theophilusx.yorick.utils :as utils]
             [theophilusx.yorick.store :as store]
             [theophilusx.yorick.basic :as basic]
@@ -128,8 +128,7 @@
    [:div.table-container [table/table table-data2]]])
 
 
-(defn mount [el component]
-  (rdom/render component el))
+(defonce root (atom nil))
 
 (defn placeholder-page []
   [:div.columns
@@ -166,7 +165,9 @@
 
 (defn mount-app []
   (when-let [el (get-element "app")]
-    (mount el [greeting])))
+    (when-not @root
+      (reset! root (rdomc/create-root el)))
+    (rdomc/render @root [greeting])))
 
 (defn ^:dev/after-load init []
   (println "Hello World")
